@@ -15,7 +15,7 @@ import traffic_congestion_simulator.TCSConstant;
  */
 public class Lane implements TCSConstant {
 
-    ArrayList<Vehicle> carList;// a list of all the cars on the road.
+    ArrayList<Car> carList;// a list of all the cars on the road.
 
     boolean automated;
 
@@ -34,21 +34,21 @@ public class Lane implements TCSConstant {
 
     }
 
-    public void addCar(Vehicle car) {
+    public void addCar(Car car) {
         carList.add(car);
     }
     
     public void addCar(double[] position, double[] size) {
         if (automated) {
             if (carList.isEmpty()) {
-                AutomatedCar a = new AutomatedCar(position, size, 'r');
+                Automated_Car a = new Automated_Car(position, size, 'r');
                 a.getPosition();
-                carList.add(new AutomatedCar(position, size, 'r'));
+                carList.add(new Automated_Car(position, size, 'r'));
             } else {
-                Vehicle car = carList.get(carList.size() - 1);
+                Car car = carList.get(carList.size() - 1);
                 if ((car.getPosition()[0] - car.getSafetyDistance() - (car.getSize()[0] - TESTSIZEX) / 2) > 0 
                         && (car.getPosition()[1] - car.getSafetyDistance() - (car.getSize()[1] - TESTSIZEY) / 2) > 0) {
-                    carList.add(new AutomatedCar(position, size, 'r'));
+                    carList.add(new Automated_Car(position, size, 'r'));
                 }
             }
         }
