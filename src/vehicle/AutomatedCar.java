@@ -100,7 +100,7 @@ public class AutomatedCar extends Vehicle{
         //no implementaion yet
     }
     
-    //front bumper of car to back bumper of front car including buffer
+    //front bumper of car to back bumper of front car plus buffer
     public double getDistanceFromFrontVehicle(Vehicle front_car) {
         if (front_car.isTravelingHorizontal()){
             return Math.abs(this.position[0] - front_car.position[0]) - front_car.size[0] + buffer;
