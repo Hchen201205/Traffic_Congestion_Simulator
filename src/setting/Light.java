@@ -11,29 +11,39 @@ import java.util.concurrent.TimeUnit;
  *
  * @author Christine
  */
+
 public class Light {
     boolean start;
-    private int[] changing_time;
-    private int color;
-
-    public Light() {
+    char direction;                //'n' 's' 'e' or 'w'
+    private int[] change_times;    //array of light cycle timing between color changes (milliseconds)
+    private int color;             //0 = red, 1 = green, 2 = yellow
+    private double time_remaining; //time until next color change
+    
+    private final double time_increments = 0.1;
+            
+    public Light(char direction) {
+        this.direction = direction;
         start = false;
         color = 0;
-        changing_time = new int[3];
-    }
-
-    public void setSchangeTimes(int rtg, int gty, int ytr) {
-        changing_time[0] = rtg;
-        changing_time[1] = gty;
-        changing_time[2] = ytr;
-    }
-
-    public int[] getChangeTimes() {
-        return changing_time;
+        change_times = new int[3];
+        time_remaining = 0;
     }
     
-    public int getColor(){
-        return color;
+    //runs light in real time based on change times
+    public void startCycle() throws InterruptedException{
+        start = true;
+        while (start){
+            for (double i = 0; i < change_times[color]; i += time_increments) {
+                time_remaining = change_times[color] - i;
+                long sleep_time = (long) (time_increments * 1000);
+                TimeUnit.MICROSECONDS.sleep(sleep_time);
+            }           
+            changeColor();
+        }
+    }
+    
+    public void endCycle() {
+        start = false;
     }
     
     public void changeColor(){
@@ -44,18 +54,35 @@ public class Light {
         }
     }
     
-    public void startCycle() throws InterruptedException{
-        start = true;
-        while (start){
-            TimeUnit.SECONDS.sleep(changing_time[color]);
-            changeColor();
-        }
+    //Getters and Setters
+    
+    //setting cycle times
+    public void setChangeTimes(int rtg, int gty, int ytr) {
+        change_times[0] = rtg;
+        change_times[1] = gty;
+        change_times[2] = ytr;
+    }
+
+    public int[] getChangeTimes() {
+        return change_times;
     }
     
-    public void endCycle() {
-        start = false;
+    //returns string color value
+    public String getColor(){
+        if (color == 0){
+            return "red";
+        } else if (color == 1){
+            return "green";
+        } 
+        return "yellow";
     }
-
+    
+    //returns int color value
+    public int getColorInt(){
+        return color;
+    }
+    
+    public double getTimeRemaining(){
+        return time_remaining;
+    }
 }
-
-
