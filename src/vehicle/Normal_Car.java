@@ -11,7 +11,7 @@ import java.util.concurrent.TimeUnit;
  *
  * @author Christine
  */
-public class Normal_Car extends Car{
+public class Normal_Car extends Vehicle{
     private long reaction_time;
     
     public Normal_Car(double[] position, double[] size, char direction) {
