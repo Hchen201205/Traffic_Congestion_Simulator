@@ -44,6 +44,13 @@ public interface TCSConstant {
     
     public final int LIGHTPOSY = 150;
     
+    // This value will be changed.
+    public final int LIGHTCYCLER = 0;
     
+    // This value will be changed.
+    public final int LIGHTCYCLEG = 0;
+    
+    // This value will be changed.
+    public final int LIGHTCYCLEY = 0;
     
 }
