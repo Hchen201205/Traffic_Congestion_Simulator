@@ -16,14 +16,14 @@ public class Light_Set implements TCSConstant {
 
     int xvalue;
     int yvalue;
-    Light2[][] lightset;
+    Light[][] lightset;
 
     static double time = 0;
     
     /**
      * Because each light in an intersection is following a certain light cycle,
      * they should have a time schedule according to each other Please change it
-     * later on so that this class can cover all the light (not only 1
+     * later on so that this class can cover all the lights (not only 1
      * intersection).
      *
      * @param x
@@ -32,13 +32,13 @@ public class Light_Set implements TCSConstant {
     public Light_Set(int x, int y, int numOfIntersection) {
         xvalue = x;
         yvalue = y;
-        lightset = new Light2[numOfIntersection][4];
+        lightset = new Light[numOfIntersection][4];
         for (int i = 0; i < lightset.length; i++) {
             for (int k = 0; k < lightset[0].length; k++) {
                 if (i % 2 == 0) {
-                    lightset[k][i] = new Light2(i, Color.GREEN);
+                    lightset[k][i] = new Light(i, Color.GREEN);
                 } else {
-                    lightset[k][i] = new Light2(i, Color.RED);
+                    lightset[k][i] = new Light(i, Color.RED);
                 }
                 lightset[k][i].setChangeTimes(LIGHTCYCLER, LIGHTCYCLEG, LIGHTCYCLEY);
             }

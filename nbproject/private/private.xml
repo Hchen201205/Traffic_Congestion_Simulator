@@ -4,9 +4,12 @@
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
             <file>file:/C:/Users/Christine/Documents/NetBeansProjects/Traffic%20Project%20Git/Traffic_Congestion_Simulator/src/setting/Light.java</file>
+            <file>file:/C:/Users/Christine/Documents/NetBeansProjects/Traffic%20Project%20Git/Traffic_Congestion_Simulator/src/traffic_congestion_simulator/Data.java</file>
+            <file>file:/C:/Users/Christine/Documents/NetBeansProjects/Traffic%20Project%20Git/Traffic_Congestion_Simulator/src/vehicle/Vehicle.java</file>
             <file>file:/C:/Users/Christine/Documents/NetBeansProjects/Traffic%20Project%20Git/Traffic_Congestion_Simulator/src/vehicle/AutomatedCar.java</file>
-            <file>file:/C:/Users/Christine/Documents/NetBeansProjects/Traffic%20Project%20Git/Traffic_Congestion_Simulator/src/vehicle/Car.java</file>
+            <file>file:/C:/Users/Christine/Documents/NetBeansProjects/Traffic%20Project%20Git/Traffic_Congestion_Simulator/src/vehicle/Normal_Car.java</file>
             <file>file:/C:/Users/Christine/Documents/NetBeansProjects/Traffic%20Project%20Git/Traffic_Congestion_Simulator/src/setting/Lane.java</file>
+            <file>file:/C:/Users/Christine/Documents/NetBeansProjects/Traffic%20Project%20Git/Traffic_Congestion_Simulator/src/traffic_congestion_simulator/Canvas.java</file>
         </group>
     </open-files>
 </project-private>
