@@ -17,13 +17,11 @@ public class Light {
 
     boolean start;
     int direction;                //0 = 'n', 1 = 's', 2 = 'e' or 3 = 'w'
-    private int[] change_times;    //array of light cycle timing between color changes (milliseconds)
+    private int[] change_times;   //array of light cycle timing between color changes (milliseconds)
     private Color color;
-    //private int color;             //0 = red, 1 = green, 2 = yellow
-    //private double time_remaining; //time until next color change
-    private double time_passed; // time that has pass in this cycle;
+    private double time_passed;   // time that has pass in this cycle;
 
-    private final double time_increments = 0.1;
+    private final double time_increment = 0.1; //time increment for each cycle unit (milliseconds)
 
     public Light(int direction) {
         this.direction = direction;
@@ -57,8 +55,8 @@ public class Light {
 
     
     public void runCycleUnit() throws InterruptedException {
-        time_passed += time_increments;
-        long sleep_time = (long) (time_increments * 1000);
+        time_passed += time_increment;
+        long sleep_time = (long) (time_increment * 1000);
         TimeUnit.MICROSECONDS.sleep(sleep_time);
         changeColor();
     }
@@ -84,6 +82,7 @@ public class Light {
             color = Color.YELLOW;
         } else if (time_passed == change_times[0] + change_times[1] + change_times[2])  {
             color = Color.RED;
+            time_passed = 0;
         }
     }
     
@@ -130,56 +129,9 @@ public class Light {
         }
     }
     
+    public double getTimeIncrement(){
+        return time_increment;
+    }
     
-    /**
-     * This is a method that will run the cycle based on the boolean start value
-     *
-     * @throws InterruptedException
-     */
-    /*
-    public void runCycle() throws InterruptedException {
-        while (start) {
-            for (double i = 0; i < change_times[color]; i += time_increments) {
-                runCycleUnit(i);
-            }
-            changeColor();
-        }
-    }
-
-    public void runCycleUnit(double total_increment) throws InterruptedException {
-        time_remaining = change_times[color] - total_increment;
-        long sleep_time = (long) (time_increments * 1000);
-        TimeUnit.MICROSECONDS.sleep(sleep_time);
-    }*/
-    /*
-    //returns string color value
-    public String getColor() {
-        if (color == 0) {
-            return "red";
-        } else if (color == 1) {
-            return "green";
-        }
-        return "yellow";
-    }*/
-
-    /*
-    //returns int color value
-    public int getColorInt() {
-        return color;
-    }
-*/
-    /*
-    public double getTimeRemaining() {
-        return time_remaining;
-    }
-     */
-    /*
-    public void changeColor() {
-        if (color == 2) {
-            color = 0;
-        } else {
-            color++;
-        }
-    }
-*/
+    
 }

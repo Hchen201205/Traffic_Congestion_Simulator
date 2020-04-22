@@ -46,13 +46,13 @@ public class Light_Set implements TCSConstant {
     }
 
     public void runCycle() throws InterruptedException {
-        while (true) {
-            time += time + 0.1;// time increment;
+        while (true) {       
             for (int i = 0; i < lightset.length; i++) {
                 for (int k = 0; k < lightset[0].length; k++) {
                     lightset[i][k].runCycleUnit();
                 }
             }
+            time += time + lightset[0][0].getTimeIncrement();// time increment
             // There should be some statement that control the end of this cycle. 
             //MJ This is where you come in. One of the actionListener will have to take care of this later.
         }
