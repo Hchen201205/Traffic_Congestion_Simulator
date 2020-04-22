@@ -11,7 +11,7 @@ import java.util.concurrent.TimeUnit;
  */
 public class AutomatedCar extends Vehicle {
 
-    public AutomatedCar(double[] position, double[] size, char direction) {
+    public AutomatedCar(double[] position, double[] size, int direction) {
         speed[0] = 0;
         speed[1] = 0;
         acceleration_rate = 6;
@@ -24,13 +24,16 @@ public class AutomatedCar extends Vehicle {
     }
 
     /**
-     * This is a new method I add. I add it because we are now measuring the movement for every millisecond unit.
-     * So why not have a method that only accelerate for one unit and keep updating.
-     * Also, I didn't add the sleep method in here because the light class will take the sleep.
-     * So you can think of: light will run for a unit second first and then the car will accelerate for one unit second.
-     * Or maybe this is not right... Maybe I should add sleep in the lane class.
+     * This is a new method I add. I add it because we are now measuring the
+     * movement for every millisecond unit. So why not have a method that only
+     * accelerate for one unit and keep updating. Also, I didn't add the sleep
+     * method in here because the light class will take the sleep. So you can
+     * think of: light will run for a unit second first and then the car will
+     * accelerate for one unit second. Or maybe this is not right... Maybe I
+     * should add sleep in the simulation class.
+     *
      * @param accelerating
-     * @param deccelerating 
+     * @param deccelerating
      */
     public void accelerateUnit(boolean accelerating, boolean deccelerating) {
         int time = 1;
@@ -43,22 +46,22 @@ public class AutomatedCar extends Vehicle {
                 acceleration = decceleration_rate;
             }
             switch (direction) {
-                case 'r':
+                case 2:
                     double deltaPosX = speed[0] * time + 1.0 / 2 * acceleration * time * time;
                     position[0] += deltaPosX;
                     speed[0] += acceleration * time;
                     break;
-                case 'l':
+                case 3:
                     deltaPosX = speed[0] * time + 1.0 / 2 * acceleration * time * time;
                     position[0] -= deltaPosX;
                     speed[0] += acceleration * time;
                     break;
-                case 'd':
+                case 0:
                     double deltaPosY = speed[1] * time + 1.0 / 2 * acceleration * time * time;
                     position[1] += deltaPosY;
                     speed[1] += acceleration * time;
                     break;
-                case 'u':
+                case 1:
                     deltaPosY = speed[1] * time + 1.0 / 2 * acceleration * time * time;
                     position[1] -= deltaPosY;
                     speed[1] += acceleration * time;
@@ -76,22 +79,22 @@ public class AutomatedCar extends Vehicle {
         long sleep_time = (long) (time * 1000);
         is_accelerating = true;
         switch (direction) {
-            case 'r':
+            case 2:
                 double deltaPosX = speed[0] * time + 1.0 / 2 * acceleration * time * time;
                 position[0] += deltaPosX;
                 speed[0] += acceleration * time;
                 break;
-            case 'l':
+            case 3:
                 deltaPosX = speed[0] * time + 1.0 / 2 * acceleration * time * time;
                 position[0] -= deltaPosX;
                 speed[0] += acceleration * time;
                 break;
-            case 'd':
+            case 0:
                 double deltaPosY = speed[1] * time + 1.0 / 2 * acceleration * time * time;
                 position[1] += deltaPosY;
                 speed[1] += acceleration * time;
                 break;
-            case 'u':
+            case 1:
                 deltaPosY = speed[1] * time + 1.0 / 2 * acceleration * time * time;
                 position[1] -= deltaPosY;
                 speed[1] += acceleration * time;
@@ -121,6 +124,18 @@ public class AutomatedCar extends Vehicle {
             accelerate(time_increments, decceleration_rate);
             speed_dir = this.getDirectionalSpeed();
         }
+    }
+
+    /**
+     * This class will serve as an estimation method.It will estimate the
+     * distance of the car can travel in the next something seconds. And will
+     * report the time.
+     *
+     * @return
+     */
+    public double estimateDistance(int direction, int time) {
+        
+        return 0;
     }
 
     public void accelerateToSpeedLimit() throws InterruptedException {

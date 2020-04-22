@@ -21,8 +21,6 @@ public class Lane2 {
 
     boolean automated; // Do I need this?
 
-    boolean occupied;
-
     int x_value;
 
     int y_value;
@@ -33,12 +31,13 @@ public class Lane2 {
 
     int direction;
 
+    // Testing point is a poitn which you can test whether a car is out of bound or not.
+    // In our simulation, the only way a car can be out of bound is when it has run through this lane.
     int testingpoint;
 
     public Lane2(boolean automated, int x_value, int y_value, int length, int width, int direction) {
         carList = new ArrayList<>();
         this.automated = automated;
-        occupied = false;
         // Both x and y are defining the center position of the lane.
         this.x_value = x_value;
         this.y_value = y_value;
@@ -59,12 +58,31 @@ public class Lane2 {
                 testingpoint = x_value - length / 2;
                 break;
         }
+        // I need to fix the car class based on this. That the length will always be the length and the width will always be the width. It's the direction that dominate.
     }
 
-    public boolean checkLaneStatus() {
-        return occupied;
+    // This will report the lane status.
+    public double checkLaneStatus() {
+        double excessDistance = length;
+        for (int i = 0; i < carList.size(); i++) {
+            excessDistance -= carList.get(i).getSize()[0];
+            if (i >= 1) {
+                excessDistance -= carList.get(i).getSafetyDistance();
+            }
+        }
+        return excessDistance;
     }
 
+    // This will check whether the car can make it to the other end or not.
+    // Using this method, you are assuming an excessDistance variable is passed along from the simulation class to this specific lane.
+    // Kevin, for now, please assume that this class is completed. It will tell you how many spots there are left in the lane ahead of this one.
+    public int checkSpotLeft(double excessDistance) {
+        int spotLeft = 0;
+        for (int i = 0; i < carList.size(); i++) {
+        }
+        return spotLeft;
+    }
+    
     public void addCar(Vehicle car) {
         carList.add(car);
     }
@@ -87,6 +105,21 @@ public class Lane2 {
         // It's time to introduce a car pool class...
     }
 
+    /**
+     * Slow is the method for yellow light
+     * Kevin. Please have some thoughts on that. We can discuss together but I need you to at least start it.
+     * Essentially, you will be using some of the methods that I've already set up in this class. Please choose them wisely.
+     * @param spot_left 
+     */
+    public void slow(int spot_left) {
+        for (int i = 0; i < spot_left; i++) {
+            
+        }
+        for (int i = 0; i < carList.size(); i++) {
+            carList.get(i).accelerateUnit(false, true);
+            
+        }
+    }
     public void updateCarList() {
         for (int i = 0; i < carList.size(); i++) {
             switch (direction) {

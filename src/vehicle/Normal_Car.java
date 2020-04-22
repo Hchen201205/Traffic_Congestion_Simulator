@@ -14,7 +14,7 @@ import java.util.concurrent.TimeUnit;
 public class Normal_Car extends Vehicle{
     private long reaction_time;
     
-    public Normal_Car(double[] position, double[] size, char direction) {
+    public Normal_Car(double[] position, double[] size, int direction) {
         speed[0] = 0;
         speed[1] = 0;
         acceleration_rate = 6;
@@ -118,6 +118,11 @@ public class Normal_Car extends Vehicle{
 
     @Override
     public double getDistanceFromFrontVehicle(Vehicle front_car) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void accelerateUnit(boolean accelerating, boolean decelerating) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     

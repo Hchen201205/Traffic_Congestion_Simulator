@@ -58,9 +58,12 @@ public class Light2 {
     
     public void runCycleUnit() throws InterruptedException {
         time_passed += time_increments;
+        /* I'm deciding to not have these two lines. The reason for that is the light we are considering is not a whole. It's just a single light. 
+        I will probably have this sleep in simulation class.
         long sleep_time = (long) (time_increments * 1000);
         TimeUnit.MICROSECONDS.sleep(sleep_time);
-        changeColor();
+        */
+        updateColor();
     }
 
     public void endCycle() {
@@ -77,7 +80,7 @@ public class Light2 {
         return start;
     }
 
-    public void changeColor() {
+    public void updateColor() {
         if (time_passed == change_times[0]) {
             color = Color.GREEN;
         } else if (time_passed == change_times[0] + change_times[1]) {
