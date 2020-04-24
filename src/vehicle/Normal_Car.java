@@ -14,7 +14,7 @@ import java.util.concurrent.TimeUnit;
 public class Normal_Car extends Vehicle{
     private long reaction_time;
     
-    public Normal_Car(double[] position, double[] size, char direction) {
+    public Normal_Car(double[] position, double[] size, int direction) {
         speed[0] = 0;
         speed[1] = 0;
         acceleration_rate = 6;
@@ -27,7 +27,7 @@ public class Normal_Car extends Vehicle{
     }
 
     public void accelerate(long time) throws InterruptedException {
-        accelerating = true;
+        is_accelerating = true;
         double rand_acceleration_rate = randGenerator(acceleration_rate*0.9, acceleration_rate);
         switch (direction){
             case 'r':
@@ -53,7 +53,7 @@ public class Normal_Car extends Vehicle{
         }
         updateSafetyDistance();
         TimeUnit.MILLISECONDS.sleep(time);
-        accelerating = false;
+        is_accelerating = false;
     }
     
     public void accelerateFromRest(long time) throws InterruptedException{
@@ -72,13 +72,58 @@ public class Normal_Car extends Vehicle{
         } else {
             speed_dir = speed[1];
         }
-        while (speed_dir < speedLimit){
+        while (speed_dir < speed_limit){
             accelerate(time_increments);
         }
     }
     
     public double randGenerator(double min, double max){
         return min + (max-min)*Math.random();
+    }
+
+    @Override
+    public void accelerate(double time, double acceleration) throws InterruptedException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void accelerateToSpeed(double speed) throws InterruptedException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void accelerateToSpeedLimit() throws InterruptedException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void deccelerateToSpeed(double speed) throws InterruptedException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void deccelerateToStop() throws InterruptedException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void travelDistanceToStop(double distance) throws InterruptedException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void turn(char dirrection) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public double getDistanceFromFrontVehicle(Vehicle front_car) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void accelerateUnit(boolean accelerating, boolean decelerating) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
 }

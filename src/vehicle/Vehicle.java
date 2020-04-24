@@ -17,7 +17,8 @@ public abstract class Vehicle {
     protected double[] size;                 //{length, width} in m
     protected double acceleration_rate;      //in m/s^2
     protected double decceleration_rate;     //in m/s^2
-    protected char direction;                //r for right, l for left, d for down, u for up
+    protected int direction;                //0 = 'n', 1 = 's', 2 = 'e' or 3 = 'w'
+                                             // you may want to use the nsew system.
     protected double safety_distance;        //distance needed for car to safely deccelerate to 0
     protected double time_moving;            //total time vehicle has been moving 
     protected boolean is_accelerating;       //true if accelerate method is running
@@ -28,6 +29,8 @@ public abstract class Vehicle {
     
     //simple acceleration function, updates position, speed, saftey_distance, time_moving, and sleeps for time_increments
     public abstract void accelerate(double time, double acceleration) throws InterruptedException;
+    
+    public abstract void accelerateUnit(boolean accelerating, boolean decelerating);
     
     public abstract void updateSafetyDistance();
     
@@ -56,8 +59,18 @@ public abstract class Vehicle {
         return is_accelerating;
     }
     
+    // I update the direction part so that it can be consistent.
     public char getDirection(){
-        return direction;
+        switch(direction) {
+            case 0:
+                return 'n';
+            case 1:
+                return 's';
+            case 2:
+                return 'e';
+            default: 
+                return 'w';
+        }
     }
     
     public boolean isTravelingHorizontal(){

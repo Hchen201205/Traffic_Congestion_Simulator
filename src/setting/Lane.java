@@ -20,8 +20,6 @@ public class Lane implements TCSConstant {
     boolean automated;
 
     boolean occupied;
-    
-    boolean one; // it's for testing
 
     public Lane(boolean automated) {
         carList = new ArrayList<>();

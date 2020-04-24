@@ -53,8 +53,8 @@ public class Light_Set implements TCSConstant {
                 }
             }
             time += time + lightset[0][0].getTimeIncrement();// time increment
-            // There should be some statement that control the end of this cycle. 
-            //MJ This is where you come in. One of the actionListener will have to take care of this later.
+            // There should be some statement that controls the end of this cycle. 
+            //MJ This is where you come in. actionListener will have to take care of this later.
         }
     }
 }
