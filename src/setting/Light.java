@@ -42,7 +42,6 @@ public class Light {
             time_passed = TCSConstant.LIGHTCYCLER + TCSConstant.LIGHTCYCLEG;
         }
         change_times = new int[3];
-        //time_remaining = 0;
     }
 
     //runs light in real time based on change times
@@ -56,8 +55,11 @@ public class Light {
     
     public void runCycleUnit() throws InterruptedException {
         time_passed += time_increment;
-        long sleep_time = (long) (time_increment * 1000);
+        /* I'm deciding to not have these two lines. The reason for that is the light we are considering is not a whole. It's just a single light. 
+        I will probably have this sleep in simulation class.
+        long sleep_time = (long) (time_increments * 1000);
         TimeUnit.MICROSECONDS.sleep(sleep_time);
+        */
         changeColor();
     }
 
@@ -65,15 +67,6 @@ public class Light {
         start = false;
     }
 
-    /**
-     * This is the method that will return the start value. May be deleted
-     * later.
-     *
-     * @return
-     */
-    public boolean getStart() {
-        return start;
-    }
 
     public void changeColor() {
         if (time_passed == change_times[0]) {
@@ -87,6 +80,11 @@ public class Light {
     }
     
     //Getters and Setters
+    
+    public boolean getStart() {
+        return start;
+    }
+    
     //setting cycle times
     public void setChangeTimes(int rtg, int gty, int ytr) {
         change_times[0] = rtg;
