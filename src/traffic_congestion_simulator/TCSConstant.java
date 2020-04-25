@@ -23,10 +23,11 @@ public interface TCSConstant {
     
     public final int DRAWINGHEIGHT = 400;
     
+    /*
     public final int LANELENGTH = 150;
     
     public final int LANEKWIDTH = 150;
-    
+    */
     // Need to modify
     public final int STARTINGPOSX = 0;
     
@@ -55,4 +56,20 @@ public interface TCSConstant {
     // This value will be changed.
     public final int LIGHTCYCLEY = 0;
     
+    // We will fix this later.
+    public final double[][] LIGHTPOSITION = {};
+    
+    public final int[][] LANEXVALUE = {};
+    
+    public final int[][] LANEYVALUE = {};
+    
+    public final int[][] LANELENGTH = {};
+    
+    public final int[][] LANEWIDTH = {};
+    
+    public final int[][] LANEDIRECTION = {};
+    
+    public final int[] NUMOFLANE = {};
+    
+    public final int NUMOFINTERSECTION = 0;
 }

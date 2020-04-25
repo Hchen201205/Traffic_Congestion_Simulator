@@ -5,6 +5,7 @@
  */
 package setting;
 
+import java.awt.Color;
 import java.util.ArrayList;
 import vehicle.*;
 import traffic_congestion_simulator.TCSConstant;
@@ -31,11 +32,13 @@ public class Lane2 {
 
     int direction;
 
+    Light light;
+
     // Testing point is a poitn which you can test whether a car is out of bound or not.
     // In our simulation, the only way a car can be out of bound is when it has run through this lane.
     int testingpoint;
 
-    public Lane2(boolean automated, int x_value, int y_value, int length, int width, int direction) {
+    public Lane2(boolean automated, int x_value, int y_value, int length, int width, int direction, Light light) {
         carList = new ArrayList<>();
         this.automated = automated;
         // Both x and y are defining the center position of the lane.
@@ -59,6 +62,20 @@ public class Lane2 {
                 break;
         }
         // I need to fix the car class based on this. That the length will always be the length and the width will always be the width. It's the direction that dominate.
+        this.light = light;
+    }
+
+    /**
+     * This function will run this lane for one unit time.
+     */
+    public void runUnit() {
+        if (light == null || light.getColor().equals(Color.GREEN)) {
+            green();
+        } else if (light.getColor().equals(Color.RED)) {
+            // Use Red Procedure.
+        } else {
+            // Use Yellow PRocedure.
+        }
     }
 
     // This will report the lane status.
@@ -85,9 +102,9 @@ public class Lane2 {
             excessDistance -= car.getBuffer() + car.getSize()[0]; // Buffer + length;
             if (excessDistance < 0) {
                 break;
-                
+
                 // Here I need to check whether the car can make it...
-            } 
+            }
         }
         return spotLeft;
     }
@@ -105,7 +122,7 @@ public class Lane2 {
     }
 
     // This will run for one millisecond and update carList
-    public void Green() {
+    public void green() {
         for (int i = 0; i < carList.size(); i++) {
             carList.get(i).accelerateUnit(true, false);
         }
@@ -122,11 +139,11 @@ public class Lane2 {
      *
      * @param spot_left
      */
-    public void Yellow(double excessDistance, Lane2 lane2) {
+    public void yellow(double excessDistance, Lane2 lane2) {
         if (automated) {
             int spotLeft = checkSpotLeft(lane2, excessDistance);
             for (int i = 0; i < spotLeft; i++) {
-                
+
             }
             for (int i = 0; i < carList.size(); i++) {
                 carList.get(i).accelerateUnit(false, true);

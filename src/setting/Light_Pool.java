@@ -13,22 +13,28 @@ import traffic_congestion_simulator.TCSConstant;
  *
  * @author chenhanxi
  */
-public class Light_Pool implements Runnable{
-    
+public class Light_Pool implements Runnable {
+
     Light_Set[] lightpool;
-    
+
     final Buffer shared;
-    
-    public Light_Pool(int numOfIntersection, Buffer shared) {
-        
-        lightpool = new Light_Set[numOfIntersection];
-        
-        for (int i = 0; i < lightpool.length; i++) {
+
+    public Light_Pool(Buffer shared) {
+
+        lightpool = new Light_Set[TCSConstant.NUMOFINTERSECTION + 1];
+
+        for (int i = 0; i < lightpool.length - 1; i++) {
             // I'm using TCSConstant for now. We will change to have a specific file for it.
-            lightpool[i] = new Light_Set(TCSConstant.lightposition[i][0], TCSConstant.lightposition[i][1]);
+            lightpool[i] = new Light_Set(TCSConstant.LIGHTPOSITION[i][0], TCSConstant.LIGHTPOSITION[i][1]);
         }
-        
+        // Export lane.
+        lightpool[lightpool.length - 1] = null;
+
         this.shared = shared;
+    }
+
+    public Light_Set getLight_Set(int index) {
+        return lightpool[index];
     }
     
     private void runCycleUnit() {
@@ -40,8 +46,8 @@ public class Light_Pool implements Runnable{
     // This is the thread
     @Override
     public void run() {
-        
-        while(true) {
+
+        while (true) {
             synchronized (shared) {
                 if (shared.getState() != 1) {
                     try {
@@ -50,19 +56,13 @@ public class Light_Pool implements Runnable{
                         e.printStackTrace();
                     }
                 }
-                try {
-                    System.out.println("Light increment by 1 unit second");
-                    runCycleUnit();
-                    Thread.sleep(1000); //  I need a unit second
-                } catch (InterruptedException e){
-                    e.printStackTrace();
-                }
+                System.out.println("Light increment by 1 unit second");
+                runCycleUnit();
                 // Change to Lane
                 shared.setState(2);
                 shared.notifyAll();
             }
         }
-        
-        
+
     }
 }

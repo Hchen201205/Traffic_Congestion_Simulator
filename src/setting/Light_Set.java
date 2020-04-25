@@ -17,7 +17,7 @@ public class Light_Set implements TCSConstant {
 
     double xvalue;
     double yvalue;
-    Light[] lightset;
+    Light[] light_set;
 
     static double time = 0;
 
@@ -34,13 +34,13 @@ public class Light_Set implements TCSConstant {
         xvalue = x;
         yvalue = y;
         
-        lightset = new Light[4];
+        light_set = new Light[4];
         
-        for (int i = 0; i < lightset.length; i++) {
+        for (int i = 0; i < light_set.length; i++) {
             if (i % 2 == 0) {
-                lightset[i] = new Light(i, Color.GREEN);
+                light_set[i] = new Light(i, Color.GREEN);
             } else {
-                lightset[i] = new Light(i, Color.RED);
+                light_set[i] = new Light(i, Color.RED);
             }
         }
         
@@ -62,12 +62,13 @@ public class Light_Set implements TCSConstant {
 
 */   }
         
-
+    public Light[] getLight_Set() {
+        return light_set;
+    }
    
     public void runCycleUnit() {
-        for (int i = 0; i < lightset.length; i++) {
-            lightset[i].runCycleUnit();
-            
+        for (Light light_set1 : light_set) {
+            light_set1.runCycleUnit();
         }
     }
     /*

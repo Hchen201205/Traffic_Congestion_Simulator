@@ -121,4 +121,9 @@ public abstract class Vehicle implements  TCSConstant {
     public double getTimeMoving(){
         return time_moving;
     }
+    
+    // If you want to delete this. Please let me know...
+    public double getBuffer() {
+        return buffer;
+    }
 }
