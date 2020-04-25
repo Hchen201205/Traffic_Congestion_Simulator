@@ -62,12 +62,13 @@ public class Lane2 {
     }
 
     // This will report the lane status.
+    // It's highly recommend that this method don't use with checkSpotLeft at the same time because the target these methods are serving for are not the same.
     public double checkLaneStatus() {
         double excessDistance = length;
         for (int i = 0; i < carList.size(); i++) {
             excessDistance -= carList.get(i).getSize()[0];
             if (i >= 1) {
-                excessDistance -= carList.get(i).getSafetyDistance();
+                excessDistance -= carList.get(i).getBuffer();
             }
         }
         return excessDistance;
@@ -75,14 +76,24 @@ public class Lane2 {
 
     // This will check whether the car can make it to the other end or not.
     // Using this method, you are assuming an excessDistance variable is passed along from the simulation class to this specific lane.
-    // Kevin, for now, please assume that this class is completed. It will tell you how many spots there are left in the lane ahead of this one.
-    public int checkSpotLeft(double excessDistance) {
+    // Kevin, This class is completed and you can use it. It will tell you how many spots there are left in the lane ahead of this one.
+    public int checkSpotLeft(Lane2 lane2, double time) {
+        double excessDistance = lane2.checkLaneStatus();
         int spotLeft = 0;
         for (int i = 0; i < carList.size(); i++) {
+            Vehicle car = carList.get(i);
+            excessDistance -= car.getBuffer() + car.getSize()[0]; // Buffer + length;
+            if (excessDistance < 0) {
+                break;
+                
+                // Here I need to check whether the car can make it...
+            } else if () {
+                
+            }
         }
         return spotLeft;
     }
-    
+
     public void addCar(Vehicle car) {
         carList.add(car);
     }
@@ -96,7 +107,7 @@ public class Lane2 {
     }
 
     // This will run for one millisecond and update carList
-    public void run() {
+    public void Green() {
         for (int i = 0; i < carList.size(); i++) {
             carList.get(i).accelerateUnit(true, false);
         }
@@ -106,20 +117,27 @@ public class Lane2 {
     }
 
     /**
-     * Slow is the method for yellow light
-     * Kevin. Please have some thoughts on that. We can discuss together but I need you to at least start it.
-     * Essentially, you will be using some of the methods that I've already set up in this class. Please choose them wisely.
-     * @param spot_left 
+     * Slow is the method for yellow light Kevin. Please have some thoughts on
+     * that. We can discuss together but I need you to at least start it.
+     * Essentially, you will be using some of the methods that I've already set
+     * up in this class. Please choose them wisely.
+     *
+     * @param spot_left
      */
-    public void slow(int spot_left) {
-        for (int i = 0; i < spot_left; i++) {
-            
+    public void Yellow(double excessDistance) {
+        if (automated) {
+            int spotLeft = checkSpotLeft(excessDistance);
+            for (int i = 0; i < spotLeft; i++) {
+                
+            }
+            for (int i = 0; i < carList.size(); i++) {
+                carList.get(i).accelerateUnit(false, true);
+
+            }
         }
-        for (int i = 0; i < carList.size(); i++) {
-            carList.get(i).accelerateUnit(false, true);
-            
-        }
+
     }
+
     public void updateCarList() {
         for (int i = 0; i < carList.size(); i++) {
             switch (direction) {

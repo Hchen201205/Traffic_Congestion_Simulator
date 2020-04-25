@@ -125,5 +125,10 @@ public class Normal_Car extends Vehicle{
     public void accelerateUnit(boolean accelerating, boolean decelerating) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
+
+    @Override
+    public double estimateDistance(int direction, double time) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
     
 }

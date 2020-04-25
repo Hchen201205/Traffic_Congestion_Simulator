@@ -172,4 +172,9 @@ public class AutomatedCar extends Vehicle {
         return Math.abs(this.position[1] - front_car.position[1]) - front_car.size[0] + buffer;
     }
 
+    @Override
+    public double estimateDistance(int direction, double time) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
 }

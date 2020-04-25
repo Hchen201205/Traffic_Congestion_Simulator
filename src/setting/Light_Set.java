@@ -14,12 +14,12 @@ import traffic_congestion_simulator.TCSConstant;
  */
 public class Light_Set implements TCSConstant {
 
-    int xvalue;
-    int yvalue;
-    Light2[][] lightset;
+    double xvalue;
+    double yvalue;
+    Light2[] lightset;
 
     static double time = 0;
-    
+
     /**
      * Because each light in an intersection is following a certain light cycle,
      * they should have a time schedule according to each other Please change it
@@ -29,32 +29,27 @@ public class Light_Set implements TCSConstant {
      * @param x
      * @param y
      */
-    public Light_Set(int x, int y, int numOfIntersection) {
+    public Light_Set(double x, double y) {
         xvalue = x;
         yvalue = y;
-        lightset = new Light2[numOfIntersection][4];
+        lightset = new Light2[4];
+
         for (int i = 0; i < lightset.length; i++) {
-            for (int k = 0; k < lightset[0].length; k++) {
-                if (i % 2 == 0) {
-                    lightset[k][i] = new Light2(i, Color.GREEN);
-                } else {
-                    lightset[k][i] = new Light2(i, Color.RED);
-                }
-                lightset[k][i].setChangeTimes(LIGHTCYCLER, LIGHTCYCLEG, LIGHTCYCLEY);
+            if (i % 2 == 0) {
+                lightset[i] = new Light2(i, Color.GREEN);
+            } else {
+                lightset[i] = new Light2(i, Color.RED);
             }
+            lightset[i].setChangeTimes(LIGHTCYCLER, LIGHTCYCLEG, LIGHTCYCLEY);
         }
+
     }
 
-    public void runCycle() throws InterruptedException {
-        while (true) {
-            time += time + 0.1;// time increment;
-            for (int i = 0; i < lightset.length; i++) {
-                for (int k = 0; k < lightset[0].length; k++) {
-                    lightset[i][k].runCycleUnit();
-                }
-            }
-            // There should be some statement that control the end of this cycle. 
-            //MJ This is where you come in. One of the actionListener will have to take care of this later.
+    public void runCycleUnit() throws InterruptedException {
+        for (int i = 0; i < lightset.length; i++) {
+            lightset[i].runCycleUnit();
         }
+        // There should be some statement that control the end of this cycle. 
+        //MJ This is where you come in. One of the actionListener will have to take care of this later.
     }
 }
