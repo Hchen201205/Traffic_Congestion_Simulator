@@ -13,6 +13,8 @@ package traffic_congestion_simulator;
  */
 public interface TCSConstant {
     
+    public final double TIMEINCREMENTS = 0.0001; //milliseconds
+    
     public final int FRAMEWIDTH = 1000;
     
     public final int FRAMEHEIGHT = 500;
@@ -53,7 +55,4 @@ public interface TCSConstant {
     // This value will be changed.
     public final int LIGHTCYCLEY = 0;
     
-    
-    // I'm making up these values. It will be changed.
-    public final double[][] lightposition = {{0, 1}, {1, 1}};
 }

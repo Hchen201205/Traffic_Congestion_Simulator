@@ -3,6 +3,7 @@
  */
 package vehicle;
 
+import java.text.DecimalFormat;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -110,6 +111,7 @@ public class AutomatedCar extends Vehicle {
         safety_distance = Math.pow(this.getDirectionalSpeed(), 2) / (2 * -decceleration_rate);
     }
 
+    
     public void accelerateToSpeed(double speed) throws InterruptedException {
         double speed_dir = this.getDirectionalSpeed();
         while (speed_dir < speed) {
@@ -171,10 +173,31 @@ public class AutomatedCar extends Vehicle {
         }
         return Math.abs(this.position[1] - front_car.position[1]) - front_car.size[0] + buffer;
     }
-
-    @Override
-    public double estimateDistance(int direction, double time) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    
+    public double getDistanceFromLimitLine (){
+        
+    }
+    
+    public double timeToStop (){
+        double speed = this.getDirectionalSpeed();
+        double time = - speed / this.decceleration_rate;
+        return time;
+    }
+    
+    public int incrementsToStop(){
+        double increments = this.timeToStop() / time_increments;
+        return (int) Math.floor(increments);
+    }
+    
+    public double timeToSpeedLimit(){
+        double speed = this.getDirectionalSpeed();
+        double time = - (speed_limit - speed) / this.decceleration_rate;
+        return time;
+    }
+    
+    public int incrementsToSpeedLimit(){
+        double increments = this.timeToSpeedLimit() / time_increments;
+        return (int) Math.floor(increments);
     }
 
 }
