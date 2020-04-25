@@ -87,9 +87,7 @@ public class Lane2 {
                 break;
                 
                 // Here I need to check whether the car can make it...
-            } else if () {
-                
-            }
+            } 
         }
         return spotLeft;
     }
@@ -124,9 +122,9 @@ public class Lane2 {
      *
      * @param spot_left
      */
-    public void Yellow(double excessDistance) {
+    public void Yellow(double excessDistance, Lane2 lane2) {
         if (automated) {
-            int spotLeft = checkSpotLeft(excessDistance);
+            int spotLeft = checkSpotLeft(lane2, excessDistance);
             for (int i = 0; i < spotLeft; i++) {
                 
             }

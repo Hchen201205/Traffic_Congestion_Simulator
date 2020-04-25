@@ -45,18 +45,6 @@ public class Light_Set implements TCSConstant {
         }
         
         /*
-
-        lightset = new Light2[4];
-
-        for (int i = 0; i < lightset.length; i++) {
-            if (i % 2 == 0) {
-                lightset[i] = new Light2(i, Color.GREEN);
-            } else {
-                lightset[i] = new Light2(i, Color.RED);
-
-        */
-        
-        /*
         lightset = new Light[numOfIntersection][4];
         for (int i = 0; i < lightset.length; i++) {
             for (int k = 0; k < lightset[0].length; k++) {
@@ -76,10 +64,10 @@ public class Light_Set implements TCSConstant {
         
 
    
-    public void runCycleUnit() throws InterruptedException {
+    public void runCycleUnit() {
         for (int i = 0; i < lightset.length; i++) {
             lightset[i].runCycleUnit();
-
+            
         }
     }
     /*

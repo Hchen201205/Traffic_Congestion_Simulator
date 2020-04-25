@@ -53,7 +53,7 @@ public class Light {
     }
 
     
-    public void runCycleUnit() throws InterruptedException {
+    public void runCycleUnit(){
         time_passed += time_increment;
         /* I'm deciding to not have these two lines. The reason for that is the light we are considering is not a whole. It's just a single light. 
         I will probably have this sleep in simulation class.
