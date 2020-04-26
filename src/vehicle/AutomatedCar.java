@@ -5,6 +5,7 @@ package vehicle;
 
 import java.text.DecimalFormat;
 import java.util.concurrent.TimeUnit;
+import setting.Lane;
 
 /**
  *
@@ -15,69 +16,23 @@ public class AutomatedCar extends Vehicle {
     public AutomatedCar(double[] position, double[] size, int direction) {
         speed[0] = 0;
         speed[1] = 0;
-        acceleration_rate = 6;
-        decceleration_rate = -9;
-        safety_distance = buffer;
+        safety_distance = 0;
+        speed_limit = 18;
+        time_moving = 0;
+        
+        //may change/dump these two methods later
+        this.setAccelerationRate();
+        this.setDeccelerationRate();
+        
         this.position = position;
         this.size = size;
         this.direction = direction;
-        this.time_moving = 0;
     }
 
-    /**
-     * This is a new method I add. I add it because we are now measuring the
-     * movement for every millisecond unit. So why not have a method that only
-     * accelerate for one unit and keep updating. Also, I didn't add the sleep
-     * method in here because the light class will take the sleep. So you can
-     * think of: light will run for a unit second first and then the car will
-     * accelerate for one unit second. Or maybe this is not right... Maybe I
-     * should add sleep in the simulation class.
-     *
-     * @param accelerating
-     * @param deccelerating
-     */
-    public void accelerateUnit(boolean accelerating, boolean deccelerating) {
-        int time = 1;
-        if (accelerating || deccelerating) {
-            double acceleration = 0;
-            is_accelerating = true;
-            if (accelerating) {
-                acceleration = acceleration_rate;
-            } else if (deccelerating) {
-                acceleration = decceleration_rate;
-            }
-            switch (direction) {
-                case 2:
-                    double deltaPosX = speed[0] * time + 1.0 / 2 * acceleration * time * time;
-                    position[0] += deltaPosX;
-                    speed[0] += acceleration * time;
-                    break;
-                case 3:
-                    deltaPosX = speed[0] * time + 1.0 / 2 * acceleration * time * time;
-                    position[0] -= deltaPosX;
-                    speed[0] += acceleration * time;
-                    break;
-                case 0:
-                    double deltaPosY = speed[1] * time + 1.0 / 2 * acceleration * time * time;
-                    position[1] += deltaPosY;
-                    speed[1] += acceleration * time;
-                    break;
-                case 1:
-                    deltaPosY = speed[1] * time + 1.0 / 2 * acceleration * time * time;
-                    position[1] -= deltaPosY;
-                    speed[1] += acceleration * time;
-                    break;
-            }
-            updateSafetyDistance();
-            time_moving += time;
-            is_accelerating = false;
-        }
-
-    }
-
-    //changes saftey distance, sleeps
+    //changes saftey distance
     public void accelerate(double time, double acceleration) throws InterruptedException {
-        long sleep_time = (long) (time * 1000);
+        //sleep handled in seperate class
+        //long sleep_time = (long) (time * 1000);
         is_accelerating = true;
         switch (direction) {
             case 2:
@@ -102,7 +57,8 @@ public class AutomatedCar extends Vehicle {
                 break;
         }
         updateSafetyDistance();
-        TimeUnit.MICROSECONDS.sleep(sleep_time);
+        //Sleep handled in seperate class
+        //TimeUnit.MICROSECONDS.sleep(sleep_time);
         time_moving += time;
         is_accelerating = false;
     }
@@ -129,11 +85,10 @@ public class AutomatedCar extends Vehicle {
     }
 
     /**
-     * This class will serve as an estimation method.It will estimate the
+     * This class will serve as an estimation method. It will estimate the
      * distance of the car can travel in the next something seconds. And will
      * report the time.
      *
-     * @return
      */
     public double estimateDistance(int direction, int time) {
         
@@ -162,6 +117,19 @@ public class AutomatedCar extends Vehicle {
         this.deccelerateToStop();
     }
 
+    public void setAccelerationRate(){
+        //not sure if these methods will make thing too complicated or not
+        //no implementation yet
+        
+        acceleration_rate = 3;
+    };
+    
+    public void setDeccelerationRate(){
+        //no implementation yet
+        
+        decceleration_rate = -4;
+    };
+    
     public void turn(char dirrection) {
         //no implementaion yet
     }
@@ -174,8 +142,9 @@ public class AutomatedCar extends Vehicle {
         return Math.abs(this.position[1] - front_car.position[1]) - front_car.size[0] + buffer;
     }
     
-    public double getDistanceFromLimitLine (){
-        
+    public double getDistanceFromLimitLine (Lane lane){
+        //not implemented yet, coming soon
+        return distance;
     }
     
     public double timeToStop (){

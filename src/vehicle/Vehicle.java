@@ -6,6 +6,7 @@
 package vehicle;
 
 import java.util.concurrent.TimeUnit;
+import setting.Lane;
 import traffic_congestion_simulator.TCSConstant;
 
 /**
@@ -18,21 +19,21 @@ public abstract class Vehicle implements  TCSConstant {
     protected double[] size;                 //{length, width} in m
     protected double acceleration_rate;      //in m/s^2
     protected double decceleration_rate;     //in m/s^2
-    protected int direction;                 //0 = 'n', 1 = 's', 2 = 'e' or 3 = 'w'
-                                            
+    protected int direction;                 //0 = 'n', 1 = 's', 2 = 'e' or 3 = 'w'          
+    protected double speed_limit;            //in m/s, set for AutomatedCar, randomized for NormalCar
     protected double safety_distance;        //distance needed for car to safely deccelerate to 0
-    protected double time_moving;            //total time vehicle has been moving 
-    protected boolean is_accelerating;       //true if accelerate method is running
+    protected double time_moving;            //total time vehicle has been moving, helpful for testing/checking
     
-    protected final double buffer = 3;       //to be added onto safety distance (gap between cars when stopped, in m)
-    protected final double speed_limit = 18; //in m/s
+    protected boolean is_accelerating;       //true if accelerate method is running
+    protected boolean is_turning;            //true if car is turning in intersection
+    protected boolean at_limit_line;         //no implementation yet
+    protected final double buffer = BUFFER;  //gap between cars when stopped, in m
     protected final double time_increments = TIMEINCREMENTS; //milliseconds 
     
-    //simple acceleration function, updates position, speed, saftey_distance, time_moving, and sleeps for time_increments
+    //simple acceleration function, updates position, speed, saftey_distance, time_moving
     public abstract void accelerate(double time, double acceleration) throws InterruptedException;
     
-    public abstract void accelerateUnit(boolean accelerating, boolean decelerating);
-    
+    //calculates and assigns new saftey distance based on current speed
     public abstract void updateSafetyDistance();
     
     public abstract void accelerateToSpeed(double speed) throws InterruptedException;
@@ -47,29 +48,56 @@ public abstract class Vehicle implements  TCSConstant {
     //until it needs to begin deccelerating based on saftey distance 
     public abstract void travelDistanceToStop(double distance) throws InterruptedException;
     
+    //calculates accleration rate based on vehicle size
+    public abstract void setAccelerationRate();
+    
+    //calculates deccleration rate based on vehicle size
+    public abstract void setDeccelerationRate();
+    
     //no implementation yet
     public abstract void turn(char dirrection);
     
     //distance between front bumper of vehicle to back bumper of front car plus the buffer
-    public abstract double getDistanceFromFrontVehicle(Vehicle front_car);
+    public abstract double findDistanceFromFrontVehicle(Vehicle front_car);
     
-    public abstract double getDistanceFromLimitLine ();
+    //no implementation yet
+    //returns distance needed to reach the limit line of the lane (begining of intersection)
+    public abstract double findDistanceFromLimitLine (Lane lane);
     
-    public abstract double timeToStop ();
+    //returns exact time needed to deccelerate to stop
+    public abstract double timeToStop();
     
+    //total number of increments needed to deccelerate to stop
     public abstract int incrementsToStop();
     
+    //returns exact time needed to accelerate to speed_limit
     public abstract double timeToSpeedLimit();
     
+    //total number of increments needed to accelerate to speed_limit
     public abstract int incrementsToSpeedLimit();
     
-    //Getters and Setters:
+    //returns true vehicle is facing east or west
+    public boolean isTravelingHorizontal(){
+        if (direction == '2' || direction == '3'){
+            return true;
+        } 
+        return false;
+    }
+    
+
+    
+    //Basic getters and setters:
     
     public boolean isAccelerating() {
         return is_accelerating;
     }
     
-    // I update the direction part so that it can be consistent.
+    public boolean isTurning(){
+        //no implementation yet
+        return is_turning;
+    }
+    
+    //returns char value for direction ('n' = north, 's' =  south, etc.)
     public char getDirection(){
         switch(direction) {
             case 0:
@@ -81,13 +109,6 @@ public abstract class Vehicle implements  TCSConstant {
             default: 
                 return 'w';
         }
-    }
-    
-    public boolean isTravelingHorizontal(){
-        if (direction == 'l' || direction == 'r'){
-            return true;
-        } 
-        return false;
     }
     
     public double[] getPosition() {
