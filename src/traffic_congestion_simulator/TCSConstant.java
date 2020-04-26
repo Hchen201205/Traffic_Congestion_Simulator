@@ -13,6 +13,8 @@ package traffic_congestion_simulator;
  */
 public interface TCSConstant {
     
+    public final double BUFFER = 3;
+    
     public final double TIMEINCREMENTS = 0.0001; //milliseconds
     
     public final int FRAMEWIDTH = 1000;
