@@ -130,7 +130,7 @@ public class AutomatedCar extends Vehicle {
         decceleration_rate = -4;
     };
     
-    public void turn(char dirrection) {
+    public void turn(int direction) {
         //no implementaion yet
     }
 
@@ -143,7 +143,8 @@ public class AutomatedCar extends Vehicle {
     }
     
     public double getDistanceFromLimitLine (Lane lane){
-        //not implemented yet, coming soon
+        //not implemented yet, coming soon to a java class near you
+        
         return distance;
     }
     

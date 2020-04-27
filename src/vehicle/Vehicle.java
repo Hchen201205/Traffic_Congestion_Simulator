@@ -55,14 +55,14 @@ public abstract class Vehicle implements  TCSConstant {
     public abstract void setDeccelerationRate();
     
     //no implementation yet
-    public abstract void turn(char dirrection);
+    public abstract void turn(int direction);
     
     //distance between front bumper of vehicle to back bumper of front car plus the buffer
-    public abstract double findDistanceFromFrontVehicle(Vehicle front_car);
+    public abstract double getDistanceFromFrontVehicle(Vehicle front_car);
     
     //no implementation yet
     //returns distance needed to reach the limit line of the lane (begining of intersection)
-    public abstract double findDistanceFromLimitLine (Lane lane);
+    public abstract double getDistanceFromLimitLine (Lane lane);
     
     //returns exact time needed to deccelerate to stop
     public abstract double timeToStop();
@@ -86,7 +86,7 @@ public abstract class Vehicle implements  TCSConstant {
     
 
     
-    //Basic getters and setters:
+    //Basic getters
     
     public boolean isAccelerating() {
         return is_accelerating;
@@ -143,7 +143,6 @@ public abstract class Vehicle implements  TCSConstant {
         return time_moving;
     }
     
-    // If you want to delete this. Please let me know...
     public double getBuffer() {
         return buffer;
     }
