@@ -18,15 +18,14 @@ public abstract class Vehicle implements  TCSConstant {
     protected double[] position;             //Position as the upper corner of vehicle, in m
     protected double[] size;                 //{length, width} in m
     protected double acceleration_rate;      //in m/s^2
-    protected double decceleration_rate;     //in m/s^2
+    protected double deceleration_rate;     //in m/s^2
     protected int direction;                 //0 = 'n', 1 = 's', 2 = 'e' or 3 = 'w'          
     protected double speed_limit;            //in m/s, set for AutomatedCar, randomized for NormalCar
-    protected double safety_distance;        //distance needed for car to safely deccelerate to 0
+    protected double safety_distance;        //distance needed for car to safely decelerate to 0
     protected double time_moving;            //total time vehicle has been moving, helpful for testing/checking
     
     protected boolean is_accelerating;       //true if accelerate method is running
     protected boolean is_turning;            //true if car is turning in intersection
-    protected boolean at_limit_line;         //no implementation yet
     protected final double buffer = BUFFER;  //gap between cars when stopped, in m
     protected final double time_increments = TIMEINCREMENTS; //milliseconds 
     
@@ -40,19 +39,19 @@ public abstract class Vehicle implements  TCSConstant {
     
     public abstract void accelerateToSpeedLimit() throws InterruptedException;
     
-    public abstract void deccelerateToSpeed(double speed) throws InterruptedException;
+    public abstract void decelerateToSpeed(double speed) throws InterruptedException;
     
-    public abstract void deccelerateToStop() throws InterruptedException;
+    public abstract void decelerateToStop() throws InterruptedException;
     
     //vehicle will travel a certain distance to a stop, accelerating to speed limit 
-    //until it needs to begin deccelerating based on saftey distance 
+    //until it needs to begin decelerating based on saftey distance 
     public abstract void travelDistanceToStop(double distance) throws InterruptedException;
     
     //calculates accleration rate based on vehicle size
     public abstract void setAccelerationRate();
     
-    //calculates deccleration rate based on vehicle size
-    public abstract void setDeccelerationRate();
+    //calculates decleration rate based on vehicle size
+    public abstract void setDecelerationRate();
     
     //no implementation yet
     public abstract void turn(int direction);
@@ -64,10 +63,10 @@ public abstract class Vehicle implements  TCSConstant {
     //returns distance needed to reach the limit line of the lane (begining of intersection)
     public abstract double getDistanceFromLimitLine (Lane lane);
     
-    //returns exact time needed to deccelerate to stop
+    //returns exact time needed to decelerate to stop
     public abstract double timeToStop();
     
-    //total number of increments needed to deccelerate to stop
+    //total number of increments needed to decelerate to stop
     public abstract int incrementsToStop();
     
     //returns exact time needed to accelerate to speed_limit
@@ -95,6 +94,21 @@ public abstract class Vehicle implements  TCSConstant {
     public boolean isTurning(){
         //no implementation yet
         return is_turning;
+    }
+    
+    public boolean isStopped(){
+        if (this.getDirectionalSpeed() == 0){
+            return true;
+        }
+        return false;
+    }
+    
+    public boolean isAtLimitLine(){
+        double limit_line_pos = ;
+        if (this.getDirectionalPos() == limit_line_pos){
+            return true;
+        }
+            return false;    
     }
     
     //returns char value for direction ('n' = north, 's' =  south, etc.)

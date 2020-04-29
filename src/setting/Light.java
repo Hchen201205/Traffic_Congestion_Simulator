@@ -13,15 +13,13 @@ import java.util.concurrent.TimeUnit;
  *
  * @author Christine
  */
-public class Light {
+public class Light implements TCSConstant{
 
     boolean start;
     int direction;                //0 = 'n', 1 = 's', 2 = 'e' or 3 = 'w'
     private int[] change_times;   //array of light cycle timing between color changes (milliseconds)
     private Color color;
     private double time_passed;   // time that has passed in this cycle;
-
-    private final double time_increment = 0.1; //time increment for each cycle unit (milliseconds)
 
     public Light(int direction) {
         this.direction = direction;
@@ -54,7 +52,7 @@ public class Light {
 
     
     public void runCycleUnit(){
-        time_passed += time_increment;
+        time_passed += TIMEINCREMENTS;
         /* I'm deciding to not have these two lines. The reason for that is the light we are considering is not a whole. It's just a single light. 
         I will probably have this sleep in simulation class.
         long sleep_time = (long) (time_increments * 1000);
@@ -127,9 +125,7 @@ public class Light {
         }
     }
     
-    public double getTimeIncrement(){
-        return time_increment;
-    }
+
     
     
 }

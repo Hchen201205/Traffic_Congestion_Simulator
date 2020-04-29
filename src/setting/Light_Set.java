@@ -71,6 +71,7 @@ public class Light_Set implements TCSConstant {
             light_set1.runCycleUnit();
         }
     }
+    
     /*
     public void runCycle() throws InterruptedException {
         while (true) {       

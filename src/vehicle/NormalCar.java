@@ -18,7 +18,7 @@ public class NormalCar extends Vehicle implements  TCSConstant{
     protected double reaction_time;       //constantly updating based on fixed random range and mean
     protected double reaction_time_mean;  //randomly generated once, then fixed
     protected double acceleration_mean;   //randomly generated once, then fixed
-    protected double decceleration_mean;  //randomly generated once, then fixed
+    protected double deceleration_mean;  //randomly generated once, then fixed
     protected Random rand;
     
     public NormalCar(double[] position, double[] size, int direction) {
@@ -30,7 +30,7 @@ public class NormalCar extends Vehicle implements  TCSConstant{
         
         this.genRandMeans();
         this.genRandAcceleration();
-        this.genRandDecceleration();
+        this.genRandDeceleration();
         this.genRandReactionTime();
         
         this.position = position;
@@ -41,10 +41,9 @@ public class NormalCar extends Vehicle implements  TCSConstant{
     //randomly generates a mean value for each changing variable
     public void genRandMeans(){
         reaction_time_mean = rand.nextGaussian()*0.3 + REACTIONTIMEAVG;
-        
-        //need to calculate decceleration and acceleration rates based onn size
-        //I will do some research to find averages to generate a function from
-        
+        acceleration_mean = rand.nextGaussian()*ACCELERATIONAVG/8 + ACCELERATIONAVG;
+        deceleration_mean = rand.nextGaussian()*DECELERATIONAVG/8 + DECELERATIONAVG;
+
     }
     
     //may mess with the variance for the next three methods
@@ -53,9 +52,9 @@ public class NormalCar extends Vehicle implements  TCSConstant{
         acceleration_rate = rand.nextGaussian()*acceleration_mean/5 + acceleration_mean;
     }
     
-    //will asign a new rand decceleration based on mean
-    public void genRandDecceleration(){
-        decceleration_rate = rand.nextGaussian()*decceleration_mean/5 + decceleration_mean;
+    //will asign a new rand deceleration based on mean
+    public void genRandDeceleration(){
+        deceleration_rate = rand.nextGaussian()*deceleration_mean/5 + deceleration_mean;
     }
     
     //will asign a new rand reaction time based on mean
@@ -68,7 +67,38 @@ public class NormalCar extends Vehicle implements  TCSConstant{
     
 
     public void accelerate(double time, double acceleration) throws InterruptedException {
+        //reaction time randomizes each time it is used to begin accelerating from stop
+        //actual delay from reaction time must be handled in an outside class
+        if (this.isStopped()){
+            this.genRandReactionTime();
+        }
         
+        is_accelerating = true;
+        switch (direction) {
+            case 2:
+                double deltaPosX = speed[0] * time + 1.0 / 2 * acceleration * time * time;
+                position[0] += deltaPosX;
+                speed[0] += acceleration * time;
+                break;
+            case 3:
+                deltaPosX = speed[0] * time + 1.0 / 2 * acceleration * time * time;
+                position[0] -= deltaPosX;
+                speed[0] += acceleration * time;
+                break;
+            case 0:
+                double deltaPosY = speed[1] * time + 1.0 / 2 * acceleration * time * time;
+                position[1] += deltaPosY;
+                speed[1] += acceleration * time;
+                break;
+            case 1:
+                deltaPosY = speed[1] * time + 1.0 / 2 * acceleration * time * time;
+                position[1] -= deltaPosY;
+                speed[1] += acceleration * time;
+                break;
+        }
+        updateSafetyDistance();
+        time_moving += time;
+        is_accelerating = false;
     }
 
     public void updateSafetyDistance() {
@@ -108,7 +138,7 @@ public class NormalCar extends Vehicle implements  TCSConstant{
     }
     
     public double getDeccelerationMean(){
-        return decceleration_mean;
+        return deceleration_mean;
     }
 
 

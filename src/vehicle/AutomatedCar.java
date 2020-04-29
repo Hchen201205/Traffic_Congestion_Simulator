@@ -4,15 +4,17 @@
 package vehicle;
 
 import java.text.DecimalFormat;
+import java.util.Random;
 import java.util.concurrent.TimeUnit;
 import setting.Lane;
-
+import traffic_congestion_simulator.TCSConstant;
 /**
  *
  * @author Christine
  */
-public class AutomatedCar extends Vehicle {
-
+public class AutomatedCar extends Vehicle implements TCSConstant{
+    protected Random rand;
+    
     public AutomatedCar(double[] position, double[] size, int direction) {
         speed[0] = 0;
         speed[1] = 0;
@@ -22,7 +24,7 @@ public class AutomatedCar extends Vehicle {
         
         //may change/dump these two methods later
         this.setAccelerationRate();
-        this.setDeccelerationRate();
+        this.setDecelerationRate();
         
         this.position = position;
         this.size = size;
@@ -64,7 +66,7 @@ public class AutomatedCar extends Vehicle {
     }
 
     public void updateSafetyDistance() {
-        safety_distance = Math.pow(this.getDirectionalSpeed(), 2) / (2 * -decceleration_rate);
+        safety_distance = Math.pow(this.getDirectionalSpeed(), 2) / (2 * -deceleration_rate);
     }
 
     
@@ -76,10 +78,10 @@ public class AutomatedCar extends Vehicle {
         }
     }
 
-    public void deccelerateToSpeed(double speed) throws InterruptedException {
+    public void decelerateToSpeed(double speed) throws InterruptedException {
         double speed_dir = this.getDirectionalSpeed();
         while (speed_dir > speed) {
-            accelerate(time_increments, decceleration_rate);
+            accelerate(time_increments, deceleration_rate);
             speed_dir = this.getDirectionalSpeed();
         }
     }
@@ -99,8 +101,8 @@ public class AutomatedCar extends Vehicle {
         accelerateToSpeed(speed_limit);
     }
 
-    public void deccelerateToStop() throws InterruptedException {
-        deccelerateToSpeed(0);
+    public void decelerateToStop() throws InterruptedException {
+        decelerateToSpeed(0);
     }
 
     public void travelDistanceToStop(double distance) throws InterruptedException {
@@ -114,21 +116,23 @@ public class AutomatedCar extends Vehicle {
             distance -= Math.abs(initial_pos - this.getDirectionalPos());
             initial_pos = this.getDirectionalPos();
         }
-        this.deccelerateToStop();
+        this.decelerateToStop();
     }
 
+    //Randomly generating acceleration and deceleration functions:
+    //randomly generated from gaussian distribution of average values
+    //may change variance if necessary
     public void setAccelerationRate(){
-        //not sure if these methods will make thing too complicated or not
-        //no implementation yet
-        
-        acceleration_rate = 3;
+        acceleration_rate = rand.nextGaussian()*ACCELERATIONAVGMAX/10 + ACCELERATIONAVGMAX;
     };
     
-    public void setDeccelerationRate(){
-        //no implementation yet
-        
-        decceleration_rate = -4;
+    //deceleration relys on generated acceleration to avoid unrealistic/conflicting rates
+    public void setDecelerationRate(){
+        double scaled_dec_avg_max = DECELERATIONAVGMAX/ACCELERATIONAVGMAX * acceleration_rate;
+        deceleration_rate = rand.nextGaussian()*scaled_dec_avg_max/10 + scaled_dec_avg_max;
     };
+    
+    
     
     public void turn(int direction) {
         //no implementaion yet
@@ -150,7 +154,7 @@ public class AutomatedCar extends Vehicle {
     
     public double timeToStop (){
         double speed = this.getDirectionalSpeed();
-        double time = - speed / this.decceleration_rate;
+        double time = - speed / this.deceleration_rate;
         return time;
     }
     
@@ -161,7 +165,7 @@ public class AutomatedCar extends Vehicle {
     
     public double timeToSpeedLimit(){
         double speed = this.getDirectionalSpeed();
-        double time = - (speed_limit - speed) / this.decceleration_rate;
+        double time = - (speed_limit - speed) / this.deceleration_rate;
         return time;
     }
     
