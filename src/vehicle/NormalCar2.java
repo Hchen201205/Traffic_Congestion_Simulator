@@ -6,21 +6,21 @@
 package vehicle;
 
 import java.util.Random;
-import java.util.concurrent.TimeUnit;
 import setting.Lane;
 import traffic_congestion_simulator.TCSConstant;
 
 /**
  *
- * @author Christine
+ * @author chenhanxi
  */
-public class NormalCar extends Vehicle implements  TCSConstant{
+public class NormalCar2 extends Vehicle2 implements TCSConstant{
     protected double reaction_time;       //constantly updating based on fixed random range and mean
     protected double reaction_time_mean;  //randomly generated once, then fixed
     protected double acceleration_mean;   //randomly generated once, then fixed
     protected double deceleration_mean;  //randomly generated once, then fixed
+    protected Random rand;
     
-    public NormalCar(double[] position, double[] size, int direction) {
+    public NormalCar2(double[] position, double[] size, int direction) {
         rand = new Random();
         speed[0] = 0;
         speed[1] = 0;
@@ -116,11 +116,12 @@ public class NormalCar extends Vehicle implements  TCSConstant{
         return Math.abs(this.position[1] - front_car.position[1]) - front_car.size[0] + buffer;
     }
 
+    /*
     public double getDistanceFromLimitLine(Lane lane) {
         //no implementation yet
         return distance;
     }
-    
+    */
     
     //Getters
     
@@ -176,6 +177,11 @@ public class NormalCar extends Vehicle implements  TCSConstant{
     }
 
     @Override
+    public double getDistanceFromLimitLine(Lane lane) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
     public double timeToStop() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
@@ -194,6 +200,4 @@ public class NormalCar extends Vehicle implements  TCSConstant{
     public int incrementsToSpeedLimit() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-
-
 }

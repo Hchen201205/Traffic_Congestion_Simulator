@@ -6,16 +6,15 @@
 package vehicle;
 
 import java.util.Random;
-import java.util.concurrent.TimeUnit;
 import setting.Lane;
 import traffic_congestion_simulator.TCSConstant;
 
 /**
  *
- * @author Christine
+ * @author chenhanxi
  */
-public abstract class Vehicle implements  TCSConstant {
-    protected Random rand = new Random(100); // Instead of initialize random in each car class, it can be created here.
+public abstract class Vehicle2 implements TCSConstant{
+    protected Random rand = new Random(); // Instead of initialize random in each car class, it can be created here.
     
     protected double[] speed = new double[2];//{speed left/right, speed up/down} in m/s (always positive)               
     protected double[] position;             //Position as the upper corner of vehicle, in m
@@ -106,6 +105,7 @@ public abstract class Vehicle implements  TCSConstant {
         return false;
     }
     
+    /*
     public boolean isAtLimitLine(){
         double limit_line_pos = ;
         if (this.getDirectionalPos() == limit_line_pos){
@@ -113,6 +113,7 @@ public abstract class Vehicle implements  TCSConstant {
         }
             return false;    
     }
+    */
     
     //returns char value for direction ('n' = north, 's' =  south, etc.)
     public char getDirection(){

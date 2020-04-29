@@ -83,7 +83,7 @@ public interface TCSConstant {
     
     public final int[][] LANEDIRECTION = {};
     
-    public final int[] NUMOFLANE = {};
+    public final int[] NUMOFLANE = {}; // NUMOFLANE can also be an indicator of number of light at a specific intersection.
     
     public final int NUMOFINTERSECTION = 0;
 }

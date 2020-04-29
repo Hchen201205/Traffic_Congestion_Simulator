@@ -1,20 +1,21 @@
 /*
- * See abstract parent class for method/variable explanations
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
  */
 package vehicle;
 
-import java.text.DecimalFormat;
 import java.util.Random;
-import java.util.concurrent.TimeUnit;
 import setting.Lane;
 import traffic_congestion_simulator.TCSConstant;
+
 /**
  *
- * @author Christine
+ * @author chenhanxi
  */
-public class AutomatedCar extends Vehicle implements TCSConstant{
+public class AutomatedCar2 extends Vehicle2 implements TCSConstant{
     
-    public AutomatedCar(double[] position, double[] size, int direction) {
+    public AutomatedCar2(double[] position, double[] size, int direction) {
         speed[0] = 0;
         speed[1] = 0;
         safety_distance = 0;
@@ -22,7 +23,7 @@ public class AutomatedCar extends Vehicle implements TCSConstant{
         time_moving = 0;
         
         //may change/dump these two methods later
-        setAccelerationRate();
+        this.setAccelerationRate();
         this.setDecelerationRate();
         
         this.position = position;
@@ -64,6 +65,7 @@ public class AutomatedCar extends Vehicle implements TCSConstant{
         is_accelerating = false;
     }
 
+    @Override
     public void updateSafetyDistance() {
         safety_distance = Math.pow(this.getDirectionalSpeed(), 2) / (2 * -deceleration_rate);
     }
@@ -121,15 +123,18 @@ public class AutomatedCar extends Vehicle implements TCSConstant{
     //Randomly generating acceleration and deceleration functions:
     //randomly generated from gaussian distribution of average values
     //may change variance if necessary
+    @Override
     public void setAccelerationRate(){
-        acceleration_rate = rand.nextGaussian()*ACCELERATIONAVGMAX/10 + ACCELERATIONAVGMAX;
-    };
+        
+        acceleration_rate = rand.nextGaussian() * ACCELERATIONAVGMAX / 10 + ACCELERATIONAVGMAX;
+        
+    }
     
     //deceleration relys on generated acceleration to avoid unrealistic/conflicting rates
     public void setDecelerationRate(){
         double scaled_dec_avg_max = DECELERATIONAVGMAX/ACCELERATIONAVGMAX * acceleration_rate;
         deceleration_rate = rand.nextGaussian()*scaled_dec_avg_max/10 + scaled_dec_avg_max;
-    };
+    }
     
     
     
@@ -144,12 +149,13 @@ public class AutomatedCar extends Vehicle implements TCSConstant{
         }
         return Math.abs(this.position[1] - front_car.position[1]) - front_car.size[0] + buffer;
     }
-    
+    /*
     public double getDistanceFromLimitLine (Lane lane){
         //not implemented yet, coming soon to a java class near you
         
         return distance;
     }
+*/
     
     public double timeToStop (){
         double speed = this.getDirectionalSpeed();
@@ -173,4 +179,16 @@ public class AutomatedCar extends Vehicle implements TCSConstant{
         return (int) Math.floor(increments);
     }
 
+    @Override
+    public double getDistanceFromLimitLine(Lane lane) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+    
+    public static void main(String[] arg) {
+        double[] pos1 = {0, 0}, pos2 = {50, 0};
+        double[] size1 = {5, 5}, size2 = {5, 5};
+        int dir1 = 0, dir2 = 0;
+        AutomatedCar2 testing1 = new AutomatedCar2(pos1, size1, dir1);
+        AutomatedCar2 testing2 = new AutomatedCar2(pos2, size2, dir2);
+    }
 }
