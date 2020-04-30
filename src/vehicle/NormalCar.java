@@ -137,7 +137,7 @@ public class NormalCar extends Vehicle implements  TCSConstant{
         return acceleration_mean;
     }
     
-    public double getDeccelerationMean(){
+    public double getDecelerationMean(){
         return deceleration_mean;
     }
 
