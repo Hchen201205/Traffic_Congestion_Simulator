@@ -6,6 +6,7 @@
 package setting;
 
 import java.awt.Color;
+import java.util.Arrays;
 import traffic_congestion_simulator.TCSConstant;
 
 /**
@@ -14,9 +15,8 @@ import traffic_congestion_simulator.TCSConstant;
  */
 public class Light_Set implements TCSConstant {
 
-
-    double xvalue;
-    double yvalue;
+    double[] position;
+    int numOfLight;
     Light[] light_set;
 
     static double time = 0;
@@ -27,15 +27,15 @@ public class Light_Set implements TCSConstant {
      * later on so that this class can cover all the lights (not only 1
      * intersection).
      *
-     * @param x
-     * @param y
+     * @param position
+     * @param numOfLight
      */
-    public Light_Set(double x, double y) {
-        xvalue = x;
-        yvalue = y;
-        
-        light_set = new Light[4];
-        
+    public Light_Set(double[] position, int numOfLight) {
+        this.position = position;
+        this.numOfLight = numOfLight;
+
+        light_set = new Light[numOfLight];
+
         for (int i = 0; i < light_set.length; i++) {
             if (i % 2 == 0) {
                 light_set[i] = new Light(i, Color.GREEN);
@@ -43,7 +43,7 @@ public class Light_Set implements TCSConstant {
                 light_set[i] = new Light(i, Color.RED);
             }
         }
-        
+
         /*
         lightset = new Light[numOfIntersection][4];
         for (int i = 0; i < lightset.length; i++) {
@@ -60,18 +60,22 @@ public class Light_Set implements TCSConstant {
         }
 
 
-*/   }
-        
+         */    }
+
     public Light[] getLight_Set() {
         return light_set;
     }
-   
+
     public void runCycleUnit() {
         for (Light light_set1 : light_set) {
             light_set1.runCycleUnit();
         }
     }
-    
+
+    public int getSize() {
+        return numOfLight;
+    }
+
     /*
     public void runCycle() throws InterruptedException {
         while (true) {       
@@ -88,5 +92,5 @@ public class Light_Set implements TCSConstant {
         // There should be some statement that control the end of this cycle. 
         //MJ This is where you come in. One of the actionListener will have to take care of this later.
     }
-*/
+     */
 }

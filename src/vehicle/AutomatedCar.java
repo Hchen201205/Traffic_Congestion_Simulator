@@ -13,7 +13,6 @@ import traffic_congestion_simulator.TCSConstant;
  * @author Christine
  */
 public class AutomatedCar extends Vehicle implements TCSConstant{
-    protected Random rand;
     
     public AutomatedCar(double[] position, double[] size, int direction) {
         speed[0] = 0;
@@ -23,7 +22,7 @@ public class AutomatedCar extends Vehicle implements TCSConstant{
         time_moving = 0;
         
         //may change/dump these two methods later
-        this.setAccelerationRate();
+        setAccelerationRate();
         this.setDecelerationRate();
         
         this.position = position;

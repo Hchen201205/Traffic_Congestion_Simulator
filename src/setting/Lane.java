@@ -5,130 +5,180 @@
  */
 package setting;
 
-import vehicle.*;
 import java.util.ArrayList;
+import vehicle.*;
 import traffic_congestion_simulator.TCSConstant;
 
 /**
+ * One thing to remember in this lane class is that it needs to be queue instead
+ * of stack
  *
- * @author KY
+ * @author chenhanxi
  */
-public class Lane implements TCSConstant {
+public class Lane {
 
     ArrayList<Vehicle> carList;// a list of all the cars on the road.
 
-    boolean automated;
+    boolean automated; // Do I need this?
 
-    boolean occupied;
+    int x_value;
 
-    public Lane(boolean automated) {
+    int y_value;
+
+    int length;
+
+    int width;
+
+    int direction;
+    
+    protected final double buffer = 3;
+    
+    int line;
+
+    // Testing point is a poitn which you can test whether a car is out of bound or not.
+    // In our simulation, the only way a car can be out of bound is when it has run through this lane.
+    int testingpoint;
+
+    public Lane(boolean automated, int x_value, int y_value, int length, int width, int direction) {
         carList = new ArrayList<>();
         this.automated = automated;
-        occupied = false;
+        // Both x and y are defining the center position of the lane.
+        this.x_value = x_value;
+        this.y_value = y_value;
+        this.length = length;
+        this.width = width;
+        this.direction = direction; //0 = 'n', 1 = 's', 2 = 'e' or 3 = 'w'
+        switch (direction) {
+            case 0:
+                testingpoint = y_value - length / 2;
+                break;
+            case 1:
+                testingpoint = y_value + length / 2;
+                break;
+            case 2:
+                testingpoint = x_value + length / 2;
+                break;
+            case 3:
+                testingpoint = x_value - length / 2;
+                break;
+        }
+        // I need to fix the car class based on this. That the length will always be the length and the width will always be the width. It's the direction that dominate.
     }
 
-    public boolean roadIsFull() {
-        return occupied;
-
+    // This will report the lane status.
+    public double checkLaneStatus() {
+        double excessDistance = length;
+        for (int i = 0; i < carList.size(); i++) {
+            excessDistance -= carList.get(i).getSize()[0];
+            if (i >= 1) {
+                excessDistance -= carList.get(i).getSafetyDistance();
+            }
+        }
+        return excessDistance;
     }
 
+    // This will check whether the car can make it to the other end or not.
+    // Using this method, you are assuming an excessDistance variable is passed along from the simulation class to this specific lane.
+    // Kevin, for now, please assume that this class is completed. It will tell you how many spots there are left in the lane ahead of this one.
+    public int checkSpotLeft(double excessDistance) {
+        int spotLeft = 0;
+        for (int i = 0; i < carList.size(); i++) {
+        }
+        return spotLeft;
+    }
+    
     public void addCar(Vehicle car) {
         carList.add(car);
     }
-    
-    public void addCar(double[] position, double[] size) {
-        if (automated) {
-            if (carList.isEmpty()) {
-                AutomatedCar a = new AutomatedCar(position, size, 'r');
-                a.getPosition();
-                carList.add(new AutomatedCar(position, size, 'r'));
-            } else {
-                Vehicle car = carList.get(carList.size() - 1);
-                if ((car.getPosition()[0] - car.getSafetyDistance() - (car.getSize()[0] - TESTSIZEX) / 2) > 0 
-                        && (car.getPosition()[1] - car.getSafetyDistance() - (car.getSize()[1] - TESTSIZEY) / 2) > 0) {
-                    carList.add(new AutomatedCar(position, size, 'r'));
-                }
+
+    public void addCar(int[] position, int[] size) {
+        // I still have to add this part.
+    }
+
+    public void removeCar(int index) {
+        carList.remove(index);
+    }
+
+    // This will run for one millisecond and update carList
+    public void run() {
+        for (int i = 0; i < carList.size(); i++) {
+            carList.get(i).accelerateUnit(true, false);
+        }
+        updateCarList();
+        // You also need to think how you are going to transport these cars into other lanes if any.
+        // It's time to introduce a car pool class...
+    }
+
+    /**
+     * Slow is the method for yellow light
+     * Kevin.Please have some thoughts on that. We can discuss together but I need you to at least start it.
+ Essentially, you will be using some of the methods that I've already set up in this class. Please choose them wisely.
+     * @param spot_left 
+     * @param length 
+     */
+    public void lineCheck(int spot_left, int length){
+        if(length > line){
+            for (int i = 0; i < carList.size(); i++) {
+            carList.get(i).accelerateUnit(false, true);
             }
+        }
+        else {
+            for (int i = 0; i < spot_left; i++) {
+            
+        }
+        for (int i = 0; i < carList.size(); i++) {
+            carList.get(i).accelerateUnit(false, true);
+            
+            }
+        }
+    }
+    
+    public void slow(int spot_left) {
+        //int increment;
+        for (int i = 0; i < spot_left; i++) {
+            
+        }
+        for (int i = 0; i < carList.size(); i++) {
+            carList.get(i).accelerateUnit(false, true);
+            
+        }
+    }
+    public void updateCarList() {
+        for (int i = 0; i < carList.size(); i++) {
+            switch (direction) {
+                case 0:
+                    if (carList.get(i).getPosition()[1] <= testingpoint) {
+                        carList.remove(i);
+                    }
+                    break;
+                case 1:
+                    if (carList.get(i).getPosition()[1] >= testingpoint) {
+                        carList.remove(i);
+                    }
+                    break;
+                case 2:
+                    if (carList.get(i).getPosition()[0] >= testingpoint) {
+                        carList.remove(i);
+                    }
+                    break;
+                case 3:
+                    if (carList.get(i).getPosition()[0] <= testingpoint) {
+                        carList.remove(i);
+                    }
+                    break;
+            }
+        }
+    }
+    public void redStop(){
+        for (int i = 0; i < carList.size(); i++) {
+            carList.get(i).accelerateUnit(true, false);
+        }
+        updateCarList();
+    }
+    public void distanceAdjust(){
+        for (int i = 0; i < buffer; i++) {
+            carList.get(i).accelerateUnit(true, false);
         }
     }
 
-    public void deleteCar(int index) {
-        carList.remove(index);
-    }
-    
-    public void detectOutOfBoundsCar() {
-        for (int i = 0; i < carList.size(); i++) {
-            double[] pos = carList.get(i).getPosition();
-            if (pos[0] > DRAWINGWIDTH || pos[0] < 0 ||pos[1] > DRAWINGHEIGHT || pos[1] < 0) {
-                // do something
-            }
-        }
-    }
-    public void runCar() {
-        for (int i = 0; i < carList.size(); i++) {
-             if(speed == speedllimit){
-                 return false;
-             }
-             else {
-                  accelerate(acceleration, time_increments);
-             }
-             if(Distance == buffer){
-                 accelerate(0 - acceleration, time_increments);
-             }
-             else{
-                 accelerate(acceleration, time_increments);
-             }
-             if(color == 1){
-                 accelerate(0 - acceleration, time_increments);
-             }
-             if(color == 0){
-                 accelerate(acceleration, time_increments);
-             }
-        }
-    }
-    
-    public boolean check_line(){
-        if(car.position == line.position){ // we need a line variable 
-            return true;
-        }
-        else{
-            return false;
-        }
-    }
-    
-    public void Yellow_speedup(){
-        if(true){
-            accelerate(acceleration, time_increments);
-        }
-        else{
-            accelerate(0 - acceleration, time_increments);
-        }
-    }
-    
-    public void Next_car(){
-        accelerate(0 - acceleration, time_increments);
-    }
-    
-    public void Green(){// starts to accelerate
-        accelerate(acceleration, time_increments);
-    }
-    
-    public void Yellow(){// starts to deccelerate
-        accelerate(0 - acceleration, time_increments);
-    }
-    
-    public void Red(){// stops 
-            speed = 0;
-            acceleration = 0;
-        }
-    
-    public void Safe_Distance (){//distance between cars, no crash
-        if(distance < 1){
-            accelerate(0 - acceleration, time_increments);
-        }
-    }
-    
-    public int Distance_Check (){// Calculates the distance between the car and the car in front of it
-        distance = initial_distance + (velocity1 - velocity2)*time;
-    } return distance;
 }

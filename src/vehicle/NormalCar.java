@@ -19,7 +19,6 @@ public class NormalCar extends Vehicle implements  TCSConstant{
     protected double reaction_time_mean;  //randomly generated once, then fixed
     protected double acceleration_mean;   //randomly generated once, then fixed
     protected double deceleration_mean;  //randomly generated once, then fixed
-    protected Random rand;
     
     public NormalCar(double[] position, double[] size, int direction) {
         rand = new Random();
@@ -139,6 +138,61 @@ public class NormalCar extends Vehicle implements  TCSConstant{
     
     public double getDecelerationMean(){
         return deceleration_mean;
+    }
+
+    @Override
+    public void accelerateToSpeed(double speed) throws InterruptedException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void accelerateToSpeedLimit() throws InterruptedException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void decelerateToSpeed(double speed) throws InterruptedException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void decelerateToStop() throws InterruptedException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void travelDistanceToStop(double distance) throws InterruptedException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void setAccelerationRate() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void setDecelerationRate() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public double timeToStop() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public int incrementsToStop() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public double timeToSpeedLimit() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public int incrementsToSpeedLimit() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 

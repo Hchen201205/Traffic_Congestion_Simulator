@@ -6,6 +6,7 @@
 package setting;
 
 import java.awt.Color;
+import java.util.Arrays;
 import traffic_congestion_simulator.TCSConstant;
 import java.util.concurrent.TimeUnit;
 
@@ -13,7 +14,7 @@ import java.util.concurrent.TimeUnit;
  *
  * @author Christine
  */
-public class Light implements TCSConstant{
+public class Light implements TCSConstant {
 
     boolean start;
     int direction;                //0 = 'n', 1 = 's', 2 = 'e' or 3 = 'w'
@@ -50,39 +51,43 @@ public class Light implements TCSConstant{
         start = true;
     }
 
-    
-    public void runCycleUnit(){
-        time_passed += TIMEINCREMENTS;
-        /* I'm deciding to not have these two lines. The reason for that is the light we are considering is not a whole. It's just a single light. 
+    public void runCycleUnit() {
+        if (start) {
+            time_passed += TIMEINCREMENTS;
+            /* I'm deciding to not have these two lines. The reason for that is the light we are considering is not a whole. It's just a single light. 
         I will probably have this sleep in simulation class.
         long sleep_time = (long) (time_increments * 1000);
         TimeUnit.MICROSECONDS.sleep(sleep_time);
-        */
-        changeColor();
+             */
+            changeColor();
+
+            // You need this line. Java has a rounding error if you don't include this.
+            time_passed = Math.round(time_passed * 1000) / 1000.0;
+
+        }
+
     }
 
     public void endCycle() {
         start = false;
     }
 
-
     public void changeColor() {
         if (time_passed == change_times[0]) {
             color = Color.GREEN;
         } else if (time_passed == change_times[0] + change_times[1]) {
             color = Color.YELLOW;
-        } else if (time_passed == change_times[0] + change_times[1] + change_times[2])  {
+        } else if (time_passed == change_times[0] + change_times[1] + change_times[2]) {
             color = Color.RED;
             time_passed = 0;
         }
     }
-    
+
     //Getters and Setters
-    
     public boolean getStart() {
         return start;
     }
-    
+
     //setting cycle times
     public void setChangeTimes(int rtg, int gty, int ytr) {
         change_times[0] = rtg;
@@ -97,7 +102,7 @@ public class Light implements TCSConstant{
     public Color getColor() {
         return color;
     }
-    
+
     public String getColorString() {
         if (color.equals(Color.RED)) {
             return "Red";
@@ -110,7 +115,7 @@ public class Light implements TCSConstant{
             return "I don't know what this color is.";
         }
     }
-    
+
     public char getDirection() {
         switch (direction) {
             case 0:
@@ -124,8 +129,31 @@ public class Light implements TCSConstant{
 
         }
     }
-    
 
-    
-    
+    public double getTimePassed() {
+        return time_passed;
+    }
+
+    /**
+     * This is the testing code. Try it out. I believe there is no more
+     * bug. When you confirm it just delete the following.
+     *
+     * @param arg
+     */
+    /*
+    public static void main(String[] arg) {
+        Light testing = new Light(1, Color.GREEN);
+        System.out.println(testing.getColorString());
+        System.out.println(testing.getDirection());
+        testing.setChangeTimes(LIGHTCYCLER, LIGHTCYCLEG, LIGHTCYCLEY);
+        System.out.println(Arrays.toString(testing.getChangeTimes()));
+        System.out.println(testing.getTimePassed());
+        testing.startCycle();
+        for (int i = 0; i < 8000; i++) {
+            testing.runCycleUnit();
+            System.out.println(testing.getTimePassed());
+        }
+        System.out.println(testing.getColorString());
+    }
+     */
 }

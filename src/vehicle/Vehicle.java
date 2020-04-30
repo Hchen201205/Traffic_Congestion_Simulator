@@ -5,6 +5,7 @@
  */
 package vehicle;
 
+import java.util.Random;
 import java.util.concurrent.TimeUnit;
 import setting.Lane;
 import traffic_congestion_simulator.TCSConstant;
@@ -14,6 +15,8 @@ import traffic_congestion_simulator.TCSConstant;
  * @author Christine
  */
 public abstract class Vehicle implements  TCSConstant {
+    protected Random rand = new Random(100); // Instead of initialize random in each car class, it can be created here.
+    
     protected double[] speed = new double[2];//{speed left/right, speed up/down} in m/s (always positive)               
     protected double[] position;             //Position as the upper corner of vehicle, in m
     protected double[] size;                 //{length, width} in m
