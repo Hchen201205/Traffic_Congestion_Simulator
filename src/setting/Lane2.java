@@ -126,6 +126,9 @@ public class Lane2 {
         for (int i = 0; i < carList.size(); i++) {
             if (carList.get(i).getReactionTime() == 0) {
                 carList.get(i).accelerate(TCSConstant.TIMEINCREMENTS, true);
+            } else {
+                carList.get(i).reduceReactionTimeUnit();
+                break;
             }
 
         }

@@ -83,6 +83,10 @@ public class AutomatedCar2 extends Vehicle2 implements TCSConstant {
         is_accelerating = false;
     }
 
+    public void genRandReactionTime() {
+        reaction_time = 0;
+    }
+    
     public void updateSafetyDistance() {
         if (this.is_turning) {
             safety_distance = Math.pow(this.getDirectionalSpeed(), 2) / (2 * -deceleration_rate);

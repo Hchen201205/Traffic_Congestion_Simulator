@@ -73,6 +73,8 @@ public abstract class Vehicle2 implements  TCSConstant {
     //assigns each car a random deceleration rate
     public abstract void genRandDeceleration();
     
+    public abstract void genRandReactionTime();
+    
     //no implementation yet
     public abstract void turn(int dirrection);
     
@@ -210,5 +212,9 @@ public abstract class Vehicle2 implements  TCSConstant {
     
     public double getReactionTime() {
         return reaction_time;
+    }
+    
+    public void reduceReactionTimeUnit() {
+        reaction_time -= TIMEINCREMENTS;
     }
 }
