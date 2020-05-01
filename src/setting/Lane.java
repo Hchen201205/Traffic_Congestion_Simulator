@@ -18,7 +18,7 @@ import traffic_congestion_simulator.TCSConstant;
  */
 public class Lane {
 
-    ArrayList<Vehicle2> carList;// a list of all the cars on the road.
+    ArrayList<Vehicle> carList;// a list of all the cars on the road.
 
     boolean automated; // Do I need this?
 
@@ -98,7 +98,7 @@ public class Lane {
         double excessDistance = lane2.checkLaneStatus();
         int spotLeft = 0;
         for (int i = 0; i < carList.size(); i++) {
-            Vehicle2 car = carList.get(i);
+            Vehicle car = carList.get(i);
             excessDistance -= car.getBuffer() + car.getSize()[0]; // Buffer + length;
             if (excessDistance < 0) {
                 break;
@@ -109,7 +109,7 @@ public class Lane {
         return spotLeft;
     }
 
-    public void addCar(Vehicle2 car) {
+    public void addCar(Vehicle car) {
         carList.add(car);
     }
 

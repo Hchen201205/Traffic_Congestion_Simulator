@@ -21,7 +21,9 @@ public class Light implements TCSConstant {
     private int[] change_times;   //array of light cycle timing between color changes (milliseconds)
     private Color color;
     private double time_passed;   // time that has passed in this cycle;
-
+    
+    private final int rounded_dec_pos = ROUNDEDDECPOS;
+    
     public Light(int direction) {
         this.direction = direction;
         start = false;
@@ -62,7 +64,7 @@ public class Light implements TCSConstant {
             changeColor();
 
             // You need this line. Java has a rounding error if you don't include this.
-            time_passed = Math.round(time_passed * 1000) / 1000.0;
+            time_passed = Math.round(time_passed * Math.pow(10, rounded_dec_pos) / Math.pow(10, rounded_dec_pos));
 
         }
 

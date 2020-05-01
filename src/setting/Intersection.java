@@ -7,7 +7,7 @@ package setting;
 
 import java.util.ArrayList;
 import traffic_congestion_simulator.TCSConstant;
-import vehicle.Vehicle2;
+import vehicle.Vehicle;
 
 
 /**
@@ -17,7 +17,7 @@ import vehicle.Vehicle2;
 public class Intersection {
     Lane[] lane_set;
     double[] position;
-    ArrayList<Vehicle2> carList;
+    ArrayList<Vehicle> carList;
     public Intersection(Lane[] lane_set, double[] position) {
         this.lane_set = lane_set;
         this.position = position;
