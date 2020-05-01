@@ -19,13 +19,13 @@ public class NormalCar2 extends Vehicle2 implements  TCSConstant{
     protected double reaction_time_mean;  //randomly generated once, then fixed
     protected double acceleration_mean;   //randomly generated once, then fixed
     protected double deceleration_mean;  //randomly generated once, then fixed
-    protected double safety_distance_mean;
+    protected double safety_distance_min;
     
     public NormalCar2(double[] position, double[] size, int direction) {
         rand = new Random();
         speed[0] = 0;
         speed[1] = 0;
-        safety_distance_mean = 0;
+        safety_distance_min = 0;
         safety_distance = 0;
         time_moving = 0;
         is_turning = false;
@@ -56,13 +56,8 @@ public class NormalCar2 extends Vehicle2 implements  TCSConstant{
         deceleration_mean = rand.nextGaussian()*DECELERATIONAVG/8 + DECELERATIONAVG;
     }
     
-    public void genSafetyDistanceMean(){
-        safety_distance_mean = Math.pow(this.getDirectionalSpeed(), 2) 
-                / (2 * -deceleration_rate);
-    }
     
-    
-    //may mess with the variance for the next three methods
+        //may mess with the variance for the next three methods
     //will asign a new rand acceleration based on mean, 
     public void genRandAcceleration(){
         acceleration_rate = rand.nextGaussian()*acceleration_mean/5 
@@ -80,13 +75,20 @@ public class NormalCar2 extends Vehicle2 implements  TCSConstant{
         reaction_time = rand.nextGaussian()*0.1 + reaction_time_mean;
     }
     
+    
+    //generates the minimum value that saftey_distance can randomly generate to
+    public void genSafetyDistanceMin(){
+        safety_distance_min = Math.pow(this.getDirectionalSpeed(), 2) 
+                / (2 * -deceleration_rate);
+    }
+    
     //will asign a new rand safety_distance each time it is called
     public void updateSafetyDistance(){
         if (this.is_turning){
-            this.genSafetyDistanceMean();
+            this.genSafetyDistanceMin();
             //safety_distance will always be at least the minimum distance to deccelerate to stop
-            safety_distance = Math.abs(rand.nextGaussian()*safety_distance_mean / 7) 
-                + safety_distance_mean;
+            safety_distance = Math.abs(rand.nextGaussian()*safety_distance_min / 7) 
+                + safety_distance_min;
         } else {
             //safety distance while turning
             //not implemented yet
