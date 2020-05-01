@@ -8,12 +8,13 @@ import java.util.Random;
 import java.util.concurrent.TimeUnit;
 import setting.Lane;
 import traffic_congestion_simulator.TCSConstant;
+
 /**
  *
  * @author Christine
  */
-public class AutomatedCar2 extends Vehicle2 implements TCSConstant{
-    
+public class AutomatedCar2 extends Vehicle2 implements TCSConstant {
+
     public AutomatedCar2(double[] position, double[] size, int direction) {
         speed[0] = 0;
         speed[1] = 0;
@@ -21,37 +22,41 @@ public class AutomatedCar2 extends Vehicle2 implements TCSConstant{
         speed_limit = 18;
         time_moving = 0;
         is_turning = false;
-        
+        reaction_time = 0;
+
         //may change/dump these two methods later
         this.genRandAcceleration();
         this.genRandDeceleration();
-        
+
         this.position = position;
         this.size = size;
         this.direction = direction;
     }
 
     //changes saftey distance
-    public void accelerate(double time, boolean accelerate) throws InterruptedException {
+    public void accelerate(double time, boolean accelerate) {
         //sleep handled in seperate class
         //long sleep_time = (long) (time * 1000);
         double acceleration;
         if (accelerate) {
-           acceleration = acceleration_rate; 
+            acceleration = acceleration_rate;
         } else {
             acceleration = deceleration_rate;
         }
+        
+        // I'm going to need it soon.
         is_accelerating = true;
-        
+
+        // I updated it.
         double deltaPosX = speed[0] * time + 1.0 / 2 * acceleration * time * time * Math.cos(Math.toRadians(direction));
-        deltaPosX = this.rounder(deltaPosX, this.rounded_dec_pos);
+        deltaPosX = this.rounder(deltaPosX, rounded_dec_pos);
         position[0] = deltaPosX;
-        speed[0] += this.rounder(acceleration * time * Math.cos(Math.toRadians(direction)), this.rounded_dec_pos);
-        double deltaPosY = speed[0] * time + 1.0 / 2 * acceleration * time * time * Math.sin(Math.toRadians(direction));
-        deltaPosY = this.rounder(deltaPosY, this.rounded_dec_pos);
+        speed[0] += this.rounder(acceleration * time * Math.cos(Math.toRadians(direction)), rounded_dec_pos);
+        double deltaPosY = speed[1] * time + 1.0 / 2 * acceleration * time * time * Math.sin(Math.toRadians(direction));
+        deltaPosY = this.rounder(deltaPosY, rounded_dec_pos);
         position[1] = deltaPosY;
-        speed[1] += this.rounder(acceleration * time * Math.sin(Math.toRadians(direction)), this.rounded_dec_pos);
-        
+        speed[1] += this.rounder(acceleration * time * Math.sin(Math.toRadians(direction)), rounded_dec_pos);
+
         /*
         if (this.isTravelingHorizontal()){
             double deltaPosX = speed[0] * time + 1.0 / 2 * acceleration * time * time;
@@ -70,8 +75,7 @@ public class AutomatedCar2 extends Vehicle2 implements TCSConstant{
             //might delete later
             System.out.println("Error: accelerate called while car is not facing a cardinal direction");
         }
-        */
-        
+         */
         updateSafetyDistance();
         //Sleep handled in seperate class
         //TimeUnit.MICROSECONDS.sleep(sleep_time);
@@ -80,18 +84,16 @@ public class AutomatedCar2 extends Vehicle2 implements TCSConstant{
     }
 
     public void updateSafetyDistance() {
-        if (this.is_turning){
+        if (this.is_turning) {
             safety_distance = Math.pow(this.getDirectionalSpeed(), 2) / (2 * -deceleration_rate);
-        } else{
+        } else {
             //safety distance while turning
             //not implemented yet
         }
     }
 
-    
     //Obsolete functions, explained in abstract Vehicle class
     //still might find a use for code/logic in other classes
-    
     /*
     public void accelerateToSpeed(double speed) throws InterruptedException {
         double speed_dir = this.getDirectionalSpeed();
@@ -130,32 +132,34 @@ public class AutomatedCar2 extends Vehicle2 implements TCSConstant{
         }
         this.decelerateToStop();
     }
-    */
-    
-    
-     /**
+     */
+    /**
      * This class will serve as an estimation method. It will estimate the
      * distance of the car can travel in the next something seconds. And will
      * report the time.
      *
      */
     public double estimateDistance(int direction, int time) {
-        
+
         return 0;
     }
 
     //Randomly generating acceleration and deceleration functions:
     //randomly generated from gaussian distribution of average values
     //may change variance if necessary
-    public void genRandAcceleration(){
-        acceleration_rate = rand.nextGaussian()*ACCELERATIONAVGMAX/10 + ACCELERATIONAVGMAX;
-    };
+    public void genRandAcceleration() {
+        acceleration_rate = rand.nextGaussian() * ACCELERATIONAVGMAX / 10 + ACCELERATIONAVGMAX;
+    }
+
+    ;
     
     //deceleration relys on generated acceleration to avoid unrealistic/conflicting rates
-    public void genRandDeceleration(){
-        double scaled_dec_avg_max = DECELERATIONAVGMAX/ACCELERATIONAVGMAX * acceleration_rate;
-        deceleration_rate = rand.nextGaussian()*scaled_dec_avg_max/10 + scaled_dec_avg_max;
-    };
+    public void genRandDeceleration() {
+        double scaled_dec_avg_max = DECELERATIONAVGMAX / ACCELERATIONAVGMAX * acceleration_rate;
+        deceleration_rate = rand.nextGaussian() * scaled_dec_avg_max / 10 + scaled_dec_avg_max;
+    }
+
+    ;
     
     
     
@@ -170,43 +174,43 @@ public class AutomatedCar2 extends Vehicle2 implements TCSConstant{
         }
         return Math.abs(this.position[1] - front_car.position[1]) - front_car.size[0] + buffer;
     }
-    
+
     /*
     public double getDistanceFromTurningVehicle(Vehicle2 front_car){
         //no implementation yet
         
         return distance;
     }
-    */
-    /*
+     */
+ /*
     public double getDistanceFromLimitLine (Lane lane){
         //not implemented yet
         
         return distance;
     }
-    */
+     */
     //returns exact time needed to decelerate to stop
-    public double timeToStop (){
+    public double timeToStop() {
         double speed = this.getDirectionalSpeed();
-        double time = - speed / this.deceleration_rate;
+        double time = -speed / this.deceleration_rate;
         return time;
     }
-    
+
     //total number of increments needed to decelerate to stop
-    public int incrementsToStop(){
+    public int incrementsToStop() {
         double increments = this.timeToStop() / time_increments;
         return (int) Math.floor(increments);
     }
-    
+
     //returns exact time needed to accelerate to speed_limit
-    public double timeToSpeedLimit(){
+    public double timeToSpeedLimit() {
         double speed = this.getDirectionalSpeed();
-        double time = - (speed_limit - speed) / this.deceleration_rate;
+        double time = -(speed_limit - speed) / this.deceleration_rate;
         return time;
     }
-    
+
     //total number of increments needed to accelerate to speed_limit
-    public int incrementsToSpeedLimit(){
+    public int incrementsToSpeedLimit() {
         double increments = this.timeToSpeedLimit() / time_increments;
         return (int) Math.floor(increments);
     }
@@ -220,7 +224,5 @@ public class AutomatedCar2 extends Vehicle2 implements TCSConstant{
     public double getDistanceFromLimitLine(Lane lane) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-    
-    
 
 }

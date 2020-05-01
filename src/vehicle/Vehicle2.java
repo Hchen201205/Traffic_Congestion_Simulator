@@ -24,6 +24,7 @@ public abstract class Vehicle2 implements  TCSConstant {
     protected double speed_limit;            //in m/s, set for AutomatedCar, randomized for NormalCar
     protected double safety_distance;        //distance needed for car to safely decelerate to 0
     protected double time_moving;            //total time vehicle has been moving, helpful for testing/checking
+    protected double reaction_time;
     
     protected boolean is_accelerating;       //true if accelerate method is running
     protected boolean is_turning;            //true if car is turning in intersection
@@ -38,7 +39,7 @@ public abstract class Vehicle2 implements  TCSConstant {
     //Abstract functions:
     
     //simple acceleration function, updates position, speed, saftey_distance, time_moving
-    public abstract void accelerate(double time, boolean accelerate) throws InterruptedException;
+    public abstract void accelerate(double time, boolean accelerate);
     
     //calculates and assigns new saftey distance based on current speed
     public abstract void updateSafetyDistance();
@@ -205,5 +206,9 @@ public abstract class Vehicle2 implements  TCSConstant {
     
     public int getRoundedDecPos(){
         return rounded_dec_pos;
+    }
+    
+    public double getReactionTime() {
+        return reaction_time;
     }
 }
