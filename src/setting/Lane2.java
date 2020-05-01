@@ -124,7 +124,7 @@ public class Lane2 {
     // This will run for one millisecond and update carList
     public void green() {
         for (int i = 0; i < carList.size(); i++) {
-            carList.get(i).accelerateUnit(true, false);
+            carList.get(i).accelerate(TCSConstant.TIMEINCREMENTS, true);
         }
         updateCarList();
         // You also need to think how you are going to transport these cars into other lanes if any.

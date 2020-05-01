@@ -38,7 +38,7 @@ public abstract class Vehicle2 implements  TCSConstant {
     //Abstract functions:
     
     //simple acceleration function, updates position, speed, saftey_distance, time_moving
-    public abstract void accelerate(double time, double acceleration) throws InterruptedException;
+    public abstract void accelerate(double time, boolean accelerate) throws InterruptedException;
     
     //calculates and assigns new saftey distance based on current speed
     public abstract void updateSafetyDistance();
@@ -127,7 +127,7 @@ public abstract class Vehicle2 implements  TCSConstant {
         }
         return false;
     }
-    
+    /*
     public boolean isAtLimitLine(){
         //no implementation yet
         double limit_line_pos = ;
@@ -136,7 +136,7 @@ public abstract class Vehicle2 implements  TCSConstant {
         }
             return false;    
     }
-    
+    */
     public int getDirection(){
         return direction;
     }

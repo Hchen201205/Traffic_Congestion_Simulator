@@ -97,12 +97,19 @@ public class NormalCar2 extends Vehicle2 implements  TCSConstant{
     }
         
     
-    public void accelerate(double time, double acceleration) throws InterruptedException {
+    public void accelerate(double time, boolean accelerate) throws InterruptedException {
         //reaction time randomizes each time it is used to begin accelerating from stop
         //actual delay from reaction time must be handled in an outside class
         if (this.isStopped()){
             this.genRandReactionTime();
         }
+        double acceleration;
+        if (accelerate) {
+            acceleration = acceleration_rate;
+        } else {
+            acceleration = deceleration_rate;
+        }
+        
         is_accelerating = true;
         
         if (this.isTravelingHorizontal()){
@@ -143,18 +150,20 @@ public class NormalCar2 extends Vehicle2 implements  TCSConstant{
                 - front_car.size[0] + buffer;
     }
 
+    /*
     public double getDistanceFromTurningVehicle(Vehicle2 front_car){
         //no implementation yet
         
         return distance;
     }
-    
+    */
+    /*
     public double getDistanceFromLimitLine (Lane lane){
         //not implemented yet
         
         return distance;
     }
-    
+    */
     
     
     //Getters
@@ -173,6 +182,16 @@ public class NormalCar2 extends Vehicle2 implements  TCSConstant{
     
     public double getDecelerationMean(){
         return deceleration_mean;
+    }
+
+    @Override
+    public double getDistanceFromTurningVehicle(Vehicle2 front_car) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public double getDistanceFromLimitLine(Lane lane) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 

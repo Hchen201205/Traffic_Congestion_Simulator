@@ -122,13 +122,17 @@ public class AutomatedCar extends Vehicle implements TCSConstant{
     //randomly generated from gaussian distribution of average values
     //may change variance if necessary
     public void setAccelerationRate(){
+        
+        // Round it to 4-decimal in order to make it more controlable.
         acceleration_rate = rand.nextGaussian()*ACCELERATIONAVGMAX/10 + ACCELERATIONAVGMAX;
+        acceleration_rate = Math.round(acceleration_rate * 1000) / 1000;
     };
     
     //deceleration relys on generated acceleration to avoid unrealistic/conflicting rates
     public void setDecelerationRate(){
         double scaled_dec_avg_max = DECELERATIONAVGMAX/ACCELERATIONAVGMAX * acceleration_rate;
         deceleration_rate = rand.nextGaussian()*scaled_dec_avg_max/10 + scaled_dec_avg_max;
+        deceleration_rate = Math.round(acceleration_rate * 1000) / 1000;
     };
     
     
@@ -138,6 +142,8 @@ public class AutomatedCar extends Vehicle implements TCSConstant{
     }
 
     //front bumper of car to back bumper of front car plus buffer
+    // This method is useful
+    @Override
     public double getDistanceFromFrontVehicle(Vehicle front_car) {
         if (front_car.isTravelingHorizontal()) {
             return Math.abs(this.position[0] - front_car.position[0]) - front_car.size[0] + buffer;

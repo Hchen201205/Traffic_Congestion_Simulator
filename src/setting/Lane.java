@@ -169,12 +169,16 @@ public class Lane {
             }
         }
     }
+    
+    // You need to first measure the distance and then decide whether you want to move forward or back up or neither.
     public void redStop(){
         for (int i = 0; i < carList.size(); i++) {
             carList.get(i).accelerateUnit(true, false);
         }
         updateCarList();
     }
+    
+    // This is a bug. Please fix.
     public void distanceAdjust(){
         for (int i = 0; i < buffer; i++) {
             carList.get(i).accelerateUnit(true, false);
