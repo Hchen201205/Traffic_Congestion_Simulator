@@ -64,17 +64,20 @@ public class NormalCar2 extends Vehicle2 implements TCSConstant {
     public void genRandAcceleration() {
         acceleration_rate = rand.nextGaussian() * acceleration_mean / 5
                 + acceleration_mean;
+        acceleration_rate = this.rounder(acceleration_rate);
     }
 
     //will asign a new rand deceleration based on mean
     public void genRandDeceleration() {
         deceleration_rate = rand.nextGaussian() * deceleration_mean / 5
                 + deceleration_mean;
+        deceleration_rate = this.rounder(deceleration_rate);
     }
 
     //will asign a new rand reaction time based on mean
     public void genRandReactionTime() {
         reaction_time = rand.nextGaussian() * 0.1 + reaction_time_mean;
+        reaction_time = this.rounder(reaction_time);
     }
 
     //generates the minimum value that saftey_distance can randomly generate to
@@ -90,6 +93,7 @@ public class NormalCar2 extends Vehicle2 implements TCSConstant {
             //safety_distance will always be at least the minimum distance to deccelerate to stop
             safety_distance = Math.abs(rand.nextGaussian() * safety_distance_min / 7)
                     + safety_distance_min;
+            safety_distance = this.rounder(safety_distance);
         } else {
             //safety distance while turning
             //not implemented yet
@@ -113,13 +117,13 @@ public class NormalCar2 extends Vehicle2 implements TCSConstant {
         is_accelerating = true;
 
         double deltaPosX = speed[0] * time + 1.0 / 2 * acceleration * time * time * Math.cos(Math.toRadians(direction));
-        deltaPosX = rounder(deltaPosX, rounded_dec_pos);
+        deltaPosX = rounder(deltaPosX);
         position[0] = deltaPosX;
-        speed[0] += rounder(acceleration * time * Math.cos(Math.toRadians(direction)), rounded_dec_pos);
+        speed[0] += rounder(acceleration * time * Math.cos(Math.toRadians(direction)));
         double deltaPosY = speed[1] * time + 1.0 / 2 * acceleration * time * time * Math.sin(Math.toRadians(direction));
-        deltaPosY = rounder(deltaPosY, rounded_dec_pos);
+        deltaPosY = rounder(deltaPosY);
         position[1] = deltaPosY;
-        speed[1] += rounder(acceleration * time * Math.sin(Math.toRadians(direction)), rounded_dec_pos);
+        speed[1] += rounder(acceleration * time * Math.sin(Math.toRadians(direction)));
 
         /*
         if (this.isTravelingHorizontal()){

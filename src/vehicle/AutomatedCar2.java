@@ -49,13 +49,13 @@ public class AutomatedCar2 extends Vehicle2 implements TCSConstant {
 
         // I updated it.
         double deltaPosX = speed[0] * time + 1.0 / 2 * acceleration * time * time * Math.cos(Math.toRadians(direction));
-        deltaPosX = this.rounder(deltaPosX, rounded_dec_pos);
+        deltaPosX = this.rounder(deltaPosX);
         position[0] = deltaPosX;
-        speed[0] += this.rounder(acceleration * time * Math.cos(Math.toRadians(direction)), rounded_dec_pos);
+        speed[0] += this.rounder(acceleration * time * Math.cos(Math.toRadians(direction)));
         double deltaPosY = speed[1] * time + 1.0 / 2 * acceleration * time * time * Math.sin(Math.toRadians(direction));
-        deltaPosY = this.rounder(deltaPosY, rounded_dec_pos);
+        deltaPosY = this.rounder(deltaPosY);
         position[1] = deltaPosY;
-        speed[1] += this.rounder(acceleration * time * Math.sin(Math.toRadians(direction)), rounded_dec_pos);
+        speed[1] += this.rounder(acceleration * time * Math.sin(Math.toRadians(direction)));
 
         /*
         if (this.isTravelingHorizontal()){
@@ -153,6 +153,7 @@ public class AutomatedCar2 extends Vehicle2 implements TCSConstant {
     //may change variance if necessary
     public void genRandAcceleration() {
         acceleration_rate = rand.nextGaussian() * ACCELERATIONAVGMAX / 10 + ACCELERATIONAVGMAX;
+        acceleration_rate = this.rounder(acceleration_rate);
     }
 
     ;
@@ -161,9 +162,9 @@ public class AutomatedCar2 extends Vehicle2 implements TCSConstant {
     public void genRandDeceleration() {
         double scaled_dec_avg_max = DECELERATIONAVGMAX / ACCELERATIONAVGMAX * acceleration_rate;
         deceleration_rate = rand.nextGaussian() * scaled_dec_avg_max / 10 + scaled_dec_avg_max;
+        deceleration_rate = this.rounder(deceleration_rate);
     }
-
-    ;
+    
     
     
     

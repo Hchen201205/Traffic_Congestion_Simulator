@@ -107,10 +107,10 @@ public abstract class Vehicle2 implements  TCSConstant {
         return false;
     }
     
-    public double rounder (double num, double dec_places){
-        num = num * Math.pow(10, dec_places);
+    public double rounder (double num){
+        num = num * Math.pow(10, rounded_dec_pos);
         num = Math.round(num);
-        return num / Math.pow(10, dec_places);
+        return num / Math.pow(10, rounded_dec_pos);
     }
 
     
