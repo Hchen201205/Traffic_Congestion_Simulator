@@ -5,6 +5,7 @@
  */
 package vehicle;
 
+import java.util.Random;
 import java.util.concurrent.TimeUnit;
 import setting.Lane;
 import traffic_congestion_simulator.TCSConstant;
@@ -26,14 +27,29 @@ public abstract class Vehicle2 implements  TCSConstant {
     
     protected boolean is_accelerating;       //true if accelerate method is running
     protected boolean is_turning;            //true if car is turning in intersection
+    
+    protected Random rand = new Random(100); // Instead of initialize random in each car class, it can be created here.
+    
     protected final double buffer = BUFFER;  //gap between cars when stopped, in m
+    protected final int rounded_dec_pos = ROUNDEDDECPOS;     //the decimal position accuracy of functions
     protected final double time_increments = TIMEINCREMENTS; //milliseconds 
+    
+    
+    //Abstract functions:
     
     //simple acceleration function, updates position, speed, saftey_distance, time_moving
     public abstract void accelerate(double time, double acceleration) throws InterruptedException;
     
     //calculates and assigns new saftey distance based on current speed
     public abstract void updateSafetyDistance();
+    
+    
+    
+    //The following functions are now obsolete with the way Vehicle classes function
+    //But the logic is still helpful and might be able to be reused in other classes
+    //See AutomatedCar for fleshed out functions and code
+    
+    /*
     
     public abstract void accelerateToSpeed(double speed) throws InterruptedException;
     
@@ -46,34 +62,32 @@ public abstract class Vehicle2 implements  TCSConstant {
     //vehicle will travel a certain distance to a stop, accelerating to speed limit 
     //until it needs to begin decelerating based on saftey distance 
     public abstract void travelDistanceToStop(double distance) throws InterruptedException;
+    */
     
-    //calculates accleration rate based on vehicle size
-    public abstract void setAccelerationRate();
     
-    //calculates decleration rate based on vehicle size
-    public abstract void setDecelerationRate();
+    
+    //assigns each car a random acceleration rate
+    public abstract void genRandAcceleration();
+    
+    //assigns each car a random deceleration rate
+    public abstract void genRandDeceleration();
     
     //no implementation yet
-    public abstract void turn(char dirrection);
+    public abstract void turn(int dirrection);
     
     //distance between front bumper of vehicle to back bumper of front car plus the buffer
     public abstract double getDistanceFromFrontVehicle(Vehicle2 front_car);
     
     //no implementation yet
+    //for use when car is turning
+    public abstract double getDistanceFromTurningVehicle(Vehicle2 front_car);
+    
+    //no implementation yet
     //returns distance needed to reach the limit line of the lane (begining of intersection)
     public abstract double getDistanceFromLimitLine (Lane lane);
     
-    //returns exact time needed to decelerate to stop
-    public abstract double timeToStop();
     
-    //total number of increments needed to decelerate to stop
-    public abstract int incrementsToStop();
-    
-    //returns exact time needed to accelerate to speed_limit
-    public abstract double timeToSpeedLimit();
-    
-    //total number of increments needed to accelerate to speed_limit
-    public abstract int incrementsToSpeedLimit();
+    //Non-abstract functions:
     
     //returns true vehicle is facing east or west
     public boolean isTravelingHorizontal(){
@@ -83,6 +97,18 @@ public abstract class Vehicle2 implements  TCSConstant {
         return false;
     }
     
+    public boolean isTravelingVertical(){
+        if (direction == 90 || direction == 270){
+            return true;
+        } 
+        return false;
+    }
+    
+    public double rounder (double num, double dec_places){
+        num = num * Math.pow(10, dec_places);
+        num = Math.round(num);
+        return num / Math.pow(10, dec_places);
+    }
 
     
     //Basic getters
@@ -103,6 +129,7 @@ public abstract class Vehicle2 implements  TCSConstant {
     }
     
     public boolean isAtLimitLine(){
+        //no implementation yet
         double limit_line_pos = ;
         if (this.getDirectionalPos() == limit_line_pos){
             return true;
@@ -174,5 +201,9 @@ public abstract class Vehicle2 implements  TCSConstant {
     
     public double getBuffer() {
         return buffer;
+    }
+    
+    public int getRoundedDecPos(){
+        return rounded_dec_pos;
     }
 }
