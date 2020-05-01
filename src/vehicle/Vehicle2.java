@@ -92,6 +92,7 @@ public abstract class Vehicle2 implements  TCSConstant {
     
     //Non-abstract functions:
     
+    
     //returns true vehicle is facing east or west
     public boolean isTravelingHorizontal(){
         if (direction == 0 || direction == 180){
@@ -100,6 +101,11 @@ public abstract class Vehicle2 implements  TCSConstant {
         return false;
     }
     
+    /* Once we have turning. I will implement this method.
+    public void genRandDestination() {
+        
+    }
+    */
     public boolean isTravelingVertical(){
         if (direction == 90 || direction == 270){
             return true;

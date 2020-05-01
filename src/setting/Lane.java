@@ -133,8 +133,6 @@ public class Lane {
 
         }
         updateCarList();
-        // You also need to think how you are going to transport these cars into other lanes if any.
-        // It's time to introduce a car pool class...
     }
 
     /**
