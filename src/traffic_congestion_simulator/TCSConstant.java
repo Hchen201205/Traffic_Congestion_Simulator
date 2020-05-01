@@ -18,6 +18,8 @@ public interface TCSConstant {
     //Vehicle classes constants
     public final double BUFFER = 3;
     
+    public final int ROUNDEDDECPOS = 4;
+            
     public final double ACCELERATIONAVG = 3.5;
     
     public final double ACCELERATIONAVGMAX = 4.1;
