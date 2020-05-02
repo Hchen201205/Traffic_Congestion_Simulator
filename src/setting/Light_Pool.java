@@ -18,7 +18,8 @@ public class Light_Pool implements Runnable {
     Light_Set[] lightpool;
 
     final Buffer shared;
-
+    
+    //Creates all the traffic lights.
     public Light_Pool(Buffer shared) {
 
         lightpool = new Light_Set[TCSConstant.NUMOFINTERSECTION + 1];

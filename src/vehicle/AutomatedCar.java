@@ -14,7 +14,8 @@ import traffic_congestion_simulator.TCSConstant;
  * @author Christine
  */
 public class AutomatedCar extends Vehicle implements TCSConstant {
-
+    
+    //Creates a Automated car.
     public AutomatedCar(double[] position, double[] size, int direction) {
         speed[0] = 0;
         speed[1] = 0;
@@ -82,11 +83,13 @@ public class AutomatedCar extends Vehicle implements TCSConstant {
         time_moving += time;
         is_accelerating = false;
     }
-
+    
+    //For automated car there is no reaction time.
     public void genRandReactionTime() {
         reaction_time = 0;
     }
     
+    //Updates car safe distances, so the car will avoid accident.
     public void updateSafetyDistance() {
         if (this.is_turning) {
             safety_distance = Math.pow(this.getDirectionalSpeed(), 2) / (2 * -deceleration_rate);

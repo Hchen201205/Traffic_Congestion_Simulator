@@ -18,6 +18,7 @@ public class Lane_Pool implements Runnable {
 
     final Buffer shared;
 
+    //Creates lanes segments.
     public Lane_Pool(boolean automated, Light_Pool lightpool, Buffer shared) {
         // + 1 for the lane that is exporting cars.
         lanepool = new Lane_Set[TCSConstant.NUMOFINTERSECTION + 1];
@@ -35,6 +36,7 @@ public class Lane_Pool implements Runnable {
         }
     }
 
+    //Updates lane status.
     @Override
     public void run() {
 

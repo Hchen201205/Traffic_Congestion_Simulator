@@ -14,6 +14,7 @@ import vehicle.Vehicle;
  *
  * @author chenhanxi
  */
+//Creates a intersection situation.
 public class Intersection {
     Lane[] lane_set;
     double[] position;
@@ -24,6 +25,7 @@ public class Intersection {
         this.carList = new ArrayList<>();
     }
     
+//Update each car's acceleration unit.
     public void runCycleUnit() {
         for (int i = 0; i < carList.size(); i++) {
             carList.get(i).accelerate(TCSConstant.TIMEINCREMENTS, true);

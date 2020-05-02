@@ -16,6 +16,7 @@ public class Lane_Set implements TCSConstant{
     
     Lane2[] lane_set;
     
+    // Creates a lane.
     public Lane_Set(boolean automated, int[] x_value, int[] y_value, int[]length, int[] width, int[] direction, int numOfLane, Light_Set light_set) {
         lane_set = new Lane2[numOfLane];
         if (light_set != null) {
@@ -29,6 +30,7 @@ public class Lane_Set implements TCSConstant{
         }
     }
     
+    //Runs that lane.
     public void runUnit() {
         for (Lane2 lane_set1 : lane_set) {
             lane_set1.runUnit();

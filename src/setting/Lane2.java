@@ -37,7 +37,8 @@ public class Lane2 {
     // Testing point is a poitn which you can test whether a car is out of bound or not.
     // In our simulation, the only way a car can be out of bound is when it has run through this lane.
     int testingpoint;
-
+    
+    //Shows the car position on the lane by creating four corners of the car.
     public Lane2(boolean automated, int x_value, int y_value, int length, int width, int direction, Light light) {
         carList = new ArrayList<>();
         this.automated = automated;
@@ -68,6 +69,7 @@ public class Lane2 {
     /**
      * This function will run this lane for one unit time.
      */
+    //One cycle of traffic light
     public void runUnit() {
         if (light == null || light.getColor().equals(Color.GREEN)) {
             green();
@@ -159,6 +161,7 @@ public class Lane2 {
 
     }
 
+    //Updates the car position.
     public void updateCarList() {
         for (int i = 0; i < carList.size(); i++) {
             switch (direction) {

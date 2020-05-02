@@ -100,7 +100,8 @@ public class NormalCar extends Vehicle implements TCSConstant {
         }
 
     }
-
+    
+    //Calculates the acceleration of individual car.
     public void accelerate(double time, boolean accelerate) {
         //reaction time randomizes each time it is used to begin accelerating from stop
         //actual delay from reaction time must be handled in an outside class
@@ -154,6 +155,7 @@ public class NormalCar extends Vehicle implements TCSConstant {
         //no implementation yet
     }
 
+    //Updates the distance between cars.
     public double getDistanceFromFrontVehicle(Vehicle front_car) {
         if (front_car.isTravelingHorizontal()) {
             return Math.abs(this.position[0] - front_car.position[0])

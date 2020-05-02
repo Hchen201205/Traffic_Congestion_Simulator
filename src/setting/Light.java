@@ -24,6 +24,7 @@ public class Light implements TCSConstant {
     
     private final int rounded_dec_pos = ROUNDEDDECPOS;
     
+    //Creates a traffic light.
     public Light(int direction) {
         this.direction = direction;
         start = false;
@@ -53,6 +54,7 @@ public class Light implements TCSConstant {
         start = true;
     }
 
+    //A cycle of traffic light.
     public void runCycleUnit() {
         if (start) {
             time_passed += TIMEINCREMENTS;
