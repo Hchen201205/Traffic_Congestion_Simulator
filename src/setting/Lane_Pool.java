@@ -12,6 +12,7 @@ import traffic_congestion_simulator.TCSConstant;
  *
  * @author chenhanxi
  */
+//Creates the conditions that all cars have to obey.
 public class Lane_Pool implements Runnable {
 
     Lane_Set[] lanepool;
