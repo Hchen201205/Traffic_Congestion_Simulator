@@ -21,8 +21,6 @@ public class Lane {
 
     ArrayList<Vehicle> carList;// a list of all the cars on the road.
 
-    boolean automated; // Do I need this?
-
     double[] position; // 0 is x, 1 is y
 
     double[] size; // 0 is length, 1 is width
@@ -31,10 +29,12 @@ public class Lane {
 
     Light light;
 
+    boolean overflow;
 
-    public Lane(boolean automated, double[] position, double[] size, double direction, Light light) {
+    ArrayList<Vehicle> overflowVehicles;
+
+    public Lane(double[] position, double[] size, double direction, Light light) {
         carList = new ArrayList<>();
-        this.automated = automated;
         // Both x and y are defining the center position of the lane.
         this.position = position;
         this.size = size;
@@ -42,6 +42,10 @@ public class Lane {
 
         // I need to fix the car class based on this. That the length will always be the length and the width will always be the width. It's the direction that dominate.
         this.light = light;
+
+        overflow = false;
+
+        overflowVehicles = new ArrayList<>();
     }
 
     public double rounder(double num) {
@@ -129,15 +133,13 @@ public class Lane {
      * @param spot_left
      */
     public void yellow(double excessDistance, Lane2 lane2) {
-        if (automated) {
-            int spotLeft = checkSpotLeft(lane2, excessDistance);
-            for (int i = 0; i < spotLeft; i++) {
+        int spotLeft = checkSpotLeft(lane2, excessDistance);
+        for (int i = 0; i < spotLeft; i++) {
 
-            }
-            for (int i = 0; i < carList.size(); i++) {
-                // wait for implementation
+        }
+        for (int i = 0; i < carList.size(); i++) {
+            // wait for implementation
 
-            }
         }
 
     }
@@ -147,12 +149,52 @@ public class Lane {
             double[] frontPos = carList.get(i).getCarFrontPos();
             // Distance formula
             double distance = Math.sqrt(Math.pow(frontPos[0] - position[0], 2) + Math.pow(frontPos[1] - position[1], 2));
-            if (distance > (1 /2 * size[0])) {
+            if (distance > (1 / 2 * size[0])) {
+                
+                // Remember to check this tomorrow.
+                overflowVehicles.add(carList.get(i));
                 carList.remove(i);
+                overflow = true;
             } else {
                 break;
             }
         }
     }
 
+    public boolean haveLight() {
+        return light != null;
+    }
+
+    public boolean getOverFlow() {
+        return overflow;
+    }
+
+    public ArrayList<Vehicle> getOverFlowList() {
+        return overflowVehicles;
+    }
+
+    public void removeOverFlow() {
+        overflow = false;
+        overflowVehicles.clear();
+    }
+
+    public double getDirection() {
+        return direction;
+    }
+
+    public double[][] getPoints() {
+        double[][] points = new double[4][2];
+        double v1 = direction;
+        for (int i = 0; i < 2; i++) {
+            double v2 = v1 + 90;
+            for (int j = 0; j < 2; j++) {
+                points[i + j][0] = position[0] + 1 / 2 * size[0] * Math.cos(Math.toRadians(v1)) + 1 / 2 * size[1] * Math.cos(Math.toRadians(v2));
+                points[i + j][1] = position[1] + 1 / 2 * size[0] * Math.sin(Math.toRadians(v1)) + 1 / 2 * size[1] * Math.sin(Math.toRadians(v2));
+                v2 -= 180;
+
+            }
+            v1 -= 180;
+        }
+        return points;
+    }
 }
