@@ -223,4 +223,12 @@ public abstract class Vehicle implements  TCSConstant {
     public void reduceReactionTimeUnit() {
         reaction_time -= TIMEINCREMENTS;
     }
+    
+    // this will get a point that is the center of width but the front of one side of the vehicle
+    public double[] getCarFrontPos() {
+        double[] frontPos = new double[2];
+        frontPos[0] = this.rounder(position[0] + 1 / 2 * size[0] * Math.cos(Math.toRadians(direction)));
+        frontPos[1] = this.rounder(position[1] + 1 / 2 * size[0] * Math.sin(Math.toRadians(direction)));
+        return frontPos;
+    }
 }

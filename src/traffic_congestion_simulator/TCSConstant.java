@@ -76,15 +76,11 @@ public interface TCSConstant {
     // We will fix this later.
     public final double[][] LIGHTPOSITION = {};
     
-    public final int[][] LANEXVALUE = {};
+    public final double[][][] LANEPOSITION = {};
+
+    public final double[][][] LANESIZE = {};
     
-    public final int[][] LANEYVALUE = {};
-    
-    public final int[][] LANELENGTH = {};
-    
-    public final int[][] LANEWIDTH = {};
-    
-    public final int[][] LANEDIRECTION = {};
+    public final double[][] LANEDIRECTION = {};
     
     public final int[] NUMOFLANE = {}; // NUMOFLANE can also be an indicator of number of light at a specific intersection.
     
