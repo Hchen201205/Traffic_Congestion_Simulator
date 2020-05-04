@@ -9,6 +9,7 @@ import java.awt.Color;
 import java.util.ArrayList;
 import vehicle.*;
 import traffic_congestion_simulator.TCSConstant;
+import static traffic_congestion_simulator.TCSConstant.ROUNDEDDECPOS;
 
 /**
  * One thing to remember in this lane class is that it needs to be queue instead
@@ -22,47 +23,31 @@ public class Lane {
 
     boolean automated; // Do I need this?
 
-    int x_value;
+    double[] position; // 0 is x, 1 is y
 
-    int y_value;
+    double[] size; // 0 is length, 1 is width
 
-    int length;
-
-    int width;
-
-    int direction;
+    double direction; //  angle
 
     Light light;
 
-    // Testing point is a poitn which you can test whether a car is out of bound or not.
-    // In our simulation, the only way a car can be out of bound is when it has run through this lane.
-    int testingpoint;
 
-    public Lane(boolean automated, int x_value, int y_value, int length, int width, int direction, Light light) {
+    public Lane(boolean automated, double[] position, double[] size, double direction, Light light) {
         carList = new ArrayList<>();
         this.automated = automated;
         // Both x and y are defining the center position of the lane.
-        this.x_value = x_value;
-        this.y_value = y_value;
-        this.length = length;
-        this.width = width;
-        this.direction = direction; //0 = 'n', 1 = 's', 2 = 'e' or 3 = 'w'
-        switch (direction) {
-            case 0:
-                testingpoint = y_value - length / 2;
-                break;
-            case 1:
-                testingpoint = y_value + length / 2;
-                break;
-            case 2:
-                testingpoint = x_value + length / 2;
-                break;
-            case 3:
-                testingpoint = x_value - length / 2;
-                break;
-        }
+        this.position = position;
+        this.size = size;
+        this.direction = direction; // angle
+
         // I need to fix the car class based on this. That the length will always be the length and the width will always be the width. It's the direction that dominate.
         this.light = light;
+    }
+
+    public double rounder(double num) {
+        num = num * Math.pow(10, ROUNDEDDECPOS);
+        num = Math.round(num);
+        return num / Math.pow(10, ROUNDEDDECPOS);
     }
 
     /**
@@ -81,7 +66,7 @@ public class Lane {
     // This will report the lane status.
     // It's highly recommend that this method don't use with checkSpotLeft at the same time because the target these methods are serving for are not the same.
     public double checkLaneStatus() {
-        double excessDistance = length;
+        double excessDistance = size[0];
         for (int i = 0; i < carList.size(); i++) {
             excessDistance -= carList.get(i).getSize()[0];
             if (i >= 1) {
@@ -159,27 +144,13 @@ public class Lane {
 
     public void updateCarList() {
         for (int i = 0; i < carList.size(); i++) {
-            switch (direction) {
-                case 0:
-                    if (carList.get(i).getPosition()[1] <= testingpoint) {
-                        carList.remove(i);
-                    }
-                    break;
-                case 1:
-                    if (carList.get(i).getPosition()[1] >= testingpoint) {
-                        carList.remove(i);
-                    }
-                    break;
-                case 2:
-                    if (carList.get(i).getPosition()[0] >= testingpoint) {
-                        carList.remove(i);
-                    }
-                    break;
-                case 3:
-                    if (carList.get(i).getPosition()[0] <= testingpoint) {
-                        carList.remove(i);
-                    }
-                    break;
+            double[] frontPos = carList.get(i).getCarFrontPos();
+            // Distance formula
+            double distance = Math.sqrt(Math.pow(frontPos[0] - position[0], 2) + Math.pow(frontPos[1] - position[1], 2));
+            if (distance > (1 /2 * size[0])) {
+                carList.remove(i);
+            } else {
+                break;
             }
         }
     }

@@ -39,7 +39,6 @@ public class Lane_Pool implements Runnable {
     //Updates lane status.
     @Override
     public void run() {
-
         while (true) {
             synchronized (shared) {
                 if (shared.getState() != 2) {

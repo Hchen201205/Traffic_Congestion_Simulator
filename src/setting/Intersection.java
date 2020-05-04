@@ -18,10 +18,12 @@ import vehicle.Vehicle;
 public class Intersection {
     Lane[] lane_set;
     double[] position;
+    double[] size;
     ArrayList<Vehicle> carList;
-    public Intersection(Lane[] lane_set, double[] position) {
+    public Intersection(Lane[] lane_set, double[] position, double[] size) {
         this.lane_set = lane_set;
         this.position = position;
+        this.size = size;
         this.carList = new ArrayList<>();
     }
     
@@ -30,5 +32,13 @@ public class Intersection {
         for (int i = 0; i < carList.size(); i++) {
             carList.get(i).accelerate(TCSConstant.TIMEINCREMENTS, true);
         }
+    }
+    
+    public void addCar(Vehicle vehicle) {
+        carList.add(vehicle);
+    }
+    
+    public void updateIntersection() {
+        if ()
     }
 }
