@@ -14,6 +14,7 @@ import vehicle.Vehicle_Pool;
  *
  * @author chenhanxi
  */
+//Creates the conditions that all cars have to obey.
 public class Lane_Pool implements Runnable {
 
     Lane_Set[] lanepool;

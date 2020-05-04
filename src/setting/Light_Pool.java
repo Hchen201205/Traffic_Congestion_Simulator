@@ -13,6 +13,7 @@ import traffic_congestion_simulator.TCSConstant;
  *
  * @author chenhanxi
  */
+//Creates different situations for cars, and to mimic real life traffic light.
 public class Light_Pool implements Runnable {
 
     Light_Set[] lightpool;

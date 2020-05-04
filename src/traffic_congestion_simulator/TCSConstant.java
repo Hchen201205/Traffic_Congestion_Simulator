@@ -11,6 +11,7 @@ package traffic_congestion_simulator;
  *
  * @author chenhanxi
  */
+//Stores all the contants that this simulation needs.
 public interface TCSConstant {
     
     public final double TIMEINCREMENTS = 0.001; //milliseconds in unit second, 1 millisecond = 0.001 second
