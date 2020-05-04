@@ -24,9 +24,9 @@ public class Lane_Pool implements Runnable {
         lanepool = new Lane_Set[TCSConstant.NUMOFINTERSECTION + 1];
 
         for (int i = 0; i < lanepool.length; i++) {
-            lanepool[i] = new Lane_Set(automated, TCSConstant.LANEXVALUE[i], TCSConstant.LANEYVALUE[i], TCSConstant.LANELENGTH[i], TCSConstant.LANEWIDTH[i], TCSConstant.LANEDIRECTION[i], TCSConstant.NUMOFLANE[i], lightpool.getLight_Set(i));
+            lanepool[i] = new Lane_Set(automated, TCSConstant.LANEPOSITION[i], TCSConstant.LANESIZE[i], TCSConstant.LANEDIRECTION[i], TCSConstant.NUMOFLANE[i], lightpool.getLight_Set(i));
         }
-
+        
         this.shared = shared;
     }
 
