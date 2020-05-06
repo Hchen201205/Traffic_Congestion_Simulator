@@ -16,11 +16,11 @@ import traffic_congestion_simulator.TCSConstant;
  */
 public abstract class Vehicle implements  TCSConstant {
     protected double[] speed = new double[2];//{speed left/right, speed up/down} in m/s (always positive)               
-    protected double[] position;             //Position as the upper corner of vehicle, in m
+    protected double[] position;             //Position as the middle vehicle, in m
     protected double[] size;                 //{length, width} in m
     protected double acceleration_rate;      //in m/s^2
     protected double deceleration_rate;      //in m/s^2
-    protected int direction;                 //degrees, 0° -> right, 90° -> up, etc.     
+    protected double direction;              //degrees, 0° -> right, 90° -> up, etc. Should always be positive     
     protected double speed_limit;            //in m/s, set for AutomatedCar, randomized for NormalCar
     protected double safety_distance;        //distance needed for car to safely decelerate to 0
     protected double time_moving;            //total time vehicle has been moving, helpful for testing/checking
@@ -29,11 +29,19 @@ public abstract class Vehicle implements  TCSConstant {
     protected boolean is_accelerating;       //true if accelerate method is running
     protected boolean is_turning;            //true if car is turning in intersection
     
+    //temporary turning constants (only called before a car starts a turn)
+    protected double turning_acceleration;   //acceleration value used only for turning
+    protected double turn_radius;            //radius of quarter circle modeling turn
+    protected double turning_velocity;       //calculated from turning_acceleration value
+    protected double[] turn_initial_position;//position before turn (with center at limit line)
+    protected double turn_initial_direction; //direction car was facing before turn
+    
     protected Random rand = new Random(100); // Instead of initialize random in each car class, it can be created here.
     
     protected final double buffer = BUFFER;  //gap between cars when stopped, in m
     protected final int rounded_dec_pos = ROUNDEDDECPOS;     //the decimal position accuracy of functions
     protected final double time_increments = TIMEINCREMENTS; //milliseconds 
+    
     
     
     //Abstract functions:
@@ -44,29 +52,6 @@ public abstract class Vehicle implements  TCSConstant {
     //calculates and assigns new saftey distance based on current speed
     public abstract void updateSafetyDistance();
     
-    
-    
-    //The following functions are now obsolete with the way Vehicle classes function
-    //But the logic is still helpful and might be able to be reused in other classes
-    //See AutomatedCar for fleshed out functions and code
-    
-    /*
-    
-    public abstract void accelerateToSpeed(double speed) throws InterruptedException;
-    
-    public abstract void accelerateToSpeedLimit() throws InterruptedException;
-    
-    public abstract void decelerateToSpeed(double speed) throws InterruptedException;
-    
-    public abstract void decelerateToStop() throws InterruptedException;
-    
-    //vehicle will travel a certain distance to a stop, accelerating to speed limit 
-    //until it needs to begin decelerating based on saftey distance 
-    public abstract void travelDistanceToStop(double distance) throws InterruptedException;
-    */
-    
-    
-    
     //assigns each car a random acceleration rate
     public abstract void genRandAcceleration();
     
@@ -75,8 +60,19 @@ public abstract class Vehicle implements  TCSConstant {
     
     public abstract void genRandReactionTime();
     
-    //no implementation yet
-    public abstract void turn(int dirrection);
+    //used when turn() is first called, sets starting constants so the function 
+    //can be called on many times and edit Vehicle vairables
+    public abstract void setTurningConstants(double[] destination);
+    
+    //      - Direction is 90 for left turn and -90 for right turn
+    //      - Destination is the middle of the limit line of the lane the car should turn to 
+    //      - Accounts for the back half of the car still being in the intersection 
+    // after the car has reached the destination by moving car forward till back 
+    // is past the limit line
+    //      - Only use method once car has front tires at limit line
+    //      - When the car begins turn, is_turning will be set to true and once the car 
+    // has finished the turn, is_turning will be set to false
+    public abstract void turn(int direction, double[] destination);
     
     //distance between front bumper of vehicle to back bumper of front car plus the buffer
     public abstract double getDistanceFromFrontVehicle(Vehicle front_car);
@@ -90,8 +86,8 @@ public abstract class Vehicle implements  TCSConstant {
     public abstract double getDistanceFromLimitLine (Lane lane);
     
     
-    //Non-abstract functions:
     
+    //Non-abstract functions:
     
     //returns true vehicle is facing east or west
     public boolean isTravelingHorizontal(){
@@ -106,6 +102,7 @@ public abstract class Vehicle implements  TCSConstant {
         
     }
     */
+    
     public boolean isTravelingVertical(){
         if (direction == 90 || direction == 270){
             return true;
@@ -119,6 +116,7 @@ public abstract class Vehicle implements  TCSConstant {
         return num / Math.pow(10, rounded_dec_pos);
     }
 
+    
     
     //Basic getters
     
@@ -146,13 +144,13 @@ public abstract class Vehicle implements  TCSConstant {
             return false;    
     }
     */
-    public int getDirection(){
+    public double getDirection(){
         return direction;
     }
     //returns char value for direction
     //'!' means car is not travelling in one of the cardinal directions
     public char getCharDirection(){
-        switch(direction) {
+        switch((int) direction) {
             case 0:
                 return 'r';
             case 90:
@@ -223,4 +221,25 @@ public abstract class Vehicle implements  TCSConstant {
     public void reduceReactionTimeUnit() {
         reaction_time -= TIMEINCREMENTS;
     }
+    
+    
+    
+    //The following functions are now obsolete with the way Vehicle classes function
+    //But the logic is still helpful and might be able to be reused in other classes
+    //See AutomatedCar for fleshed out functions and code
+    
+    /*
+    
+    public abstract void accelerateToSpeed(double speed) throws InterruptedException;
+    
+    public abstract void accelerateToSpeedLimit() throws InterruptedException;
+    
+    public abstract void decelerateToSpeed(double speed) throws InterruptedException;
+    
+    public abstract void decelerateToStop() throws InterruptedException;
+    
+    //vehicle will travel a certain distance to a stop, accelerating to speed limit 
+    //until it needs to begin decelerating based on saftey distance 
+    public abstract void travelDistanceToStop(double distance) throws InterruptedException;
+    */
 }

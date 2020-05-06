@@ -4,6 +4,7 @@
 package vehicle;
 
 import java.text.DecimalFormat;
+import java.util.Arrays;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 import setting.Lane;
@@ -14,7 +15,7 @@ import traffic_congestion_simulator.TCSConstant;
  * @author Christine
  */
 public class AutomatedCar extends Vehicle implements TCSConstant {
-    
+
     //Creates a Automated car.
     public AutomatedCar(double[] position, double[] size, int direction) {
         speed[0] = 0;
@@ -24,6 +25,11 @@ public class AutomatedCar extends Vehicle implements TCSConstant {
         time_moving = 0;
         is_turning = false;
         reaction_time = 0;
+        turning_acceleration = 0;
+        turn_radius = 0;
+        turning_velocity = 0;
+        turn_initial_position = new double[2];
+        turn_initial_direction = 0;
 
         //may change/dump these two methods later
         this.genRandAcceleration();
@@ -41,54 +47,41 @@ public class AutomatedCar extends Vehicle implements TCSConstant {
         double acceleration;
         if (accelerate) {
             acceleration = acceleration_rate;
+            this.genRandAcceleration();
         } else {
             acceleration = deceleration_rate;
+            this.genRandDeceleration();
         }
-        
+
         // I'm going to need it soon.
         is_accelerating = true;
 
         // I updated it.
-        double deltaPosX = speed[0] * time + 1.0 / 2 * acceleration * time * time * Math.cos(Math.toRadians(direction));
+        double deltaPosX = speed[0] * time + 1.0 / 2 * acceleration * time * time
+                * Math.cos(Math.toRadians(direction));
         deltaPosX = this.rounder(deltaPosX);
-        position[0] = deltaPosX;
+        position[0] += deltaPosX;
         speed[0] += this.rounder(acceleration * time * Math.cos(Math.toRadians(direction)));
-        double deltaPosY = speed[1] * time + 1.0 / 2 * acceleration * time * time * Math.sin(Math.toRadians(direction));
+
+        double deltaPosY = speed[1] * time + 1.0 / 2 * acceleration * time * time
+                * Math.sin(Math.toRadians(direction));
         deltaPosY = this.rounder(deltaPosY);
-        position[1] = deltaPosY;
+        position[1] += deltaPosY;
         speed[1] += this.rounder(acceleration * time * Math.sin(Math.toRadians(direction)));
 
-        /*
-        if (this.isTravelingHorizontal()){
-            double deltaPosX = speed[0] * time + 1.0 / 2 * acceleration * time * time;
-            deltaPosX = this.rounder(deltaPosX, this.rounded_dec_pos);
-            position[0] += deltaPosX * Math.cos(Math.toRadians(direction));
-            speed[0] += this.rounder(acceleration * time, this.rounded_dec_pos);
-            
-        } else if (this.isTravelingVertical()) {
-            double deltaPosY = speed[1] * time + 1.0 / 2 * acceleration * time * time;
-            deltaPosY = this.rounder(deltaPosY, this.rounded_dec_pos);
-            position[1] += deltaPosY * Math.sin(Math.toRadians(direction));
-            speed[1] += this.rounder(acceleration * time, this.rounded_dec_pos);
-            
-        } else {
-            //error message just in case
-            //might delete later
-            System.out.println("Error: accelerate called while car is not facing a cardinal direction");
-        }
-         */
         updateSafetyDistance();
         //Sleep handled in seperate class
         //TimeUnit.MICROSECONDS.sleep(sleep_time);
         time_moving += time;
         is_accelerating = false;
+
     }
-    
+
     //For automated car there is no reaction time.
     public void genRandReactionTime() {
         reaction_time = 0;
     }
-    
+
     //Updates car safe distances, so the car will avoid accident.
     public void updateSafetyDistance() {
         if (this.is_turning) {
@@ -99,88 +92,137 @@ public class AutomatedCar extends Vehicle implements TCSConstant {
         }
     }
 
-    //Obsolete functions, explained in abstract Vehicle class
-    //still might find a use for code/logic in other classes
-    /*
-    public void accelerateToSpeed(double speed) throws InterruptedException {
-        double speed_dir = this.getDirectionalSpeed();
-        while (speed_dir < speed) {
-            accelerate(time_increments, acceleration_rate);
-            speed_dir = this.getDirectionalSpeed();
-        }
-    }
-
-    public void decelerateToSpeed(double speed) throws InterruptedException {
-        double speed_dir = this.getDirectionalSpeed();
-        while (speed_dir > speed) {
-            accelerate(time_increments, deceleration_rate);
-            speed_dir = this.getDirectionalSpeed();
-        }
-    }
-
-    public void accelerateToSpeedLimit() throws InterruptedException {
-        accelerateToSpeed(speed_limit);
-    }
-
-    public void decelerateToStop() throws InterruptedException {
-        decelerateToSpeed(0);
-    }
-
-    public void travelDistanceToStop(double distance) throws InterruptedException {
-        double initial_pos = this.getDirectionalPos();
-        while (distance > safety_distance) {
-            if (this.getDirectionalSpeed() < speed_limit) {
-                accelerate(time_increments, acceleration_rate);
-            } else {
-                accelerate(time_increments, 0);
-            }
-            distance -= Math.abs(initial_pos - this.getDirectionalPos());
-            initial_pos = this.getDirectionalPos();
-        }
-        this.decelerateToStop();
-    }
-     */
-    /**
-     * This class will serve as an estimation method. It will estimate the
-     * distance of the car can travel in the next something seconds. And will
-     * report the time.
-     *
-     */
-    public double estimateDistance(int direction, int time) {
-
-        return 0;
-    }
-
     //Randomly generating acceleration and deceleration functions:
     //randomly generated from gaussian distribution of average values
     //may change variance if necessary
     public void genRandAcceleration() {
-        acceleration_rate = rand.nextGaussian() * ACCELERATIONAVGMAX / 10 + ACCELERATIONAVGMAX;
+        acceleration_rate = Math.abs(rand.nextGaussian() * ACCELERATIONAVGMAX / 10 + ACCELERATIONAVGMAX);
         acceleration_rate = this.rounder(acceleration_rate);
     }
 
-    ;
-    
     //deceleration relys on generated acceleration to avoid unrealistic/conflicting rates
     public void genRandDeceleration() {
         double scaled_dec_avg_max = DECELERATIONAVGMAX / ACCELERATIONAVGMAX * acceleration_rate;
         deceleration_rate = rand.nextGaussian() * scaled_dec_avg_max / 10 + scaled_dec_avg_max;
         deceleration_rate = this.rounder(deceleration_rate);
     }
-    
-    
-    
-    
-    public void turn(int direction) {
-        //no implementation yet
-    }
 
-    //front bumper of car to back bumper of front car plus buffer
+        //front bumper of car to back bumper of front car plus buffer
     public double getDistanceFromFrontVehicle(Vehicle front_car) {
         if (front_car.isTravelingHorizontal()) {
-            return Math.abs(this.position[0] - front_car.position[0]) - front_car.size[0] + buffer;
+            return Math.abs(this.position[0] - front_car.position[0])
+                    - this.size[0] / 2 - front_car.size[0] / 2 + buffer;
         }
-        return Math.abs(this.position[1] - front_car.position[1]) - front_car.size[0] + buffer;
+        return Math.abs(this.position[1] - front_car.position[1])
+                - this.size[1] / 2 - front_car.size[1] / 2 + buffer;
+    }
+    
+    public void setTurningConstants(double[] destination) {
+        //slighty dimished acceleration rate to more realistically model a turn
+        //also acceleration is assumed to be constant
+        turning_acceleration = 2.0 / 3.0 * this.acceleration_rate;
+
+        turning_velocity = this.getDirectionalSpeed() / 2;
+
+        //radius of quarter circle that is being used to model the turn
+        turn_radius = Math.abs(destination[0] - this.position[0]);
+        
+        //initial values stored so turn() can be called many times and edit Vehicle vairables
+        turn_initial_position[0] = this.position[0];
+        turn_initial_position[1] = this.position[1];
+        turn_initial_direction = this.direction;
+
+    }
+
+    public void turn(int direction, double[] destination) {
+        //  this will run one time when turn() is first called, sets the constants 
+        //and positions car halfway in the intersection to prepare to begin turn
+        if (!this.is_turning) {
+            if (this.isTravelingHorizontal()) {
+                position[0] += size[0] * Math.cos(Math.toRadians(this.direction)) / 2;
+            } else {
+                position[1] += size[0] * Math.sin(Math.toRadians(this.direction)) / 2;
+            }
+
+            this.setTurningConstants(destination);
+            //for testing:
+            //System.out.println("I ran. Position: " + Arrays.toString(position));
+        }
+        is_turning = true;
+
+        //the change of angle is used to model acceleration
+        //the change is calculated based on one time increment of turning
+        turning_velocity += turning_acceleration * time_increments;
+        double angle_increment = turning_velocity * time_increments / turn_radius;
+        //testing:
+        //System.out.println("Angle inc: " + Math.toDegrees(angle_increment));
+        
+        //keeps track of how far car has travelled in the intersection
+        double[] turn_pos = {Math.abs(Math.abs(position[0]) - Math.abs(turn_initial_position[0])),
+            Math.abs(Math.abs(position[1]) - Math.abs(turn_initial_position[1]))};
+
+        //starting facing left or right
+        if (this.turn_initial_direction == 0 || this.turn_initial_direction == 180) {
+            //  keeps track of what reference angle should be used for each position component
+            //and whether each position component should be positively or negatively incremented
+            int neg_or_pos = (int) (Math.cos(Math.toRadians(this.turn_initial_direction))
+                    * Math.sin(Math.toRadians(this.turn_initial_direction + direction)));
+            
+            //changes dirrection of car based on calculated incremental angle change
+            this.direction += neg_or_pos * Math.toDegrees(angle_increment);
+            
+            //updates position components for one time increment of turning
+            position[0] += Math.cos(Math.toRadians(this.turn_initial_direction))
+                    * (turn_radius * Math.abs(Math.cos(Math.toRadians(this.direction - 
+                    neg_or_pos * 90))) - turn_pos[0]);
+
+            position[1] += Math.sin(Math.toRadians(this.turn_initial_direction + direction))*(turn_radius - turn_pos[1] - Math.abs(turn_radius
+                    * Math.sin(Math.toRadians(this.direction - neg_or_pos * 90))));
+        
+        //starting facing up or down
+        } else {
+            int neg_or_pos = (int) (-1*Math.cos(Math.toRadians(this.turn_initial_direction + direction))
+                    * Math.sin(Math.toRadians(this.turn_initial_direction)));
+            
+            this.direction += neg_or_pos * Math.toDegrees(angle_increment);
+            
+            position[0] += Math.cos(Math.toRadians(this.turn_initial_direction + direction))*(turn_radius - turn_pos[0] - Math.abs(turn_radius
+                    * Math.cos(Math.toRadians(this.direction - neg_or_pos * 90))));
+            
+            position[1] += Math.sin(Math.toRadians(this.turn_initial_direction))
+                    * (turn_radius * Math.abs(Math.sin(Math.toRadians(this.direction - 
+                    neg_or_pos * 90))) - turn_pos[1]);
+            
+        }
+
+        time_moving += time_increments;
+        
+        //checks if the car has finished the turn or not
+        if (direction == -90 && this.direction <= turn_initial_direction - 90
+                || direction == 90 && this.direction >= turn_initial_direction + 90) {
+            
+            //rounds angle down/up to be exactly 0, 90, 180, or 270
+            if (this.direction >= 360) {
+                this.direction = 0;
+            } else if (this.direction < -1) {
+                this.direction = 270;
+            } else {
+                this.direction = turn_initial_direction + direction;
+            }
+            
+            //  moves car slightly forward in whatever direction it is facing so 
+            //the whole car is past limit line (with back tires on it)
+            if (this.isTravelingHorizontal()) {
+                position[0] = destination[0] + size[0] * Math.cos(Math.toRadians(this.direction)) / 2;
+                position[1] = destination[1];
+            } else {
+                position[1] = destination[1] + size[0] * Math.sin(Math.toRadians(this.direction)) / 2;
+                position[0] = destination[0];
+            }
+            
+            is_turning = false;    
+        } 
+            
     }
 
     /*
@@ -233,4 +275,45 @@ public class AutomatedCar extends Vehicle implements TCSConstant {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
+    //Obsolete functions, explained in abstract Vehicle class
+    //still might find a use for code/logic in other classes
+    /*
+    public void accelerateToSpeed(double speed) throws InterruptedException {
+        double speed_dir = this.getDirectionalSpeed();
+        while (speed_dir < speed) {
+            accelerate(time_increments, acceleration_rate);
+            speed_dir = this.getDirectionalSpeed();
+        }
+    }
+
+    public void decelerateToSpeed(double speed) throws InterruptedException {
+        double speed_dir = this.getDirectionalSpeed();
+        while (speed_dir > speed) {
+            accelerate(time_increments, deceleration_rate);
+            speed_dir = this.getDirectionalSpeed();
+        }
+    }
+
+    public void accelerateToSpeedLimit() throws InterruptedException {
+        accelerateToSpeed(speed_limit);
+    }
+
+    public void decelerateToStop() throws InterruptedException {
+        decelerateToSpeed(0);
+    }
+
+    public void travelDistanceToStop(double distance) throws InterruptedException {
+        double initial_pos = this.getDirectionalPos();
+        while (distance > safety_distance) {
+            if (this.getDirectionalSpeed() < speed_limit) {
+                accelerate(time_increments, acceleration_rate);
+            } else {
+                accelerate(time_increments, 0);
+            }
+            distance -= Math.abs(initial_pos - this.getDirectionalPos());
+            initial_pos = this.getDirectionalPos();
+        }
+        this.decelerateToStop();
+    }
+     */
 }
