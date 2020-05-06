@@ -15,6 +15,7 @@ import traffic_congestion_simulator.TCSConstant;
  *
  * @author Christine
  */
+//Minic cars with human drivers.
 public class NormalCar extends Vehicle implements TCSConstant {
 
     // Don't need reaction_time as a variable in normal car. It now is a shared variable in vehicle.

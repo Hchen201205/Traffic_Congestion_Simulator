@@ -14,6 +14,7 @@ import traffic_congestion_simulator.TCSConstant;
  *
  * @author Christine
  */
+//Minic cars with automated acceleration function.
 public class AutomatedCar extends Vehicle implements TCSConstant {
 
     //Creates a Automated car.

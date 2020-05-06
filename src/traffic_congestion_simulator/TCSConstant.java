@@ -11,6 +11,7 @@ package traffic_congestion_simulator;
  *
  * @author chenhanxi
  */
+//Stores all the contants that this simulation needs.
 public interface TCSConstant {
     
     public final double TIMEINCREMENTS = 0.001; //milliseconds in unit second, 1 millisecond = 0.001 second
@@ -75,15 +76,11 @@ public interface TCSConstant {
     // We will fix this later.
     public final double[][] LIGHTPOSITION = {};
     
-    public final int[][] LANEXVALUE = {};
+    public final double[][][] LANEPOSITION = {};
+
+    public final double[][][] LANESIZE = {};
     
-    public final int[][] LANEYVALUE = {};
-    
-    public final int[][] LANELENGTH = {};
-    
-    public final int[][] LANEWIDTH = {};
-    
-    public final int[][] LANEDIRECTION = {};
+    public final double[][] LANEDIRECTION = {};
     
     public final int[] NUMOFLANE = {}; // NUMOFLANE can also be an indicator of number of light at a specific intersection.
     

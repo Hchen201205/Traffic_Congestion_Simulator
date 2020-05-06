@@ -9,6 +9,7 @@ import java.awt.Color;
 import java.util.ArrayList;
 import vehicle.*;
 import traffic_congestion_simulator.TCSConstant;
+import static traffic_congestion_simulator.TCSConstant.ROUNDEDDECPOS;
 
 /**
  * One thing to remember in this lane class is that it needs to be queue instead
@@ -20,49 +21,37 @@ public class Lane {
 
     ArrayList<Vehicle> carList;// a list of all the cars on the road.
 
-    boolean automated; // Do I need this?
+    double[] position; // 0 is x, 1 is y
 
-    int x_value;
+    double[] size; // 0 is length, 1 is width
 
-    int y_value;
-
-    int length;
-
-    int width;
-
-    int direction;
+    double direction; //  angle
 
     Light light;
 
-    // Testing point is a poitn which you can test whether a car is out of bound or not.
-    // In our simulation, the only way a car can be out of bound is when it has run through this lane.
-    int testingpoint;
+    boolean overflow;
 
-    public Lane(boolean automated, int x_value, int y_value, int length, int width, int direction, Light light) {
+    ArrayList<Vehicle> overflowVehicles;
+
+    public Lane(double[] position, double[] size, double direction, Light light) {
         carList = new ArrayList<>();
-        this.automated = automated;
         // Both x and y are defining the center position of the lane.
-        this.x_value = x_value;
-        this.y_value = y_value;
-        this.length = length;
-        this.width = width;
-        this.direction = direction; //0 = 'n', 1 = 's', 2 = 'e' or 3 = 'w'
-        switch (direction) {
-            case 0:
-                testingpoint = y_value - length / 2;
-                break;
-            case 1:
-                testingpoint = y_value + length / 2;
-                break;
-            case 2:
-                testingpoint = x_value + length / 2;
-                break;
-            case 3:
-                testingpoint = x_value - length / 2;
-                break;
-        }
+        this.position = position;
+        this.size = size;
+        this.direction = direction; // angle
+
         // I need to fix the car class based on this. That the length will always be the length and the width will always be the width. It's the direction that dominate.
         this.light = light;
+
+        overflow = false;
+
+        overflowVehicles = new ArrayList<>();
+    }
+
+    public double rounder(double num) {
+        num = num * Math.pow(10, ROUNDEDDECPOS);
+        num = Math.round(num);
+        return num / Math.pow(10, ROUNDEDDECPOS);
     }
 
     /**
@@ -81,7 +70,7 @@ public class Lane {
     // This will report the lane status.
     // It's highly recommend that this method don't use with checkSpotLeft at the same time because the target these methods are serving for are not the same.
     public double checkLaneStatus() {
-        double excessDistance = length;
+        double excessDistance = size[0];
         for (int i = 0; i < carList.size(); i++) {
             excessDistance -= carList.get(i).getSize()[0];
             if (i >= 1) {
@@ -144,44 +133,68 @@ public class Lane {
      * @param spot_left
      */
     public void yellow(double excessDistance, Lane2 lane2) {
-        if (automated) {
-            int spotLeft = checkSpotLeft(lane2, excessDistance);
-            for (int i = 0; i < spotLeft; i++) {
+        int spotLeft = checkSpotLeft(lane2, excessDistance);
+        for (int i = 0; i < spotLeft; i++) {
 
-            }
-            for (int i = 0; i < carList.size(); i++) {
-                // wait for implementation
+        }
+        for (int i = 0; i < carList.size(); i++) {
+            // wait for implementation
 
-            }
         }
 
     }
 
     public void updateCarList() {
         for (int i = 0; i < carList.size(); i++) {
-            switch (direction) {
-                case 0:
-                    if (carList.get(i).getPosition()[1] <= testingpoint) {
-                        carList.remove(i);
-                    }
-                    break;
-                case 1:
-                    if (carList.get(i).getPosition()[1] >= testingpoint) {
-                        carList.remove(i);
-                    }
-                    break;
-                case 2:
-                    if (carList.get(i).getPosition()[0] >= testingpoint) {
-                        carList.remove(i);
-                    }
-                    break;
-                case 3:
-                    if (carList.get(i).getPosition()[0] <= testingpoint) {
-                        carList.remove(i);
-                    }
-                    break;
+            double[] frontPos = carList.get(i).getCarFrontPos();
+            // Distance formula
+            double distance = Math.sqrt(Math.pow(frontPos[0] - position[0], 2) + Math.pow(frontPos[1] - position[1], 2));
+            if (distance > (1 / 2 * size[0])) {
+                
+                // Remember to check this tomorrow.
+                overflowVehicles.add(carList.get(i));
+                carList.remove(i);
+                overflow = true;
+            } else {
+                break;
             }
         }
     }
 
+    public boolean haveLight() {
+        return light != null;
+    }
+
+    public boolean getOverFlow() {
+        return overflow;
+    }
+
+    public ArrayList<Vehicle> getOverFlowList() {
+        return overflowVehicles;
+    }
+
+    public void removeOverFlow() {
+        overflow = false;
+        overflowVehicles.clear();
+    }
+
+    public double getDirection() {
+        return direction;
+    }
+
+    public double[][] getPoints() {
+        double[][] points = new double[4][2];
+        double v1 = direction;
+        for (int i = 0; i < 2; i++) {
+            double v2 = v1 + 90;
+            for (int j = 0; j < 2; j++) {
+                points[i + j][0] = position[0] + 1 / 2 * size[0] * Math.cos(Math.toRadians(v1)) + 1 / 2 * size[1] * Math.cos(Math.toRadians(v2));
+                points[i + j][1] = position[1] + 1 / 2 * size[0] * Math.sin(Math.toRadians(v1)) + 1 / 2 * size[1] * Math.sin(Math.toRadians(v2));
+                v2 -= 180;
+
+            }
+            v1 -= 180;
+        }
+        return points;
+    }
 }
