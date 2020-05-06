@@ -5,9 +5,7 @@
  */
 package vehicle;
 
-import java.util.Arrays;
 import java.util.Random;
-import java.util.concurrent.TimeUnit;
 import setting.Lane;
 import traffic_congestion_simulator.TCSConstant;
 
@@ -15,7 +13,8 @@ import traffic_congestion_simulator.TCSConstant;
  *
  * @author Christine
  */
-//Minic cars with human drivers.
+
+//Mimics cars with human drivers
 public class NormalCar extends Vehicle implements TCSConstant {
 
     // Don't need reaction_time as a variable in normal car. It now is a shared variable in vehicle.
@@ -109,7 +108,7 @@ public class NormalCar extends Vehicle implements TCSConstant {
 
     }
     
-    public void accelerate(double time, boolean accelerate) {
+    public void accelerate(double time_increment, boolean accelerate) {
         //reaction time randomizes each time it is used to begin accelerating from stop
         //actual delay from reaction time must be handled in an outside class
         if (this.isStopped()) {
@@ -124,18 +123,26 @@ public class NormalCar extends Vehicle implements TCSConstant {
 
         is_accelerating = true;
 
-        double deltaPosX = speed[0] * time + 1.0 / 2 * acceleration * time * time * Math.cos(Math.toRadians(direction));
-        deltaPosX = rounder(deltaPosX);
+        double deltaPosX = (speed[0] * time_increment + 1.0 / 2 * acceleration * time_increment * time_increment)
+                * Math.abs(Math.cos(Math.toRadians(direction)));
+        deltaPosX = this.rounder(deltaPosX);
         position[0] += deltaPosX;
-        speed[0] += rounder(acceleration * time * Math.cos(Math.toRadians(direction)));
-        
-        double deltaPosY = speed[1] * time + 1.0 / 2 * acceleration * time * time * Math.sin(Math.toRadians(direction));
-        deltaPosY = rounder(deltaPosY);
+        speed[0] += this.rounder(acceleration * time_increment * Math.abs(Math.cos(Math.toRadians(direction))));
+
+        double deltaPosY = (speed[1] * time_increment + 1.0 / 2 * acceleration * time_increment * time_increment)
+                * Math.abs(Math.sin(Math.toRadians(direction)));
+        deltaPosY = this.rounder(deltaPosY);
         position[1] += deltaPosY;
-        speed[1] += rounder(acceleration * time * Math.sin(Math.toRadians(direction)));
+        speed[1] += this.rounder(acceleration * time_increment * Math.abs(Math.sin(Math.toRadians(direction))));
+
+        if (speed[0]*Math.abs(Math.cos(Math.toRadians(direction))) < 0 || 
+            speed[1] * Math.abs(Math.sin(Math.toRadians(direction))) < 0){
+            speed[0] = 0;
+            speed[1] = 1;
+        } 
 
         updateSafetyDistance();
-        time_moving += time;
+        time_moving += time_increment;
         is_accelerating = false;
     }
     

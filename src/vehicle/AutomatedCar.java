@@ -3,10 +3,7 @@
  */
 package vehicle;
 
-import java.text.DecimalFormat;
 import java.util.Arrays;
-import java.util.Random;
-import java.util.concurrent.TimeUnit;
 import setting.Lane;
 import traffic_congestion_simulator.TCSConstant;
 
@@ -14,7 +11,7 @@ import traffic_congestion_simulator.TCSConstant;
  *
  * @author Christine
  */
-//Minic cars with automated acceleration function.
+//Mimics cars with automated acceleration
 public class AutomatedCar extends Vehicle implements TCSConstant {
 
     //Creates a Automated car.
@@ -41,10 +38,7 @@ public class AutomatedCar extends Vehicle implements TCSConstant {
         this.direction = direction;
     }
 
-    //changes saftey distance
-    public void accelerate(double time, boolean accelerate) {
-        //sleep handled in seperate class
-        //long sleep_time = (long) (time * 1000);
+    public void accelerate(double time_increment, boolean accelerate) {
         double acceleration;
         if (accelerate) {
             acceleration = acceleration_rate;
@@ -58,24 +52,36 @@ public class AutomatedCar extends Vehicle implements TCSConstant {
         is_accelerating = true;
 
         // I updated it.
-        double deltaPosX = speed[0] * time + 1.0 / 2 * acceleration * time * time
-                * Math.cos(Math.toRadians(direction));
+        double deltaPosX = (speed[0] * time_increment + 1.0 / 2 * acceleration * time_increment * time_increment)
+                * Math.abs(Math.cos(Math.toRadians(direction)));
         deltaPosX = this.rounder(deltaPosX);
         position[0] += deltaPosX;
-        speed[0] += this.rounder(acceleration * time * Math.cos(Math.toRadians(direction)));
+        speed[0] += this.rounder(acceleration * time_increment * Math.abs(Math.cos(Math.toRadians(direction))));
 
-        double deltaPosY = speed[1] * time + 1.0 / 2 * acceleration * time * time
-                * Math.sin(Math.toRadians(direction));
+        double deltaPosY = (speed[1] * time_increment + 1.0 / 2 * acceleration * time_increment * time_increment)
+                * Math.abs(Math.sin(Math.toRadians(direction)));
         deltaPosY = this.rounder(deltaPosY);
         position[1] += deltaPosY;
-        speed[1] += this.rounder(acceleration * time * Math.sin(Math.toRadians(direction)));
+        speed[1] += this.rounder(acceleration * time_increment * Math.abs(Math.sin(Math.toRadians(direction))));
 
+        if (speed[0]*Math.abs(Math.cos(Math.toRadians(direction))) < 0 || 
+            speed[1] * Math.abs(Math.sin(Math.toRadians(direction))) < 0){
+            speed[0] = 0;
+            speed[1] = 1;
+        } 
+        
         updateSafetyDistance();
-        //Sleep handled in seperate class
-        //TimeUnit.MICROSECONDS.sleep(sleep_time);
-        time_moving += time;
+        time_moving += time_increment;
         is_accelerating = false;
 
+    }
+    
+    //car will travel for one increment without changing speed
+    public void travelWithConstantSpeed(){
+        double acceleration_rate = this.acceleration_rate;
+        this.acceleration_rate = 0;
+        //accelerate(true);
+        this.acceleration_rate = acceleration_rate;
     }
 
     //For automated car there is no reaction time.
@@ -108,7 +114,7 @@ public class AutomatedCar extends Vehicle implements TCSConstant {
         deceleration_rate = this.rounder(deceleration_rate);
     }
 
-        //front bumper of car to back bumper of front car plus buffer
+    //front bumper of car to back bumper of front car plus buffer
     public double getDistanceFromFrontVehicle(Vehicle front_car) {
         if (front_car.isTravelingHorizontal()) {
             return Math.abs(this.position[0] - front_car.position[0])
@@ -121,9 +127,9 @@ public class AutomatedCar extends Vehicle implements TCSConstant {
     public void setTurningConstants(double[] destination) {
         //slighty dimished acceleration rate to more realistically model a turn
         //also acceleration is assumed to be constant
-        turning_acceleration = 2.0 / 3.0 * this.acceleration_rate;
+        turning_acceleration = 3.0 / 4.0 * this.acceleration_rate;
 
-        turning_velocity = this.getDirectionalSpeed() / 2;
+        turning_velocity = this.getDirectionalSpeed() * 3.0 / 4.0;
 
         //radius of quarter circle that is being used to model the turn
         turn_radius = Math.abs(destination[0] - this.position[0]);
@@ -147,13 +153,17 @@ public class AutomatedCar extends Vehicle implements TCSConstant {
 
             this.setTurningConstants(destination);
             //for testing:
-            //System.out.println("I ran. Position: " + Arrays.toString(position));
+            System.out.println("I ran. Position: " + Arrays.toString(position));
         }
         is_turning = true;
 
         //the change of angle is used to model acceleration
         //the change is calculated based on one time increment of turning
         turning_velocity += turning_acceleration * time_increments;
+        if (turning_velocity < 0){
+            turning_velocity = 0;
+        }
+        
         double angle_increment = turning_velocity * time_increments / turn_radius;
         //testing:
         //System.out.println("Angle inc: " + Math.toDegrees(angle_increment));
@@ -226,20 +236,30 @@ public class AutomatedCar extends Vehicle implements TCSConstant {
             
     }
 
+    //runs a turn increment with no acceleration
+    //car will continue along turn for one increment with whatever speed it currently has
+    public void turnWithConstantSpeed(int direction, double[] destination){
+        double turning_acceleration = this.turning_acceleration;
+        this.turning_acceleration = 0;
+        turn(direction, destination);
+        this.turning_acceleration = turning_acceleration;
+    }
+    
     /*
     public double getDistanceFromTurningVehicle(Vehicle2 front_car){
         //no implementation yet
         
         return distance;
     }
-     */
- /*
+     
+ 
     public double getDistanceFromLimitLine (Lane lane){
         //not implemented yet
         
         return distance;
     }
      */
+    
     //returns exact time needed to decelerate to stop
     public double timeToStop() {
         double speed = this.getDirectionalSpeed();
