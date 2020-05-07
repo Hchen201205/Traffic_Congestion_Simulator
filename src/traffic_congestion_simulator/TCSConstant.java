@@ -54,12 +54,6 @@ public interface TCSConstant {
     
     public final int TESTSIZEY = 30;
     
-    public final int LIGHTGREENTOYELLOW = 25;
-    
-    public final int LIGHTYELLOWTORED = 10;
-    
-    public final int LIGHTREDTOGREEN = 40;
-    
     public final int LIGHTPOSX = 150;
     
     public final int LIGHTPOSY = 150;

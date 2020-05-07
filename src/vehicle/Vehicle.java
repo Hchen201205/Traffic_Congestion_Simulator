@@ -17,7 +17,7 @@ import traffic_congestion_simulator.TCSConstant;
 public abstract class Vehicle implements TCSConstant {
 
     protected double[] speed = new double[2];//{speed left/right, speed up/down} in m/s (always positive)               
-    protected double[] position;             //Position as the middle vehicle, in m
+    protected double[] position;             //Position as the top of the car but half of the , in m
     protected double[] size;                 //{length, width} in m
     protected double[] breakingPoint;
     
@@ -234,7 +234,8 @@ public abstract class Vehicle implements TCSConstant {
     }
 
     public void setPosition(double[] position) {
-        this.position = position;
+        this.position[0] = position[0];
+        this.position[1] = position[1];
     }
     
     //The following functions are now obsolete with the way Vehicle classes function

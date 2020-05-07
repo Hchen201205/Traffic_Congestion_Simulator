@@ -17,13 +17,13 @@ import java.util.concurrent.TimeUnit;
 public class Light implements TCSConstant {
 
     boolean start;
-    int direction;                //0 = 'n', 1 = 's', 2 = 'e' or 3 = 'w'
+    double direction;                //0 = 'n', 1 = 's', 2 = 'e' or 3 = 'w'
     private int[] change_times;   //array of light cycle timing between color changes (milliseconds)
     private Color color;
     private double time_passed;   // time that has passed in this cycle;
-    
+
     private final int rounded_dec_pos = ROUNDEDDECPOS;
-    
+
     //Creates a traffic light.
     public Light(int direction) {
         this.direction = direction;
@@ -33,7 +33,7 @@ public class Light implements TCSConstant {
     }
 
     //Add a color so that we can set which color the light is starting on
-    public Light(int direction, Color color) {
+    public Light(double direction, Color color) {
         this.direction = direction;
         start = false;
         this.color = color; // red -> 0; green -> 0 + red interval; yellow -> 0 + red interval + yellow interval;
@@ -57,19 +57,19 @@ public class Light implements TCSConstant {
     //A cycle of traffic light.
     public void runCycleUnit() {
         if (start) {
-            time_passed += TIMEINCREMENTS;
-            /* I'm deciding to not have these two lines. The reason for that is the light we are considering is not a whole. It's just a single light. 
-        I will probably have this sleep in simulation class.
-        long sleep_time = (long) (time_increments * 1000);
-        TimeUnit.MICROSECONDS.sleep(sleep_time);
-             */
+            time_passed = time_passed + TIMEINCREMENTS;
             changeColor();
 
-            // You need this line. Java has a rounding error if you don't include this.
-            time_passed = Math.round(time_passed * Math.pow(10, rounded_dec_pos) / Math.pow(10, rounded_dec_pos));
+            time_passed = rounder(time_passed);
 
         }
 
+    }
+
+    public double rounder(double num) {
+        num = num * Math.pow(10, ROUNDEDDECPOS);
+        num = Math.round(num);
+        return num / Math.pow(10, ROUNDEDDECPOS);
     }
 
     public void endCycle() {
@@ -79,11 +79,14 @@ public class Light implements TCSConstant {
     public void changeColor() {
         if (time_passed == change_times[0]) {
             color = Color.GREEN;
+            System.out.println("\n\n\n\n\n\nLight Switch to Green\n\n\n\n\n\n");
         } else if (time_passed == change_times[0] + change_times[1]) {
             color = Color.YELLOW;
+                        System.out.println("\n\n\n\n\n\nLight Switch to Yellow\n\n\n\n\n\n");
         } else if (time_passed == change_times[0] + change_times[1] + change_times[2]) {
             color = Color.RED;
             time_passed = 0;
+                        System.out.println("\n\n\n\n\n\nLight Switch to Red\n\n\n\n\n\n");
         }
     }
 
@@ -120,18 +123,8 @@ public class Light implements TCSConstant {
         }
     }
 
-    public char getDirection() {
-        switch (direction) {
-            case 0:
-                return 'n';
-            case 1:
-                return 's';
-            case 2:
-                return 'e';
-            default:
-                return 'w';
-
-        }
+    public double getDirection() {
+        return direction;
     }
 
     public double getTimePassed() {
@@ -139,8 +132,8 @@ public class Light implements TCSConstant {
     }
 
     /**
-     * This is the testing code. Try it out. I believe there is no more
-     * bug. When you confirm it just delete the following.
+     * This is the testing code. Try it out. I believe there is no more bug.
+     * When you confirm it just delete the following.
      *
      * @param arg
      */
