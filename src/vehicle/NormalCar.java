@@ -160,7 +160,7 @@ public class NormalCar extends Vehicle implements TCSConstant {
         //slighty dimished acceleration rate to more realistically model a turn
         //also acceleration is assumed to be constant
         if (accelerate){
-            turning_acceleration = 3.0 / 4.0 * this.acceleration_rate;
+            turning_acceleration = 2.0 / 3.0 * this.acceleration_rate;
         } else {
             turning_acceleration = 3.0 / 4.0 * this.deceleration_rate;
         }
@@ -315,7 +315,7 @@ public class NormalCar extends Vehicle implements TCSConstant {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
-    @Override
+
     public double[] estimateBreakingPoint(double x_value, double y_value) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
@@ -329,5 +329,4 @@ public class NormalCar extends Vehicle implements TCSConstant {
     public boolean getAutomated() {
         return false;
     }
-
 }
