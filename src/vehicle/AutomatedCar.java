@@ -64,20 +64,20 @@ public class AutomatedCar extends Vehicle implements TCSConstant {
         position[1] += deltaPosY;
         speed[1] += this.rounder(acceleration * time_increment * Math.abs(Math.sin(Math.toRadians(direction))));
 
-        if (speed[0]*Math.abs(Math.cos(Math.toRadians(direction))) < 0 || 
-            speed[1] * Math.abs(Math.sin(Math.toRadians(direction))) < 0){
+        if (speed[0] * Math.abs(Math.cos(Math.toRadians(direction))) < 0
+                || speed[1] * Math.abs(Math.sin(Math.toRadians(direction))) < 0) {
             speed[0] = 0;
             speed[1] = 1;
-        } 
-        
+        }
+
         updateSafetyDistance();
         time_moving += time_increment;
         is_accelerating = false;
 
     }
-    
+
     //car will travel for one increment without changing speed
-    public void travelWithConstantSpeed(){
+    public void travelWithConstantSpeed() {
         double acceleration_rate = this.acceleration_rate;
         this.acceleration_rate = 0;
         accelerate(this.time_increments, true);
@@ -123,22 +123,21 @@ public class AutomatedCar extends Vehicle implements TCSConstant {
         return Math.abs(this.position[1] - front_car.position[1])
                     - front_car.size[1] + buffer;
     }
-    
+
     public void setTurningConstants(double[] destination, boolean accelerate) {
         //slighty dimished acceleration rate to more realistically model a turn
         //also acceleration is assumed to be constant
-        if (accelerate){
+        if (accelerate) {
             turning_acceleration = 3.0 / 4.0 * this.acceleration_rate;
         } else {
             turning_acceleration = 3.0 / 4.0 * this.deceleration_rate;
         }
-        
 
         turning_velocity = this.getDirectionalSpeed() * 3.0 / 4.0;
 
         //radius of quarter circle that is being used to model the turn
         turn_radius = Math.abs(destination[0] - this.position[0]);
-        
+
         //initial values stored so turn() can be called many times and edit Vehicle vairables
         turn_initial_position[0] = this.position[0];
         turn_initial_position[1] = this.position[1];
@@ -168,14 +167,14 @@ public class AutomatedCar extends Vehicle implements TCSConstant {
         //the change of angle is used to model acceleration
         //the change is calculated based on one time increment of turning
         turning_velocity += turning_acceleration * time_increments;
-        if (turning_velocity < 0){
+        if (turning_velocity < 0) {
             turning_velocity = 0;
         }
-        
+
         double angle_increment = turning_velocity * time_increments / turn_radius;
         //testing:
         //System.out.println("Angle inc: " + Math.toDegrees(angle_increment));
-        
+
         //keeps track of how far car has travelled in the intersection
         double[] turn_pos = {Math.abs(Math.abs(position[0]) - Math.abs(turn_initial_position[0])),
             Math.abs(Math.abs(position[1]) - Math.abs(turn_initial_position[1]))};
@@ -186,40 +185,40 @@ public class AutomatedCar extends Vehicle implements TCSConstant {
             //and whether each position component should be positively or negatively incremented
             int neg_or_pos = (int) (Math.cos(Math.toRadians(this.turn_initial_direction))
                     * Math.sin(Math.toRadians(this.turn_initial_direction + direction)));
-            
+
             //changes dirrection of car based on calculated incremental angle change
             this.direction += neg_or_pos * Math.toDegrees(angle_increment);
-            
+
             //updates position components for one time increment of turning
             position[0] += Math.cos(Math.toRadians(this.turn_initial_direction))
-                    * (turn_radius * Math.abs(Math.cos(Math.toRadians(this.direction - 
-                    neg_or_pos * 90))) - turn_pos[0]);
+                    * (turn_radius * Math.abs(Math.cos(Math.toRadians(this.direction
+                            - neg_or_pos * 90))) - turn_pos[0]);
 
-            position[1] += Math.sin(Math.toRadians(this.turn_initial_direction + direction))*(turn_radius - turn_pos[1] - Math.abs(turn_radius
+            position[1] += Math.sin(Math.toRadians(this.turn_initial_direction + direction)) * (turn_radius - turn_pos[1] - Math.abs(turn_radius
                     * Math.sin(Math.toRadians(this.direction - neg_or_pos * 90))));
-        
-        //starting facing up or down
+
+            //starting facing up or down
         } else {
-            int neg_or_pos = (int) (-1*Math.cos(Math.toRadians(this.turn_initial_direction + direction))
+            int neg_or_pos = (int) (-1 * Math.cos(Math.toRadians(this.turn_initial_direction + direction))
                     * Math.sin(Math.toRadians(this.turn_initial_direction)));
-            
+
             this.direction += neg_or_pos * Math.toDegrees(angle_increment);
-            
-            position[0] += Math.cos(Math.toRadians(this.turn_initial_direction + direction))*(turn_radius - turn_pos[0] - Math.abs(turn_radius
+
+            position[0] += Math.cos(Math.toRadians(this.turn_initial_direction + direction)) * (turn_radius - turn_pos[0] - Math.abs(turn_radius
                     * Math.cos(Math.toRadians(this.direction - neg_or_pos * 90))));
-            
+
             position[1] += Math.sin(Math.toRadians(this.turn_initial_direction))
-                    * (turn_radius * Math.abs(Math.sin(Math.toRadians(this.direction - 
-                    neg_or_pos * 90))) - turn_pos[1]);
-            
+                    * (turn_radius * Math.abs(Math.sin(Math.toRadians(this.direction
+                            - neg_or_pos * 90))) - turn_pos[1]);
+
         }
 
         time_moving += time_increments;
-        
+
         //checks if the car has finished the turn or not
         if (direction == -90 && this.direction <= turn_initial_direction - 90
                 || direction == 90 && this.direction >= turn_initial_direction + 90) {
-            
+
             //rounds angle down/up to be exactly 0, 90, 180, or 270
             if (this.direction >= 360) {
                 this.direction = 0;
@@ -228,7 +227,7 @@ public class AutomatedCar extends Vehicle implements TCSConstant {
             } else {
                 this.direction = turn_initial_direction + direction;
             }
-            
+
             //  moves car slightly forward in whatever direction it is facing so 
             //the whole car is past limit line (with back tires on it)
             if (this.isTravelingHorizontal()) {
@@ -238,26 +237,63 @@ public class AutomatedCar extends Vehicle implements TCSConstant {
                 position[1] = destination[1] + size[0] * Math.sin(Math.toRadians(this.direction));
                 position[0] = destination[0];
             }
-            
-            is_turning = false;    
-        } 
-            
+
+            is_turning = false;
+        }
+
     }
 
     //runs a turn increment with no acceleration
     //car will continue along turn for one increment with whatever speed it currently has
-    public void turnWithConstantSpeed(int direction, double[] destination){
+    public void turnWithConstantSpeed(int direction, double[] destination) {
         double turning_acceleration = this.turning_acceleration;
         double acceleration_rate = this.acceleration_rate;
         this.turning_acceleration = 0;
         this.acceleration_rate = 0;
 
         turn(direction, destination, true);
-        
+
         this.turning_acceleration = turning_acceleration;
         this.acceleration_rate = acceleration_rate;
     }
+
+    /**
+     * This method will give the point at which the driver (robot in this case) will take the break;
+     * @param destination
+     * @return 
+     */
+    public double[] estimateBreakingPoint(double[] destination) {
+        // general equation (deceleration_rate * destination - acceleration_rate * position + 1 / 2 * velocity * velocity) / (deceleration_rate - acceleration_rate)
+        double[] breakingPoint = new double[2];
+        breakingPoint[0] = (deceleration_rate * Math.abs(Math.cos(Math.toRadians(direction))) * destination[0] - acceleration_rate * Math.abs(Math.cos(Math.toRadians(direction))) * position[0] + 1 / 2 * Math.pow(speed[0], 2)) / (deceleration_rate * Math.abs(Math.cos(Math.toRadians(direction))) - acceleration_rate * Math.abs(Math.cos(Math.toRadians(direction))));
+        breakingPoint[1] = (deceleration_rate * Math.abs(Math.sin(Math.toRadians(direction))) * destination[1] - acceleration_rate * Math.abs(Math.sin(Math.toRadians(direction))) * position[1] + 1 / 2 * Math.pow(speed[1], 2)) / (deceleration_rate * Math.abs(Math.sin(Math.toRadians(direction))) - acceleration_rate * Math.abs(Math.sin(Math.toRadians(direction))));
+
+        return breakingPoint;
+    }
     
+    /**
+     * This method will give the point at which the driver (robot in this case) will take the break;
+     * @param destination
+     * @return 
+     */
+    public double[] estimateBreakingPoint(Vehicle v) {
+        // general equation (deceleration_rate * destination - acceleration_rate * position + 1 / 2 * velocity * velocity) / (deceleration_rate - acceleration_rate)
+        double[] destination = new double[2];
+        for (int i = 0; i < 2; i++) {
+            destination[0] = v.getPosition()[0] + safety_distance * Math.abs(Math.cos(Math.toRadians(direction)));
+            destination[1] = v.getPosition()[1] + safety_distance * Math.abs(Math.sin(Math.toRadians(direction)));
+        }
+        double[] breakingPoint = new double[2];
+        breakingPoint[0] = (deceleration_rate * Math.abs(Math.cos(Math.toRadians(direction))) * destination[0] - acceleration_rate * Math.abs(Math.cos(Math.toRadians(direction))) * position[0] + 1 / 2 * Math.pow(speed[0], 2)) / (deceleration_rate * Math.abs(Math.cos(Math.toRadians(direction))) - acceleration_rate * Math.abs(Math.cos(Math.toRadians(direction))));
+        breakingPoint[1] = (deceleration_rate * Math.abs(Math.sin(Math.toRadians(direction))) * destination[1] - acceleration_rate * Math.abs(Math.sin(Math.toRadians(direction))) * position[1] + 1 / 2 * Math.pow(speed[1], 2)) / (deceleration_rate * Math.abs(Math.sin(Math.toRadians(direction))) - acceleration_rate * Math.abs(Math.sin(Math.toRadians(direction))));
+
+        return breakingPoint;
+    }
+
+    public boolean getAutomated() {
+        return true;
+    }
+
     /*
     public double getDistanceFromTurningVehicle(Vehicle2 front_car){
         //no implementation yet
@@ -272,7 +308,6 @@ public class AutomatedCar extends Vehicle implements TCSConstant {
         return distance;
     }
      */
-    
     //returns exact time needed to decelerate to stop
     public double timeToStop() {
         double speed = this.getDirectionalSpeed();

@@ -65,6 +65,7 @@ public class VehicleTesting {
             //System.out.println("Final Direction: " + car.direction);
             System.out.println("Final Position: " + Arrays.toString(car.position));
             System.out.println("\n\n\n\n\n\n");
-        }
+        
+       }
     }
 }

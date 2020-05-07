@@ -134,23 +134,30 @@ public class Lane {
      */
     public void yellow(double excessDistance, Lane2 lane2) {
         int spotLeft = checkSpotLeft(lane2, excessDistance);
-        for (int i = 0; i < spotLeft; i++) {
-
-        }
         for (int i = 0; i < carList.size(); i++) {
-            // wait for implementation
-
+            Vehicle v = carList.get(i);
+            if ((v.getAutomated() && spotLeft > 0 && estimate distance) || !v.getAutomated()) {
+                v.accelerate(TCSConstant.TIMEINCREMENTS, true);
+            } else {
+                v.accelerate(TCSConstant.TIMEINCREMENTS, false);
+            }
         }
-
     }
 
+    public void red() {
+        carList.get(i).
+        for (int i = 1; i < carList.size(); i++) {
+            
+        }
+    }
+    
     public void updateCarList() {
         for (int i = 0; i < carList.size(); i++) {
             double[] frontPos = carList.get(i).getCarFrontPos();
             // Distance formula
             double distance = Math.sqrt(Math.pow(frontPos[0] - position[0], 2) + Math.pow(frontPos[1] - position[1], 2));
             if (distance > (1 / 2 * size[0])) {
-                
+
                 // Remember to check this tomorrow.
                 overflowVehicles.add(carList.get(i));
                 carList.remove(i);
