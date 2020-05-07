@@ -118,10 +118,10 @@ public class AutomatedCar extends Vehicle implements TCSConstant {
     public double getDistanceFromFrontVehicle(Vehicle front_car) {
         if (front_car.isTravelingHorizontal()) {
             return Math.abs(this.position[0] - front_car.position[0])
-                    - this.size[0] / 2 - front_car.size[0] / 2 + buffer;
+                    - front_car.size[0] + buffer;
         }
         return Math.abs(this.position[1] - front_car.position[1])
-                - this.size[1] / 2 - front_car.size[1] / 2 + buffer;
+                    - front_car.size[1] + buffer;
     }
     
     public void setTurningConstants(double[] destination, boolean accelerate) {
@@ -150,12 +150,15 @@ public class AutomatedCar extends Vehicle implements TCSConstant {
         //  this will run one time when turn() is first called, sets the constants 
         //and positions car halfway in the intersection to prepare to begin turn
         if (!this.is_turning) {
+            
+            /*
             if (this.isTravelingHorizontal()) {
                 position[0] += size[0] * Math.cos(Math.toRadians(this.direction)) / 2;
             } else {
                 position[1] += size[0] * Math.sin(Math.toRadians(this.direction)) / 2;
             }
-
+            */
+            
             this.setTurningConstants(destination, accelerate);
             //for testing:
             //System.out.println("I ran. Position: " + Arrays.toString(position));
@@ -229,10 +232,10 @@ public class AutomatedCar extends Vehicle implements TCSConstant {
             //  moves car slightly forward in whatever direction it is facing so 
             //the whole car is past limit line (with back tires on it)
             if (this.isTravelingHorizontal()) {
-                position[0] = destination[0] + size[0] * Math.cos(Math.toRadians(this.direction)) / 2;
+                position[0] = destination[0] + size[0] * Math.cos(Math.toRadians(this.direction));
                 position[1] = destination[1];
             } else {
-                position[1] = destination[1] + size[0] * Math.sin(Math.toRadians(this.direction)) / 2;
+                position[1] = destination[1] + size[0] * Math.sin(Math.toRadians(this.direction));
                 position[0] = destination[0];
             }
             

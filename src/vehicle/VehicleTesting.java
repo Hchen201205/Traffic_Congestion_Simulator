@@ -20,7 +20,7 @@ public class VehicleTesting {
 
     public static void turnTesting() {
         double[] size = {2, 1};
-        double[][] pos = {{1, 2.5}, {1, 0.5}, {5.5, -1}, {7.5, -1}, {9, 3.5}, {9, 5.5}, {4.5, 7}, {2.5, 7}};
+        double[][] pos = {{2, 2.5}, {2, 0.5}, {5.5, 0}, {7.5, 0}, {8, 3.5}, {8, 5.5}, {4.5, 6}, {2.5, 6}};
         double[][] des = {{5.5, 6}, {2.5, 0}, {2,  3.5}, {8,  0.5}, {4.5, 0}, {7.5, 6}, {8, 2.5}, {2, 5.5}};
 
         HashMap<Integer, String> facing = new HashMap<Integer, String>();
@@ -53,14 +53,16 @@ public class VehicleTesting {
             while (car.is_turning) {
                 count++;
                 car.turn(turn, des[i], true);
-                if (count % 10 == 0) {
-                    System.out.println("Position: [" + car.rounder(car.position[0])
-                            + ", " + car.rounder(car.position[1]) + "]");
-                    System.out.println("Direction: " + car.rounder(car.direction));
+                if (count % 40 == 0) {
+                    System.out.println("(" + car.rounder(car.position[0])
+                            + ", " + car.rounder(car.position[1]) + ")");
+                    //System.out.println("Position: [" + car.rounder(car.position[0])
+                    //        + ", " + car.rounder(car.position[1]) + "]");
+                    //System.out.println("Direction: " + car.rounder(car.direction));
                 }
             }
-            System.out.println("\nTime increments: " + count);
-            System.out.println("Final Direction: " + car.direction);
+            //System.out.println("\nTime increments: " + count);
+            //System.out.println("Final Direction: " + car.direction);
             System.out.println("Final Position: " + Arrays.toString(car.position));
             System.out.println("\n\n\n\n\n\n");
         }
