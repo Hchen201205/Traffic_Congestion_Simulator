@@ -23,6 +23,8 @@ public class Lane {
 
     double[] position; // 0 is x, 1 is y
 
+    double[] frontPos;
+
     double[] size; // 0 is length, 1 is width
 
     double direction; //  angle
@@ -46,6 +48,10 @@ public class Lane {
         overflow = false;
 
         overflowVehicles = new ArrayList<>();
+
+        frontPos = new double[2];
+        frontPos[0] = position[0] * 1 / 2 * rounder(Math.abs(Math.cos(Math.toRadians(direction))));
+        frontPos[1] = position[1] * 1 / 2 * rounder(Math.abs(Math.sin(Math.toRadians(direction))));
     }
 
     public double rounder(double num) {
@@ -135,22 +141,26 @@ public class Lane {
     public void yellow(double excessDistance, Lane2 lane2) {
         int spotLeft = checkSpotLeft(lane2, excessDistance);
         for (int i = 0; i < carList.size(); i++) {
-            Vehicle v = carList.get(i);
-            if ((v.getAutomated() && spotLeft > 0 && estimate distance) || !v.getAutomated()) {
-                v.accelerate(TCSConstant.TIMEINCREMENTS, true);
-            } else {
-                v.accelerate(TCSConstant.TIMEINCREMENTS, false);
-            }
+            carList.get(i).accelerate(TCSConstant.TIMEINCREMENTS, false);
         }
     }
 
     public void red() {
-        carList.get(i).
+        double[] destination = new double[2];
+        // Wait for position to be switched.
+        destination[0] = frontPos[0] - (carList.get(1).getSize()[0] * rounder(Math.abs(Math.cos(Math.toRadians(direction)))));
+        destination[1] = frontPos[1] - (carList.get(1).getSize()[1] * rounder(Math.abs(Math.cos(Math.toRadians(direction)))));
+        carList.get(1).setPosition(destination);
+        
         for (int i = 1; i < carList.size(); i++) {
-            
+            destination[0] = carList.get(i - 1).getPosition()[0] - (rounder(Math.abs(Math.cos(Math.toRadians(direction))) * (1 / 2 * carList.get(i - 1).getSize()[0] - carList.get(i).getSafetyDistance() - 1 / 2 * carList.get(i).getSize()[0])));
+            destination[1] = carList.get(i - 1).getPosition()[1] - (rounder(Math.abs(Math.cos(Math.toRadians(direction))) * (1 / 2 * carList.get(i - 1).getSize()[1] - carList.get(i).getSafetyDistance() - 1 / 2 * carList.get(i).getSize()[1])));
+            if (carList.get(i).getAutomated()) {
+                carList.get(i).setPosition(position);
+            }
         }
     }
-    
+
     public void updateCarList() {
         for (int i = 0; i < carList.size(); i++) {
             double[] frontPos = carList.get(i).getCarFrontPos();
