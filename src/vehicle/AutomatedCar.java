@@ -128,7 +128,7 @@ public class AutomatedCar extends Vehicle implements TCSConstant {
         //slighty dimished acceleration rate to more realistically model a turn
         //also acceleration is assumed to be constant
         if (accelerate) {
-            turning_acceleration = 3.0 / 4.0 * this.acceleration_rate;
+            turning_acceleration = 2.0 / 3.0 * this.acceleration_rate;
         } else {
             turning_acceleration = 3.0 / 4.0 * this.deceleration_rate;
         }

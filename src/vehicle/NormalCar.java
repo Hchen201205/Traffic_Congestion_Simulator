@@ -160,7 +160,7 @@ public class NormalCar extends Vehicle implements TCSConstant {
         //slighty dimished acceleration rate to more realistically model a turn
         //also acceleration is assumed to be constant
         if (accelerate){
-            turning_acceleration = 3.0 / 4.0 * this.acceleration_rate;
+            turning_acceleration = 2.0 / 3.0 * this.acceleration_rate;
         } else {
             turning_acceleration = 3.0 / 4.0 * this.deceleration_rate;
         }
@@ -312,6 +312,11 @@ public class NormalCar extends Vehicle implements TCSConstant {
 
     @Override
     public double getDistanceFromLimitLine(Lane lane) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public boolean getAutomated() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
