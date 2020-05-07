@@ -5,6 +5,7 @@
  */
 package vehicle;
 
+import java.util.Arrays;
 import java.util.Random;
 import setting.Lane;
 import traffic_congestion_simulator.TCSConstant;
@@ -155,24 +156,29 @@ public class NormalCar extends Vehicle implements TCSConstant {
                 - this.size[1]/2 - front_car.size[1]/2 + buffer;
     }
     
-    public void setTurningConstants(double[] destination) {
+        public void setTurningConstants(double[] destination, boolean accelerate) {
         //slighty dimished acceleration rate to more realistically model a turn
         //also acceleration is assumed to be constant
-        turning_acceleration = 2.0 / 3.0 * this.acceleration_rate;
+        if (accelerate){
+            turning_acceleration = 3.0 / 4.0 * this.acceleration_rate;
+        } else {
+            turning_acceleration = 3.0 / 4.0 * this.deceleration_rate;
+        }
+        
 
-        turning_velocity = this.getDirectionalSpeed() / 2;
+        turning_velocity = this.getDirectionalSpeed() * 3.0 / 4.0;
 
         //radius of quarter circle that is being used to model the turn
         turn_radius = Math.abs(destination[0] - this.position[0]);
         
-        //initial values stored so turn() can be called many times and still edit Vehicle vairables
+        //initial values stored so turn() can be called many times and edit Vehicle vairables
         turn_initial_position[0] = this.position[0];
         turn_initial_position[1] = this.position[1];
         turn_initial_direction = this.direction;
 
     }
 
-    public void turn(int direction, double[] destination) {
+    public void turn(int direction, double[] destination, boolean accelerate) {
         //  this will run one time when turn() is first called, sets the constants 
         //and positions car halfway in the intersection to prepare to begin turn
         if (!this.is_turning) {
@@ -182,7 +188,7 @@ public class NormalCar extends Vehicle implements TCSConstant {
                 position[1] += size[0] * Math.sin(Math.toRadians(this.direction)) / 2;
             }
 
-            this.setTurningConstants(destination);
+            this.setTurningConstants(destination, accelerate);
             //for testing:
             //System.out.println("I ran. Position: " + Arrays.toString(position));
         }
@@ -191,6 +197,10 @@ public class NormalCar extends Vehicle implements TCSConstant {
         //the change of angle is used to model acceleration
         //the change is calculated based on one time increment of turning
         turning_velocity += turning_acceleration * time_increments;
+        if (turning_velocity < 0){
+            turning_velocity = 0;
+        }
+        
         double angle_increment = turning_velocity * time_increments / turn_radius;
         //testing:
         //System.out.println("Angle inc: " + Math.toDegrees(angle_increment));

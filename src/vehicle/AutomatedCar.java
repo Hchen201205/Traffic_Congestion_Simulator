@@ -80,7 +80,7 @@ public class AutomatedCar extends Vehicle implements TCSConstant {
     public void travelWithConstantSpeed(){
         double acceleration_rate = this.acceleration_rate;
         this.acceleration_rate = 0;
-        //accelerate(true);
+        accelerate(this.time_increments, true);
         this.acceleration_rate = acceleration_rate;
     }
 
@@ -124,10 +124,15 @@ public class AutomatedCar extends Vehicle implements TCSConstant {
                 - this.size[1] / 2 - front_car.size[1] / 2 + buffer;
     }
     
-    public void setTurningConstants(double[] destination) {
+    public void setTurningConstants(double[] destination, boolean accelerate) {
         //slighty dimished acceleration rate to more realistically model a turn
         //also acceleration is assumed to be constant
-        turning_acceleration = 3.0 / 4.0 * this.acceleration_rate;
+        if (accelerate){
+            turning_acceleration = 3.0 / 4.0 * this.acceleration_rate;
+        } else {
+            turning_acceleration = 3.0 / 4.0 * this.deceleration_rate;
+        }
+        
 
         turning_velocity = this.getDirectionalSpeed() * 3.0 / 4.0;
 
@@ -141,7 +146,7 @@ public class AutomatedCar extends Vehicle implements TCSConstant {
 
     }
 
-    public void turn(int direction, double[] destination) {
+    public void turn(int direction, double[] destination, boolean accelerate) {
         //  this will run one time when turn() is first called, sets the constants 
         //and positions car halfway in the intersection to prepare to begin turn
         if (!this.is_turning) {
@@ -151,9 +156,9 @@ public class AutomatedCar extends Vehicle implements TCSConstant {
                 position[1] += size[0] * Math.sin(Math.toRadians(this.direction)) / 2;
             }
 
-            this.setTurningConstants(destination);
+            this.setTurningConstants(destination, accelerate);
             //for testing:
-            System.out.println("I ran. Position: " + Arrays.toString(position));
+            //System.out.println("I ran. Position: " + Arrays.toString(position));
         }
         is_turning = true;
 
@@ -240,9 +245,14 @@ public class AutomatedCar extends Vehicle implements TCSConstant {
     //car will continue along turn for one increment with whatever speed it currently has
     public void turnWithConstantSpeed(int direction, double[] destination){
         double turning_acceleration = this.turning_acceleration;
+        double acceleration_rate = this.acceleration_rate;
         this.turning_acceleration = 0;
-        turn(direction, destination);
+        this.acceleration_rate = 0;
+
+        turn(direction, destination, true);
+        
         this.turning_acceleration = turning_acceleration;
+        this.acceleration_rate = acceleration_rate;
     }
     
     /*

@@ -47,6 +47,7 @@ public abstract class Vehicle implements  TCSConstant {
     //Abstract functions:
     
     //simple acceleration function, updates position, speed, saftey_distance, time_moving
+    //accelerate = true to accelerate & accelerate = false to decelerate
     public abstract void accelerate(double time, boolean accelerate);
     
     //calculates and assigns new saftey distance based on current speed
@@ -62,7 +63,7 @@ public abstract class Vehicle implements  TCSConstant {
     
     //used when turn() is first called, sets starting constants so the function 
     //can be called on many times and edit Vehicle vairables
-    public abstract void setTurningConstants(double[] destination);
+    public abstract void setTurningConstants(double[] destination, boolean accelerate);
     
     //      - Direction is 90 for left turn and -90 for right turn
     //      - Destination is the middle of the limit line of the lane the car should turn to 
@@ -72,7 +73,8 @@ public abstract class Vehicle implements  TCSConstant {
     //      - Only use method once car has front tires at limit line
     //      - When the car begins turn, is_turning will be set to true and once the car 
     // has finished the turn, is_turning will be set to false
-    public abstract void turn(int direction, double[] destination);
+    //accelerate = true to accelerate & accelerate = false to decelerate
+    public abstract void turn(int direction, double[] destination, boolean accelerate);
     
     //distance between front bumper of vehicle to back bumper of front car plus the buffer
     public abstract double getDistanceFromFrontVehicle(Vehicle front_car);
