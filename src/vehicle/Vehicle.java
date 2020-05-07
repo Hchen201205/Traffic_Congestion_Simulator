@@ -19,6 +19,8 @@ public abstract class Vehicle implements TCSConstant {
     protected double[] speed = new double[2];//{speed left/right, speed up/down} in m/s (always positive)               
     protected double[] position;             //Position as the middle vehicle, in m
     protected double[] size;                 //{length, width} in m
+    protected double[] breakingPoint;
+    
     protected double acceleration_rate;      //in m/s^2
     protected double deceleration_rate;      //in m/s^2
     protected double direction;              //degrees, 0° -> right, 90° -> up, etc. Should always be positive     
@@ -58,6 +60,10 @@ public abstract class Vehicle implements TCSConstant {
     public abstract void genRandDeceleration();
 
     public abstract void genRandReactionTime();
+    
+    public abstract double[] estimateBreakingPoint(double x_value, double y_value);
+    
+    public abstract double[] estimateBreakingPoint(Vehicle v);
 
     //used when turn() is first called, sets starting constants so the function 
     //can be called on many times and edit Vehicle vairables
@@ -222,11 +228,15 @@ public abstract class Vehicle implements TCSConstant {
     public double getReactionTime() {
         return reaction_time;
     }
-
+    
     public void reduceReactionTimeUnit() {
         reaction_time -= TIMEINCREMENTS;
     }
 
+    public void setPosition(double[] position) {
+        this.position = position;
+    }
+    
     //The following functions are now obsolete with the way Vehicle classes function
     //But the logic is still helpful and might be able to be reused in other classes
     //See AutomatedCar for fleshed out functions and code

@@ -255,23 +255,30 @@ public class AutomatedCar extends Vehicle implements TCSConstant {
     }
 
     /**
-     * This method will give the point at which the driver (robot in this case) will take the break;
+     * This method will give the point at which the driver (robot in this case)
+     * will take the break;
+     *
+     * @param x_value
+     * @param y_value
      * @param destination
-     * @return 
+     * @return
      */
-    public double[] estimateBreakingPoint(double[] destination) {
+    public double[] estimateBreakingPoint(double x_value, double y_value) {
         // general equation (deceleration_rate * destination - acceleration_rate * position + 1 / 2 * velocity * velocity) / (deceleration_rate - acceleration_rate)
         double[] breakingPoint = new double[2];
-        breakingPoint[0] = (deceleration_rate * Math.abs(Math.cos(Math.toRadians(direction))) * destination[0] - acceleration_rate * Math.abs(Math.cos(Math.toRadians(direction))) * position[0] + 1 / 2 * Math.pow(speed[0], 2)) / (deceleration_rate * Math.abs(Math.cos(Math.toRadians(direction))) - acceleration_rate * Math.abs(Math.cos(Math.toRadians(direction))));
-        breakingPoint[1] = (deceleration_rate * Math.abs(Math.sin(Math.toRadians(direction))) * destination[1] - acceleration_rate * Math.abs(Math.sin(Math.toRadians(direction))) * position[1] + 1 / 2 * Math.pow(speed[1], 2)) / (deceleration_rate * Math.abs(Math.sin(Math.toRadians(direction))) - acceleration_rate * Math.abs(Math.sin(Math.toRadians(direction))));
+        breakingPoint[0] = (deceleration_rate * Math.abs(Math.cos(Math.toRadians(direction))) * x_value - acceleration_rate * Math.abs(Math.cos(Math.toRadians(direction))) * position[0] + 1 / 2 * Math.pow(speed[0], 2)) / (deceleration_rate * Math.abs(Math.cos(Math.toRadians(direction))) - acceleration_rate * Math.abs(Math.cos(Math.toRadians(direction))));
+        breakingPoint[1] = (deceleration_rate * Math.abs(Math.sin(Math.toRadians(direction))) * y_value - acceleration_rate * Math.abs(Math.sin(Math.toRadians(direction))) * position[1] + 1 / 2 * Math.pow(speed[1], 2)) / (deceleration_rate * Math.abs(Math.sin(Math.toRadians(direction))) - acceleration_rate * Math.abs(Math.sin(Math.toRadians(direction))));
 
         return breakingPoint;
     }
-    
+
     /**
-     * This method will give the point at which the driver (robot in this case) will take the break;
+     * This method will give the point at which the driver (robot in this case)
+     * will take the break;
+     *
+     * @param v
      * @param destination
-     * @return 
+     * @return
      */
     public double[] estimateBreakingPoint(Vehicle v) {
         // general equation (deceleration_rate * destination - acceleration_rate * position + 1 / 2 * velocity * velocity) / (deceleration_rate - acceleration_rate)
