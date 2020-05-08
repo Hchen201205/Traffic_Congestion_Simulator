@@ -14,7 +14,6 @@ import traffic_congestion_simulator.TCSConstant;
  *
  * @author Christine
  */
-
 //Mimics cars with human drivers
 public class NormalCar extends Vehicle implements TCSConstant {
 
@@ -25,7 +24,7 @@ public class NormalCar extends Vehicle implements TCSConstant {
     protected double deceleration_mean;  //randomly generated once, then fixed
     protected double safety_distance_min;
 
-    public NormalCar(double[] position, double[] size, int direction) {
+    public NormalCar(double[] position, double[] size, double direction) {
         rand = new Random();
         speed[0] = 0;
         speed[1] = 0;
@@ -86,6 +85,7 @@ public class NormalCar extends Vehicle implements TCSConstant {
     public void genRandReactionTime() {
         reaction_time = rand.nextGaussian() * 0.1 + reaction_time_mean;
         reaction_time = this.rounder(reaction_time);
+        System.out.println("This reaction time is" + reaction_time);
     }
 
     //generates the minimum value that saftey_distance can randomly generate to
@@ -108,7 +108,7 @@ public class NormalCar extends Vehicle implements TCSConstant {
         }
 
     }
-    
+
     public void accelerate(double time_increment, boolean accelerate) {
         //reaction time randomizes each time it is used to begin accelerating from stop
         //actual delay from reaction time must be handled in an outside class
@@ -126,51 +126,50 @@ public class NormalCar extends Vehicle implements TCSConstant {
 
         double deltaPosX = (speed[0] * time_increment + 1.0 / 2 * acceleration * time_increment * time_increment)
                 * Math.abs(Math.cos(Math.toRadians(direction)));
-        deltaPosX = this.rounder(deltaPosX);
         position[0] += deltaPosX;
+        position[0] = this.rounder(position[0]);
         speed[0] += this.rounder(acceleration * time_increment * Math.abs(Math.cos(Math.toRadians(direction))));
 
         double deltaPosY = (speed[1] * time_increment + 1.0 / 2 * acceleration * time_increment * time_increment)
                 * Math.abs(Math.sin(Math.toRadians(direction)));
-        deltaPosY = this.rounder(deltaPosY);
         position[1] += deltaPosY;
+        position[1] = this.rounder(position[1]);
         speed[1] += this.rounder(acceleration * time_increment * Math.abs(Math.sin(Math.toRadians(direction))));
 
-        if (speed[0]*Math.abs(Math.cos(Math.toRadians(direction))) < 0 || 
-            speed[1] * Math.abs(Math.sin(Math.toRadians(direction))) < 0){
+        if (speed[0] * Math.abs(Math.cos(Math.toRadians(direction))) < 0
+                || speed[1] * Math.abs(Math.sin(Math.toRadians(direction))) < 0) {
             speed[0] = 0;
             speed[1] = 1;
-        } 
+        }
 
         updateSafetyDistance();
         time_moving += time_increment;
         is_accelerating = false;
     }
-    
+
     public double getDistanceFromFrontVehicle(Vehicle front_car) {
         if (front_car.isTravelingHorizontal()) {
             return Math.abs(this.position[0] - front_car.position[0])
-                    - this.size[0]/2 - front_car.size[0]/2 + buffer;
+                    - this.size[0] / 2 - front_car.size[0] / 2 + buffer;
         }
         return Math.abs(this.position[1] - front_car.position[1])
-                - this.size[1]/2 - front_car.size[1]/2 + buffer;
+                - this.size[1] / 2 - front_car.size[1] / 2 + buffer;
     }
-    
-        public void setTurningConstants(double[] destination, boolean accelerate) {
+
+    public void setTurningConstants(double[] destination, boolean accelerate) {
         //slighty dimished acceleration rate to more realistically model a turn
         //also acceleration is assumed to be constant
-        if (accelerate){
+        if (accelerate) {
             turning_acceleration = 2.0 / 3.0 * this.acceleration_rate;
         } else {
             turning_acceleration = 3.0 / 4.0 * this.deceleration_rate;
         }
-        
 
         turning_velocity = this.getDirectionalSpeed() * 3.0 / 4.0;
 
         //radius of quarter circle that is being used to model the turn
         turn_radius = Math.abs(destination[0] - this.position[0]);
-        
+
         //initial values stored so turn() can be called many times and edit Vehicle vairables
         turn_initial_position[0] = this.position[0];
         turn_initial_position[1] = this.position[1];
@@ -197,14 +196,14 @@ public class NormalCar extends Vehicle implements TCSConstant {
         //the change of angle is used to model acceleration
         //the change is calculated based on one time increment of turning
         turning_velocity += turning_acceleration * time_increments;
-        if (turning_velocity < 0){
+        if (turning_velocity < 0) {
             turning_velocity = 0;
         }
-        
+
         double angle_increment = turning_velocity * time_increments / turn_radius;
         //testing:
         //System.out.println("Angle inc: " + Math.toDegrees(angle_increment));
-        
+
         //keeps track of how far car has travelled in the intersection
         double[] turn_pos = {Math.abs(Math.abs(position[0]) - Math.abs(turn_initial_position[0])),
             Math.abs(Math.abs(position[1]) - Math.abs(turn_initial_position[1]))};
@@ -215,40 +214,40 @@ public class NormalCar extends Vehicle implements TCSConstant {
             //and whether each position component should be positively or negatively incremented
             int neg_or_pos = (int) (Math.cos(Math.toRadians(this.turn_initial_direction))
                     * Math.sin(Math.toRadians(this.turn_initial_direction + direction)));
-            
+
             //changes dirrection of car based on calculated incremental angle change
             this.direction += neg_or_pos * Math.toDegrees(angle_increment);
-            
+
             //updates position components for one time increment of turning
             position[0] += Math.cos(Math.toRadians(this.turn_initial_direction))
-                    * (turn_radius * Math.abs(Math.cos(Math.toRadians(this.direction - 
-                    neg_or_pos * 90))) - turn_pos[0]);
+                    * (turn_radius * Math.abs(Math.cos(Math.toRadians(this.direction
+                            - neg_or_pos * 90))) - turn_pos[0]);
 
-            position[1] += Math.sin(Math.toRadians(this.turn_initial_direction + direction))*(turn_radius - turn_pos[1] - Math.abs(turn_radius
+            position[1] += Math.sin(Math.toRadians(this.turn_initial_direction + direction)) * (turn_radius - turn_pos[1] - Math.abs(turn_radius
                     * Math.sin(Math.toRadians(this.direction - neg_or_pos * 90))));
-        
-        //starting facing up or down
+
+            //starting facing up or down
         } else {
-            int neg_or_pos = (int) (-1*Math.cos(Math.toRadians(this.turn_initial_direction + direction))
+            int neg_or_pos = (int) (-1 * Math.cos(Math.toRadians(this.turn_initial_direction + direction))
                     * Math.sin(Math.toRadians(this.turn_initial_direction)));
-            
+
             this.direction += neg_or_pos * Math.toDegrees(angle_increment);
-            
-            position[0] += Math.cos(Math.toRadians(this.turn_initial_direction + direction))*(turn_radius - turn_pos[0] - Math.abs(turn_radius
+
+            position[0] += Math.cos(Math.toRadians(this.turn_initial_direction + direction)) * (turn_radius - turn_pos[0] - Math.abs(turn_radius
                     * Math.cos(Math.toRadians(this.direction - neg_or_pos * 90))));
-            
+
             position[1] += Math.sin(Math.toRadians(this.turn_initial_direction))
-                    * (turn_radius * Math.abs(Math.sin(Math.toRadians(this.direction - 
-                    neg_or_pos * 90))) - turn_pos[1]);
-            
+                    * (turn_radius * Math.abs(Math.sin(Math.toRadians(this.direction
+                            - neg_or_pos * 90))) - turn_pos[1]);
+
         }
 
         time_moving += time_increments;
-        
+
         //checks if the car has finished the turn or not
         if (direction == -90 && this.direction <= turn_initial_direction - 90
                 || direction == 90 && this.direction >= turn_initial_direction + 90) {
-            
+
             //rounds angle down/up to be exactly 0, 90, 180, or 270
             if (this.direction >= 360) {
                 this.direction = 0;
@@ -257,7 +256,7 @@ public class NormalCar extends Vehicle implements TCSConstant {
             } else {
                 this.direction = turn_initial_direction + direction;
             }
-            
+
             //  moves car slightly forward in whatever direction it is facing so 
             //the whole car is past limit line (with back tires on it)
             if (this.isTravelingHorizontal()) {
@@ -267,10 +266,10 @@ public class NormalCar extends Vehicle implements TCSConstant {
                 position[1] = destination[1] + size[0] * Math.sin(Math.toRadians(this.direction)) / 2;
                 position[0] = destination[0];
             }
-            
-            is_turning = false;    
-        } 
-            
+
+            is_turning = false;
+        }
+
     }
 
 
@@ -314,7 +313,6 @@ public class NormalCar extends Vehicle implements TCSConstant {
     public double getDistanceFromLimitLine(Lane lane) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-
 
     public double[] estimateBreakingPoint(double x_value, double y_value) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.

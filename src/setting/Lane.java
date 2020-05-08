@@ -35,6 +35,8 @@ public class Lane {
     boolean overflow;
 
     ArrayList<Vehicle> overflowVehicles;
+    
+    boolean reset;
 
     public Lane(double[] position, double[] size, double direction, Light light) {
         carList = new ArrayList<>();
@@ -53,6 +55,7 @@ public class Lane {
         frontPos = new double[2];
         frontPos[0] = position[0] + 1 / 2.0 * size[0] * rounder(Math.abs(Math.cos(Math.toRadians(direction))));
         frontPos[1] = position[1] + 1 / 2.0 * size[0] * rounder(Math.abs(Math.sin(Math.toRadians(direction))));
+        reset = false;
     }
 
     public double rounder(double num) {
@@ -170,23 +173,20 @@ public class Lane {
     public void setCars() {
         if (carList.size() > 0) {
             carList.get(0).setPosition(frontPos);
+            double[] destination = new double[2];
             for (int i = 1; i < carList.size(); i++) {
-                double[] destination = frontPos;
                 destination[0] = carList.get(i - 1).getPosition()[0] - (rounder(Math.abs(Math.cos(Math.toRadians(direction))) * (carList.get(i - 1).getSize()[0] + carList.get(i).getBuffer())));
                 destination[1] = carList.get(i - 1).getPosition()[1] - (rounder(Math.abs(Math.sin(Math.toRadians(direction))) * (carList.get(i - 1).getSize()[0] + carList.get(i).getBuffer())));
 
                 carList.get(i).setPosition(destination);
             }
         }
-
     }
 
     public void updateCarList() {
         for (int i = 0; i < carList.size(); i++) {
             // Distance formula
             double distance = Math.sqrt(Math.pow(carList.get(i).getPosition()[0] - position[0], 2) + Math.pow(carList.get(i).getPosition()[1] - position[1], 2));
-            System.out.println(i + ": " + distance);
-            System.out.println(Arrays.toString(carList.get(i).getPosition()));
             if (distance > (1 / 2.0 * size[0])) {
                 // Remember to check this tomorrow.
                 overflowVehicles.add(carList.get(i));
@@ -245,8 +245,8 @@ public class Lane {
     }
 
     public static void main(String[] args) {
-        double[] position = {50, 50};
-        double[] size = {70, 20};
+        double[] position = {140, 310};
+        double[] size = {280, 10};
         double direction = 0;
         Light light = new Light(direction, Color.GREEN);
         light.startCycle();
@@ -255,26 +255,26 @@ public class Lane {
 
         light.setChangeTimes(10, 7, 2);
 
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < 47; i++) {
             double[] carpos = {0, 5};
             double[] carsize = {3, 2};
 
-            Vehicle c = new AutomatedCar(carpos, carsize, direction);
+            Vehicle c = new NormalCar(carpos, carsize, direction);
             c.updateSafetyDistance();
             test.addCar(c);
         }
         test.setCars();
         System.out.println(test.getCarPos());
-        for (int i = 0; i < 6000; i++) {
+        for (int i = 0; i < 500; i++) {
             light.runCycleUnit();
         }
         System.out.println(test.getCarPos());
-        for (int i = 0; i < 8000; i++) {
+        for (int i = 0; i < 800; i++) {
             System.out.println(i + "round");
             light.runCycleUnit();
             test.runUnit();
+            System.out.println(test.getCarPos());
         }
-        System.out.println(test.getCarPos());
 
     }
 }

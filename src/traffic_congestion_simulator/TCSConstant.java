@@ -14,7 +14,7 @@ package traffic_congestion_simulator;
 //Stores all the contants that this simulation needs.
 public interface TCSConstant {
     
-    public final double TIMEINCREMENTS = 0.001; //milliseconds in unit second, 1 millisecond = 0.001 second
+    public final double TIMEINCREMENTS = 0.01; //milliseconds in unit second, 1 millisecond = 0.001 second
     
     //Vehicle classes constants
     public final double BUFFER = 3;
@@ -32,9 +32,9 @@ public interface TCSConstant {
     public final double REACTIONTIMEAVG = 2;
     
     
-    public final int FRAMEWIDTH = 1000;
+    public final int FRAMEWIDTH = 600;
     
-    public final int FRAMEHEIGHT = 500;
+    public final int FRAMEHEIGHT = 600;
     
     public final int DRAWINGWIDTH = 400;
     
@@ -72,7 +72,9 @@ public interface TCSConstant {
     
     public final double[][][] LANEPOSITION = {};
 
-    public final double[][][] LANESIZE = {};
+    public final double[][][] LANESIZE = {{{280, 10}}};
+    
+    public final double[] LSIZE = {280, 10};
     
     public final double[][] LANEDIRECTION = {};
     
