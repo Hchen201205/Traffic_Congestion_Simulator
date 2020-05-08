@@ -7,6 +7,7 @@ package setting;
 
 import java.awt.Color;
 import java.util.ArrayList;
+import java.util.Arrays;
 import vehicle.*;
 import traffic_congestion_simulator.TCSConstant;
 import static traffic_congestion_simulator.TCSConstant.ROUNDEDDECPOS;
@@ -50,8 +51,8 @@ public class Lane {
         overflowVehicles = new ArrayList<>();
 
         frontPos = new double[2];
-        frontPos[0] = position[0] * 1 / 2 * rounder(Math.abs(Math.cos(Math.toRadians(direction))));
-        frontPos[1] = position[1] * 1 / 2 * rounder(Math.abs(Math.sin(Math.toRadians(direction))));
+        frontPos[0] = position[0] + 1 / 2.0 * size[0] * rounder(Math.abs(Math.cos(Math.toRadians(direction))));
+        frontPos[1] = position[1] + 1 / 2.0 * size[0] * rounder(Math.abs(Math.sin(Math.toRadians(direction))));
     }
 
     public double rounder(double num) {
@@ -67,10 +68,11 @@ public class Lane {
         if (light == null || light.getColor().equals(Color.GREEN)) {
             green();
         } else if (light.getColor().equals(Color.RED)) {
-            // Use Red Procedure.
+            setCars();
         } else {
-            // Use Yellow PRocedure.
+            yellow();
         }
+        updateCarList();
     }
 
     // This will report the lane status.
@@ -127,7 +129,6 @@ public class Lane {
             }
 
         }
-        updateCarList();
     }
 
     /**
@@ -138,9 +139,10 @@ public class Lane {
      *
      * @param spot_left
      */
-    public void yellow(double excessDistance, Lane2 lane2) {
-        int spotLeft = checkSpotLeft(lane2, excessDistance);
+    public void yellow(/*double excessDistance, Lane2 lane2*/) {
+        //int spotLeft = checkSpotLeft(lane2, excessDistance);
         for (int i = 0; i < carList.size(); i++) {
+            // destination check...
             carList.get(i).accelerate(TCSConstant.TIMEINCREMENTS, false);
         }
     }
@@ -151,26 +153,45 @@ public class Lane {
         destination[0] = frontPos[0] - (carList.get(1).getSize()[0] * rounder(Math.abs(Math.cos(Math.toRadians(direction)))));
         destination[1] = frontPos[1] - (carList.get(1).getSize()[1] * rounder(Math.abs(Math.cos(Math.toRadians(direction)))));
         carList.get(1).setPosition(destination);
-        
+
         for (int i = 1; i < carList.size(); i++) {
             destination[0] = carList.get(i - 1).getPosition()[0] - (rounder(Math.abs(Math.cos(Math.toRadians(direction))) * (1 / 2 * carList.get(i - 1).getSize()[0] - carList.get(i).getSafetyDistance() - 1 / 2 * carList.get(i).getSize()[0])));
             destination[1] = carList.get(i - 1).getPosition()[1] - (rounder(Math.abs(Math.cos(Math.toRadians(direction))) * (1 / 2 * carList.get(i - 1).getSize()[1] - carList.get(i).getSafetyDistance() - 1 / 2 * carList.get(i).getSize()[1])));
             if (carList.get(i).getAutomated()) {
                 carList.get(i).setPosition(position);
+            } else {
+                // This is where the safety distance + random comes in.
             }
         }
     }
 
+    // This method will take care of setting up the lane.
+    // Debugged
+    public void setCars() {
+        if (carList.size() > 0) {
+            carList.get(0).setPosition(frontPos);
+            for (int i = 1; i < carList.size(); i++) {
+                double[] destination = frontPos;
+                destination[0] = carList.get(i - 1).getPosition()[0] - (rounder(Math.abs(Math.cos(Math.toRadians(direction))) * (carList.get(i - 1).getSize()[0] + carList.get(i).getBuffer())));
+                destination[1] = carList.get(i - 1).getPosition()[1] - (rounder(Math.abs(Math.sin(Math.toRadians(direction))) * (carList.get(i - 1).getSize()[0] + carList.get(i).getBuffer())));
+
+                carList.get(i).setPosition(destination);
+            }
+        }
+
+    }
+
     public void updateCarList() {
         for (int i = 0; i < carList.size(); i++) {
-            double[] frontPos = carList.get(i).getCarFrontPos();
             // Distance formula
-            double distance = Math.sqrt(Math.pow(frontPos[0] - position[0], 2) + Math.pow(frontPos[1] - position[1], 2));
-            if (distance > (1 / 2 * size[0])) {
-
+            double distance = Math.sqrt(Math.pow(carList.get(i).getPosition()[0] - position[0], 2) + Math.pow(carList.get(i).getPosition()[1] - position[1], 2));
+            System.out.println(i + ": " + distance);
+            System.out.println(Arrays.toString(carList.get(i).getPosition()));
+            if (distance > (1 / 2.0 * size[0])) {
                 // Remember to check this tomorrow.
                 overflowVehicles.add(carList.get(i));
-                carList.remove(i);
+                carList.remove(i--);
+
                 overflow = true;
             } else {
                 break;
@@ -199,6 +220,14 @@ public class Lane {
         return direction;
     }
 
+    public String getCarPos() {
+        String result = "";
+        for (int i = 0; i < carList.size(); i++) {
+            result += "|" + Arrays.toString(carList.get(i).getPosition()) + "|";
+        }
+        return result;
+    }
+
     public double[][] getPoints() {
         double[][] points = new double[4][2];
         double v1 = direction;
@@ -213,5 +242,39 @@ public class Lane {
             v1 -= 180;
         }
         return points;
+    }
+
+    public static void main(String[] args) {
+        double[] position = {50, 50};
+        double[] size = {70, 20};
+        double direction = 0;
+        Light light = new Light(direction, Color.GREEN);
+        light.startCycle();
+
+        Lane test = new Lane(position, size, direction, light);
+
+        light.setChangeTimes(10, 7, 2);
+
+        for (int i = 0; i < 5; i++) {
+            double[] carpos = {0, 5};
+            double[] carsize = {3, 2};
+
+            Vehicle c = new AutomatedCar(carpos, carsize, direction);
+            c.updateSafetyDistance();
+            test.addCar(c);
+        }
+        test.setCars();
+        System.out.println(test.getCarPos());
+        for (int i = 0; i < 6000; i++) {
+            light.runCycleUnit();
+        }
+        System.out.println(test.getCarPos());
+        for (int i = 0; i < 8000; i++) {
+            System.out.println(i + "round");
+            light.runCycleUnit();
+            test.runUnit();
+        }
+        System.out.println(test.getCarPos());
+
     }
 }

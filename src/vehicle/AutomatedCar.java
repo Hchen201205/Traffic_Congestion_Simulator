@@ -15,7 +15,7 @@ import traffic_congestion_simulator.TCSConstant;
 public class AutomatedCar extends Vehicle implements TCSConstant {
 
     //Creates a Automated car.
-    public AutomatedCar(double[] position, double[] size, int direction) {
+    public AutomatedCar(double[] position, double[] size, double direction) {
         speed[0] = 0;
         speed[1] = 0;
         safety_distance = 0;
@@ -54,14 +54,14 @@ public class AutomatedCar extends Vehicle implements TCSConstant {
         // I updated it.
         double deltaPosX = (speed[0] * time_increment + 1.0 / 2 * acceleration * time_increment * time_increment)
                 * Math.abs(Math.cos(Math.toRadians(direction)));
-        deltaPosX = this.rounder(deltaPosX);
         position[0] += deltaPosX;
+        position[0] = this.rounder(position[0]);
         speed[0] += this.rounder(acceleration * time_increment * Math.abs(Math.cos(Math.toRadians(direction))));
 
         double deltaPosY = (speed[1] * time_increment + 1.0 / 2 * acceleration * time_increment * time_increment)
                 * Math.abs(Math.sin(Math.toRadians(direction)));
-        deltaPosY = this.rounder(deltaPosY);
         position[1] += deltaPosY;
+        position[01] = this.rounder(position[1]);
         speed[1] += this.rounder(acceleration * time_increment * Math.abs(Math.sin(Math.toRadians(direction))));
 
         if (speed[0] * Math.abs(Math.cos(Math.toRadians(direction))) < 0
@@ -121,7 +121,7 @@ public class AutomatedCar extends Vehicle implements TCSConstant {
                     - front_car.size[0] + buffer;
         }
         return Math.abs(this.position[1] - front_car.position[1])
-                    - front_car.size[1] + buffer;
+                - front_car.size[1] + buffer;
     }
 
     public void setTurningConstants(double[] destination, boolean accelerate) {
@@ -149,15 +149,14 @@ public class AutomatedCar extends Vehicle implements TCSConstant {
         //  this will run one time when turn() is first called, sets the constants 
         //and positions car halfway in the intersection to prepare to begin turn
         if (!this.is_turning) {
-            
+
             /*
             if (this.isTravelingHorizontal()) {
                 position[0] += size[0] * Math.cos(Math.toRadians(this.direction)) / 2;
             } else {
                 position[1] += size[0] * Math.sin(Math.toRadians(this.direction)) / 2;
             }
-            */
-            
+             */
             this.setTurningConstants(destination, accelerate);
             //for testing:
             //System.out.println("I ran. Position: " + Arrays.toString(position));
