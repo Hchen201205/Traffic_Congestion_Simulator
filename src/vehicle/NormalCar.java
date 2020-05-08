@@ -327,19 +327,8 @@ public class NormalCar extends Vehicle implements TCSConstant {
     }
 
     @Override
-<<<<<<< HEAD
-    public double[] estimateBreakingPoint(double x_value, double y_value) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public double[] estimateBreakingPoint(Vehicle v) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-=======
     public boolean getAutomated() {
         return false;
     }
->>>>>>> 8c97bb464a41485089388cec001aaf58c98ac9c7
+
 }
