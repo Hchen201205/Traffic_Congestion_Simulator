@@ -14,6 +14,7 @@ package traffic_congestion_simulator;
 //Stores all the contants that this simulation needs.
 public interface TCSConstant {
     
+    
     public final double TIMEINCREMENTS = 0.001; //milliseconds in unit second, 1 millisecond = 0.001 second
     
     //Vehicle classes constants
@@ -54,24 +55,20 @@ public interface TCSConstant {
     
     public final int TESTSIZEY = 30;
     
-    public final int LIGHTGREENTOYELLOW = 25;
-    
-    public final int LIGHTYELLOWTORED = 10;
-    
-    public final int LIGHTREDTOGREEN = 40;
-    
     public final int LIGHTPOSX = 150;
     
     public final int LIGHTPOSY = 150;
     
     // This value will be changed.
-    public final int LIGHTCYCLER = 10;
+    //public final double LIGHTCYCLER = 10;
     
     // This value will be changed.
-    public final int LIGHTCYCLEG = 7;
+    public final double LIGHTCYCLEG = 8;
     
     // This value will be changed.
-    public final int LIGHTCYCLEY = 1;
+    public final double LIGHTCYCLEY = 3;
+    
+    public final double LIGHTCYCDEADTIME = 1;
     
     // We will fix this later.
     public final double[][] LIGHTPOSITION = {};

@@ -288,6 +288,7 @@ public class NormalCar extends Vehicle implements TCSConstant {
         return distance;
     }
      */
+    
     //Getters
     public double getReactionTime() {
         return reaction_time;
@@ -317,6 +318,16 @@ public class NormalCar extends Vehicle implements TCSConstant {
 
     @Override
     public boolean getAutomated() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public double[] estimateBreakingPoint(double x_value, double y_value) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public double[] estimateBreakingPoint(Vehicle v) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 

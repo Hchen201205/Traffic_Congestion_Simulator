@@ -38,12 +38,15 @@ public class Light implements TCSConstant {
         start = false;
         this.color = color; // red -> 0; green -> 0 + red interval; yellow -> 0 + red interval + yellow interval;
         time_passed = 0;
+        
+        /*
         if (color == Color.GREEN) {
             time_passed = TCSConstant.LIGHTCYCLER;
         } else if (color == Color.YELLOW) {
             time_passed = TCSConstant.LIGHTCYCLER + TCSConstant.LIGHTCYCLEG;
         }
         change_times = new int[3];
+        */
     }
 
     //runs light in real time based on change times
