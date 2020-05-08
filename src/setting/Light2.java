@@ -20,7 +20,7 @@ public class Light2 implements TCSConstant {
     private double[] change_times;   //array of light cycle timing between color changes (milliseconds)
     private Color color;
     private double cycle_time;      //time that has passed in this light's current cycle;
-                                    //resets after each complete cycle
+    //resets after each complete cycle
 
     private boolean is_horizontal;      //if light is assigned to lanes facing left and right
     private boolean is_left_turn_light; //if light is assignedned to lanes facing up and down
@@ -36,9 +36,8 @@ public class Light2 implements TCSConstant {
         change_times = new double[3];
     }
 
-    
     /**
-     * This is a method that will change the boolean start into true.
+     * This is a method that will change the boolean start to true.
      */
     public void startCycle() {
         start = true;
@@ -57,6 +56,9 @@ public class Light2 implements TCSConstant {
 
     }
 
+    /**
+     * This is a method that will change the boolean start to false.
+     */
     public void endCycle() {
         start = false;
     }
@@ -73,7 +75,6 @@ public class Light2 implements TCSConstant {
     }
 
     //Getter and setters:
-    
     //for properly offsetting lights from eachother when cycle starts
     public void setCycleTime(double time) {
         cycle_time = time;
