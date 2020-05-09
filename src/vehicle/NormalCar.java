@@ -287,6 +287,7 @@ public class NormalCar extends Vehicle implements TCSConstant {
         return distance;
     }
      */
+    
     //Getters
     public double getReactionTime() {
         return reaction_time;
@@ -327,4 +328,5 @@ public class NormalCar extends Vehicle implements TCSConstant {
     public boolean getAutomated() {
         return false;
     }
+
 }
