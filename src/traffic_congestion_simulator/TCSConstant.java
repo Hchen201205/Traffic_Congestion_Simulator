@@ -15,7 +15,7 @@ package traffic_congestion_simulator;
 public interface TCSConstant {
     
 
-    public final double TIMEINCREMENTS = 0.01; //milliseconds in unit second, 1 millisecond = 0.001 second
+    public final double TIMEINCREMENTS = 0.05; //milliseconds in unit second, 1 millisecond = 0.001 second
 
     
     //Vehicle classes constants
