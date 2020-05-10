@@ -38,34 +38,33 @@ public class AutomatedCar extends Vehicle implements TCSConstant {
         this.direction = direction;
     }
 
-    public void move(double direction) {
-        if (this.direction == direction) {
-            accelerate();
+    public void accelerate(boolean accelerate) {
+        double acceleration;
+        if (accelerate) {
+            acceleration = acceleration_rate;
+        } else {
+            acceleration = deceleration_rate;
         }
-    }
-    public void accelerate() {
 
-        // I'm going to need it soon.
-        is_accelerating = true;
+            double deltaPosX = (speed[0] * TCSConstant.TIMEINCREMENTS + 1.0 / 2 * acceleration * TCSConstant.TIMEINCREMENTS * TCSConstant.TIMEINCREMENTS)
+                    * Math.abs(Math.cos(Math.toRadians(direction)));
+            position[0] += deltaPosX;
+            position[0] = this.rounder(position[0]);
+            speed[0] += this.rounder(acceleration * TCSConstant.TIMEINCREMENTS * Math.abs(Math.cos(Math.toRadians(direction))));
 
-        // I updated it.
-        double deltaPosX = (speed[0] * TCSConstant.TIMEINCREMENTS + 1.0 / 2 * acceleration_rate * TCSConstant.TIMEINCREMENTS * TCSConstant.TIMEINCREMENTS)
-                * Math.abs(Math.cos(Math.toRadians(direction)));
-        position[0] += deltaPosX;
-        position[0] = this.rounder(position[0]);
-        speed[0] += this.rounder(acceleration_rate * TCSConstant.TIMEINCREMENTS * Math.abs(Math.cos(Math.toRadians(direction))));
+            double deltaPosY = (speed[1] * TCSConstant.TIMEINCREMENTS + 1.0 / 2 * acceleration * TCSConstant.TIMEINCREMENTS * TCSConstant.TIMEINCREMENTS)
+                    * Math.abs(Math.sin(Math.toRadians(direction)));
+            position[1] += deltaPosY;
+            position[1] = this.rounder(position[1]);
+            speed[1] += this.rounder(acceleration * TCSConstant.TIMEINCREMENTS * Math.abs(Math.sin(Math.toRadians(direction))));
 
-        double deltaPosY = (speed[1] * TCSConstant.TIMEINCREMENTS + 1.0 / 2 * acceleration_rate * TCSConstant.TIMEINCREMENTS * TCSConstant.TIMEINCREMENTS)
-                * Math.abs(Math.sin(Math.toRadians(direction)));
-        position[1] += deltaPosY;
-        position[1] = this.rounder(position[1]);
-        speed[1] += this.rounder(acceleration_rate * TCSConstant.TIMEINCREMENTS * Math.abs(Math.sin(Math.toRadians(direction))));
-
-        if (speed[0] * Math.abs(Math.cos(Math.toRadians(direction))) < 0
-                || speed[1] * Math.abs(Math.sin(Math.toRadians(direction))) < 0) {
-            speed[0] = 0;
-            speed[1] = 1;
-        }
+            /* I don't know why we need this...
+            if (speed[0] * Math.abs(Math.cos(Math.toRadians(direction))) < 0
+                    || speed[1] * Math.abs(Math.sin(Math.toRadians(direction))) < 0) {
+                speed[0] = 0;
+                speed[1] = 1;
+            }
+             */
 
         updateSafetyDistance();
         time_moving += TCSConstant.TIMEINCREMENTS;
@@ -75,10 +74,14 @@ public class AutomatedCar extends Vehicle implements TCSConstant {
 
     //car will travel for one increment without changing speed
     public void travelWithConstantSpeed() {
-        double acceleration_rate = this.acceleration_rate;
+        double acceleration = this.acceleration_rate;
         this.acceleration_rate = 0;
-        accelerate(this.time_increments, true);
-        this.acceleration_rate = acceleration_rate;
+        speed[0] = rounder(speed_limit * Math.cos(Math.toRadians(direction)));
+        speed[1] = rounder(speed_limit * Math.sin(Math.toRadians(direction)));
+        accelerate(true);
+
+        this.acceleration_rate = acceleration;
+
     }
 
     //For automated car there is no reaction time.

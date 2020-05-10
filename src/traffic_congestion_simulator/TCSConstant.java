@@ -86,5 +86,5 @@ public interface TCSConstant {
     
     public final int NUMOFINTERSECTION = 0;
     
-    public final int AUTOMATEDFINALVELOCITY = 10;
+    public final double AUTOMATEDFINALVELOCITY = 10.0;
 }

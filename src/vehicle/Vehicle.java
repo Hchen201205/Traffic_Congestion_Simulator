@@ -20,7 +20,7 @@ public abstract class Vehicle implements TCSConstant {
     protected double[] position;             //Position as the top of the car but half of the , in m
     protected double[] size;                 //{length, width} in m
     protected double[] breakingPoint;
-    
+
     protected double acceleration_rate;      //in m/s^2
     protected double deceleration_rate;      //in m/s^2
     protected double direction;              //degrees, 0° -> right, 90° -> up, etc. Should always be positive     
@@ -48,8 +48,20 @@ public abstract class Vehicle implements TCSConstant {
     //Abstract functions:
     //simple acceleration function, updates position, speed, saftey_distance, time_moving
     //accelerate = true to accelerate & accelerate = false to decelerate
-    public abstract void accelerate();
+    public abstract void accelerate(boolean accelerate);
 
+    public void move(double direction) {
+        if (this.direction == direction) {
+            if (Math.sqrt(Math.pow(speed[0], 2) + Math.pow(speed[1], 2)) < speed_limit) {
+                accelerate(true);
+            } else {
+                travelWithConstantSpeed();
+            }
+        }
+    }
+
+    public abstract boolean getAutomated();
+    
     //calculates and assigns new saftey distance based on current speed
     public abstract void updateSafetyDistance();
 
@@ -60,9 +72,9 @@ public abstract class Vehicle implements TCSConstant {
     public abstract void genRandDeceleration();
 
     public abstract void genRandReactionTime();
-    
+
     public abstract double[] estimateBreakingPoint(double x_value, double y_value);
-    
+
     public abstract double[] estimateBreakingPoint(Vehicle v);
 
     //used when turn() is first called, sets starting constants so the function 
@@ -83,7 +95,6 @@ public abstract class Vehicle implements TCSConstant {
     //distance between front bumper of vehicle to back bumper of front car plus the buffer
     public abstract double getDistanceFromFrontVehicle(Vehicle front_car);
 
-    public abstract boolean getAutomated();
 
     // this will get a point that is the center of width but the front of one side of the vehicle
     public double[] getCarFrontPos() {
@@ -93,6 +104,8 @@ public abstract class Vehicle implements TCSConstant {
         return frontPos;
     }
 
+    public abstract void travelWithConstantSpeed();
+    
     //no implementation yet
     //for use when car is turning
     public abstract double getDistanceFromTurningVehicle(Vehicle front_car);
@@ -213,10 +226,14 @@ public abstract class Vehicle implements TCSConstant {
         return size;
     }
 
+    public double[] getSpeed() {
+        return speed;
+    }
+
     public double getAcceleration_rate() {
         return acceleration_rate;
     }
-    
+
     public double getTimeMoving() {
         return time_moving;
     }
@@ -232,7 +249,7 @@ public abstract class Vehicle implements TCSConstant {
     public double getReactionTime() {
         return reaction_time;
     }
-    
+
     public void reduceReactionTimeUnit() {
         reaction_time -= TIMEINCREMENTS;
     }
@@ -241,7 +258,7 @@ public abstract class Vehicle implements TCSConstant {
         this.position[0] = position[0];
         this.position[1] = position[1];
     }
-    
+
     //The following functions are now obsolete with the way Vehicle classes function
     //But the logic is still helpful and might be able to be reused in other classes
     //See AutomatedCar for fleshed out functions and code
