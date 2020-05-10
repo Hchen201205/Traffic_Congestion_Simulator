@@ -38,15 +38,15 @@ public class Light implements TCSConstant {
         start = false;
         this.color = color; // red -> 0; green -> 0 + red interval; yellow -> 0 + red interval + yellow interval;
         time_passed = 0;
-        
+        change_times = new int[3];
+
         /*
         if (color == Color.GREEN) {
             time_passed = TCSConstant.LIGHTCYCLER;
         } else if (color == Color.YELLOW) {
             time_passed = TCSConstant.LIGHTCYCLER + TCSConstant.LIGHTCYCLEG;
         }
-        change_times = new int[3];
-        */
+*/
     }
 
     //runs light in real time based on change times
@@ -85,11 +85,11 @@ public class Light implements TCSConstant {
             System.out.println("\n\n\n\n\n\nLight Switch to Green\n\n\n\n\n\n");
         } else if (time_passed == change_times[0] + change_times[1]) {
             color = Color.YELLOW;
-                        System.out.println("\n\n\n\n\n\nLight Switch to Yellow\n\n\n\n\n\n");
+            System.out.println("\n\n\n\n\n\nLight Switch to Yellow\n\n\n\n\n\n");
         } else if (time_passed == change_times[0] + change_times[1] + change_times[2]) {
             color = Color.RED;
             time_passed = 0;
-                        System.out.println("\n\n\n\n\n\nLight Switch to Red\n\n\n\n\n\n");
+            System.out.println("\n\n\n\n\n\nLight Switch to Red\n\n\n\n\n\n");
         }
     }
 

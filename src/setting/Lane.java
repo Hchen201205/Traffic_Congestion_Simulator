@@ -248,11 +248,12 @@ public class Lane {
         double[] position = {140, 310};
         double[] size = {280, 10};
         double direction = 0;
+        System.out.println("hi");
         Light light = new Light(direction, Color.GREEN);
+
         light.startCycle();
 
         Lane test = new Lane(position, size, direction, light);
-
         light.setChangeTimes(10, 7, 2);
 
         for (int i = 0; i < 47; i++) {
@@ -262,6 +263,7 @@ public class Lane {
             Vehicle c = new NormalCar(carpos, carsize, direction);
             c.updateSafetyDistance();
             test.addCar(c);
+            //System.out.println(c.getAcceleration_rate());
         }
         test.setCars();
         System.out.println(test.getCarPos());

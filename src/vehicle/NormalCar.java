@@ -109,32 +109,28 @@ public class NormalCar extends Vehicle implements TCSConstant {
 
     }
 
-    public void accelerate(double time_increment, boolean accelerate) {
+    public void accelerate() {
         //reaction time randomizes each time it is used to begin accelerating from stop
         //actual delay from reaction time must be handled in an outside class
+        // there is a problem here...
         if (this.isStopped()) {
             this.genRandReactionTime();
-        }
-        double acceleration;
-        if (accelerate) {
-            acceleration = acceleration_rate;
-        } else {
-            acceleration = deceleration_rate;
+            
         }
 
         is_accelerating = true;
 
-        double deltaPosX = (speed[0] * time_increment + 1.0 / 2 * acceleration * time_increment * time_increment)
+        double deltaPosX = (speed[0] * TCSConstant.TIMEINCREMENTS + 1.0 / 2 * acceleration_rate * TCSConstant.TIMEINCREMENTS * TCSConstant.TIMEINCREMENTS)
                 * Math.abs(Math.cos(Math.toRadians(direction)));
         position[0] += deltaPosX;
         position[0] = this.rounder(position[0]);
-        speed[0] += this.rounder(acceleration * time_increment * Math.abs(Math.cos(Math.toRadians(direction))));
+        speed[0] += this.rounder(acceleration_rate * TCSConstant.TIMEINCREMENTS * Math.abs(Math.cos(Math.toRadians(direction))));
 
-        double deltaPosY = (speed[1] * time_increment + 1.0 / 2 * acceleration * time_increment * time_increment)
+        double deltaPosY = (speed[1] * TCSConstant.TIMEINCREMENTS + 1.0 / 2 * acceleration_rate * TCSConstant.TIMEINCREMENTS * TCSConstant.TIMEINCREMENTS)
                 * Math.abs(Math.sin(Math.toRadians(direction)));
         position[1] += deltaPosY;
         position[1] = this.rounder(position[1]);
-        speed[1] += this.rounder(acceleration * time_increment * Math.abs(Math.sin(Math.toRadians(direction))));
+        speed[1] += this.rounder(acceleration_rate * TCSConstant.TIMEINCREMENTS * Math.abs(Math.sin(Math.toRadians(direction))));
 
         if (speed[0] * Math.abs(Math.cos(Math.toRadians(direction))) < 0
                 || speed[1] * Math.abs(Math.sin(Math.toRadians(direction))) < 0) {
@@ -143,7 +139,7 @@ public class NormalCar extends Vehicle implements TCSConstant {
         }
 
         updateSafetyDistance();
-        time_moving += time_increment;
+        time_moving += TCSConstant.TIMEINCREMENTS;
         is_accelerating = false;
     }
 

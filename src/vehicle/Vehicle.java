@@ -48,7 +48,7 @@ public abstract class Vehicle implements TCSConstant {
     //Abstract functions:
     //simple acceleration function, updates position, speed, saftey_distance, time_moving
     //accelerate = true to accelerate & accelerate = false to decelerate
-    public abstract void accelerate(double time, boolean accelerate);
+    public abstract void accelerate();
 
     //calculates and assigns new saftey distance based on current speed
     public abstract void updateSafetyDistance();
@@ -213,6 +213,10 @@ public abstract class Vehicle implements TCSConstant {
         return size;
     }
 
+    public double getAcceleration_rate() {
+        return acceleration_rate;
+    }
+    
     public double getTimeMoving() {
         return time_moving;
     }
