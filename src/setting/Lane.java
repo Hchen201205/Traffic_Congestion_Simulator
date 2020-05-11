@@ -125,7 +125,7 @@ public class Lane {
     public void green() {
         for (int i = 0; i < carList.size(); i++) {
             if (carList.get(i).getReactionTime() == 0) {
-                carList.get(i).accelerate(TCSConstant.TIMEINCREMENTS, true);
+                carList.get(i).accelerate(true);
             } else {
                 carList.get(i).reduceReactionTimeUnit();
                 break;
@@ -146,7 +146,7 @@ public class Lane {
         //int spotLeft = checkSpotLeft(lane2, excessDistance);
         for (int i = 0; i < carList.size(); i++) {
             // destination check...
-            carList.get(i).accelerate(TCSConstant.TIMEINCREMENTS, false);
+            carList.get(i).accelerate(false);
         }
     }
 
@@ -248,33 +248,17 @@ public class Lane {
         double[] position = {140, 310};
         double[] size = {280, 10};
         double direction = 0;
-        Light light = new Light(direction, Color.GREEN);
-        light.startCycle();
+        System.out.println("hi");
+        
+        double[] carpos = {0, 5};
+        double[] carsize = {3, 2};
+        Vehicle c = new AutomatedCar(carpos, carsize,direction);
 
-        Lane test = new Lane(position, size, direction, light);
-
-        light.setChangeTimes(10, 7, 2);
-
-        for (int i = 0; i < 47; i++) {
-            double[] carpos = {0, 5};
-            double[] carsize = {3, 2};
-
-            Vehicle c = new NormalCar(carpos, carsize, direction);
-            c.updateSafetyDistance();
-            test.addCar(c);
+        for (int i = 0; i < 7000; i++) {
+            c.move(direction);
+            System.out.println(Arrays.toString(c.getSpeed()) + " : " + Arrays.toString(c.getPosition()));
         }
-        test.setCars();
-        System.out.println(test.getCarPos());
-        for (int i = 0; i < 500; i++) {
-            light.runCycleUnit();
-        }
-        System.out.println(test.getCarPos());
-        for (int i = 0; i < 800; i++) {
-            System.out.println(i + "round");
-            light.runCycleUnit();
-            test.runUnit();
-            System.out.println(test.getCarPos());
-        }
-
+        
+        
     }
 }

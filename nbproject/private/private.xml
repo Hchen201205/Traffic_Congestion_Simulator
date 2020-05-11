@@ -3,6 +3,7 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
+<<<<<<< HEAD
             <file>file:/C:/Users/Christine/Documents/NetBeansProjects/Traffic%20Project%20Git/Traffic_Congestion_Simulator/src/setting/Light.java</file>
             <file>file:/C:/Users/Christine/Documents/NetBeansProjects/Traffic%20Project%20Git/Traffic_Congestion_Simulator/src/traffic_congestion_simulator/TCSConstant.java</file>
             <file>file:/C:/Users/Christine/Documents/NetBeansProjects/Traffic%20Project%20Git/Traffic_Congestion_Simulator/src/vehicle/AutomatedCar.java</file>
@@ -17,6 +18,24 @@
             <file>file:/C:/Users/Christine/Documents/NetBeansProjects/Traffic%20Project%20Git/Traffic_Congestion_Simulator/src/setting/Light_Pool.java</file>
             <file>file:/C:/Users/Christine/Documents/NetBeansProjects/Traffic%20Project%20Git/Traffic_Congestion_Simulator/src/setting/Lane.java</file>
             <file>file:/C:/Users/Christine/Documents/NetBeansProjects/Traffic%20Project%20Git/Traffic_Congestion_Simulator/src/setting/Light_Set.java</file>
+=======
+            <file>file:/Users/chenhanxi/Desktop/Projects/JAVA_Projects/Traffic_Congestion_Simulator/src/vehicle/Vehicle.java</file>
+            <file>file:/Users/chenhanxi/Desktop/Projects/JAVA_Projects/Traffic_Congestion_Simulator/src/vehicle/Vehicle_Pool.java</file>
+            <file>file:/Users/chenhanxi/Desktop/Projects/JAVA_Projects/Traffic_Congestion_Simulator/src/setting/Lane.java</file>
+            <file>file:/Users/chenhanxi/Desktop/Projects/JAVA_Projects/Traffic_Congestion_Simulator/src/setting/Lane_Pool.java</file>
+            <file>file:/Users/chenhanxi/Desktop/Projects/JAVA_Projects/Traffic_Congestion_Simulator/src/vehicle/AutomatedCar.java</file>
+            <file>file:/Users/chenhanxi/Desktop/Projects/JAVA_Projects/Traffic_Congestion_Simulator/src/vehicle/NormalCar.java</file>
+            <file>file:/Users/chenhanxi/Desktop/Projects/JAVA_Projects/Traffic_Congestion_Simulator/src/traffic_congestion_simulator/Simulation.java</file>
+            <file>file:/Users/chenhanxi/Desktop/Projects/JAVA_Projects/Traffic_Congestion_Simulator/src/setting/Lane_Set.java</file>
+            <file>file:/Users/chenhanxi/Desktop/Projects/JAVA_Projects/Traffic_Congestion_Simulator/src/traffic_congestion_simulator/TCSConstant.java</file>
+            <file>file:/Users/chenhanxi/Desktop/Projects/JAVA_Projects/Traffic_Congestion_Simulator/src/setting/Light2.java</file>
+            <file>file:/Users/chenhanxi/Desktop/Projects/JAVA_Projects/Traffic_Congestion_Simulator/src/setting/Light_Set2.java</file>
+            <file>file:/Users/chenhanxi/Desktop/Projects/JAVA_Projects/Traffic_Congestion_Simulator/src/setting/Light_Set.java</file>
+            <file>file:/Users/chenhanxi/Desktop/Projects/JAVA_Projects/Traffic_Congestion_Simulator/src/setting/Light.java</file>
+            <file>file:/Users/chenhanxi/Desktop/Projects/JAVA_Projects/Traffic_Congestion_Simulator/src/setting/Light_Pool.java</file>
+            <file>file:/Users/chenhanxi/Desktop/Projects/JAVA_Projects/Traffic_Congestion_Simulator/src/setting/LightTesting.java</file>
+            <file>file:/Users/chenhanxi/Desktop/Projects/JAVA_Projects/Traffic_Congestion_Simulator/src/traffic_congestion_simulator/Simulation2.java</file>
+>>>>>>> 3b56007d68eb32bfe8595feaa172bc625d191658
         </group>
     </open-files>
 </project-private>

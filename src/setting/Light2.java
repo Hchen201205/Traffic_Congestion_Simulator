@@ -50,10 +50,18 @@ public class Light2 implements TCSConstant {
             changeColor();
 
             //Need this line. Java has a rounding error without it...
-            cycle_time = Math.round(cycle_time * Math.pow(10, ROUNDEDDECPOS)) / Math.pow(10, ROUNDEDDECPOS);
+            cycle_time = rounder(cycle_time);
+                    
+                    //Math.round(cycle_time * Math.pow(10, ROUNDEDDECPOS)) / Math.pow(10, ROUNDEDDECPOS);
 
         }
 
+    }
+
+    public double rounder(double num) {
+        num = num * Math.pow(10, ROUNDEDDECPOS);
+        num = Math.round(num);
+        return num / Math.pow(10, ROUNDEDDECPOS);
     }
 
     /**

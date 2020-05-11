@@ -19,7 +19,7 @@ public class AutomatedCar extends Vehicle implements TCSConstant {
         speed[0] = 0;
         speed[1] = 0;
         safety_distance = 0;
-        speed_limit = 18;
+        speed_limit = TCSConstant.AUTOMATEDFINALVELOCITY;
         time_moving = 0;
         is_turning = false;
         reaction_time = 0;
@@ -38,50 +38,50 @@ public class AutomatedCar extends Vehicle implements TCSConstant {
         this.direction = direction;
     }
 
-    public void accelerate(double time_increment, boolean accelerate) {
+    public void accelerate(boolean accelerate) {
         double acceleration;
         if (accelerate) {
             acceleration = acceleration_rate;
-            this.genRandAcceleration();
         } else {
             acceleration = deceleration_rate;
-            this.genRandDeceleration();
         }
 
-        // I'm going to need it soon.
-        is_accelerating = true;
+            double deltaPosX = (speed[0] * TCSConstant.TIMEINCREMENTS + 1.0 / 2 * acceleration * TCSConstant.TIMEINCREMENTS * TCSConstant.TIMEINCREMENTS)
+                    * Math.abs(Math.cos(Math.toRadians(direction)));
+            position[0] += deltaPosX;
+            position[0] = this.rounder(position[0]);
+            speed[0] += this.rounder(acceleration * TCSConstant.TIMEINCREMENTS * Math.abs(Math.cos(Math.toRadians(direction))));
 
-        // I updated it.
-        double deltaPosX = (speed[0] * time_increment + 1.0 / 2 * acceleration * time_increment * time_increment)
-                * Math.abs(Math.cos(Math.toRadians(direction)));
-        position[0] += deltaPosX;
-        position[0] = this.rounder(position[0]);
-        speed[0] += this.rounder(acceleration * time_increment * Math.abs(Math.cos(Math.toRadians(direction))));
+            double deltaPosY = (speed[1] * TCSConstant.TIMEINCREMENTS + 1.0 / 2 * acceleration * TCSConstant.TIMEINCREMENTS * TCSConstant.TIMEINCREMENTS)
+                    * Math.abs(Math.sin(Math.toRadians(direction)));
+            position[1] += deltaPosY;
+            position[1] = this.rounder(position[1]);
+            speed[1] += this.rounder(acceleration * TCSConstant.TIMEINCREMENTS * Math.abs(Math.sin(Math.toRadians(direction))));
 
-        double deltaPosY = (speed[1] * time_increment + 1.0 / 2 * acceleration * time_increment * time_increment)
-                * Math.abs(Math.sin(Math.toRadians(direction)));
-        position[1] += deltaPosY;
-        position[1] = this.rounder(position[1]);
-        speed[1] += this.rounder(acceleration * time_increment * Math.abs(Math.sin(Math.toRadians(direction))));
-
-        if (speed[0] * Math.abs(Math.cos(Math.toRadians(direction))) < 0
-                || speed[1] * Math.abs(Math.sin(Math.toRadians(direction))) < 0) {
-            speed[0] = 0;
-            speed[1] = 1;
-        }
+            /* I don't know why we need this...
+            if (speed[0] * Math.abs(Math.cos(Math.toRadians(direction))) < 0
+                    || speed[1] * Math.abs(Math.sin(Math.toRadians(direction))) < 0) {
+                speed[0] = 0;
+                speed[1] = 1;
+            }
+             */
 
         updateSafetyDistance();
-        time_moving += time_increment;
+        time_moving += TCSConstant.TIMEINCREMENTS;
         is_accelerating = false;
 
     }
 
     //car will travel for one increment without changing speed
     public void travelWithConstantSpeed() {
-        double acceleration_rate = this.acceleration_rate;
+        double acceleration = this.acceleration_rate;
         this.acceleration_rate = 0;
-        accelerate(this.time_increments, true);
-        this.acceleration_rate = acceleration_rate;
+        speed[0] = rounder(speed_limit * Math.cos(Math.toRadians(direction)));
+        speed[1] = rounder(speed_limit * Math.sin(Math.toRadians(direction)));
+        accelerate(true);
+
+        this.acceleration_rate = acceleration;
+
     }
 
     //For automated car there is no reaction time.
@@ -391,4 +391,10 @@ public class AutomatedCar extends Vehicle implements TCSConstant {
         this.decelerateToStop();
     }
      */
+
+    @Override
+    public void decelerate(double[] pos) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        
+    }
 }
