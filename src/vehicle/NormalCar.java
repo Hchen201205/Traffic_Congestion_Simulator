@@ -341,9 +341,4 @@ public class NormalCar extends Vehicle implements TCSConstant {
         return false;
     }
 
-    @Override
-    public void travelWithConstantSpeed() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
 }

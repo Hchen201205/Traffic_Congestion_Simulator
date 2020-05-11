@@ -391,4 +391,10 @@ public class AutomatedCar extends Vehicle implements TCSConstant {
         this.decelerateToStop();
     }
      */
+
+    @Override
+    public void decelerate(double[] pos) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        
+    }
 }

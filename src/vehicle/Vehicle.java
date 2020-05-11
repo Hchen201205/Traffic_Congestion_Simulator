@@ -50,6 +50,8 @@ public abstract class Vehicle implements TCSConstant {
     //accelerate = true to accelerate & accelerate = false to decelerate
     public abstract void accelerate(boolean accelerate);
 
+    public abstract void decelerate(double[] pos);
+    
     public void move(double direction) {
         if (this.direction == direction) {
             if (Math.sqrt(Math.pow(speed[0], 2) + Math.pow(speed[1], 2)) < speed_limit) {
