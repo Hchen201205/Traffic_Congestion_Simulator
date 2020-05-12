@@ -77,7 +77,7 @@ public class VehicleTesting implements TCSConstant{
         
         AutomatedCar car = new AutomatedCar(pos, size, direction);
         
-        double[] pos2 = {0, 3};
+        double[] pos2 = {2, 3};
         AutomatedCar car2 = new AutomatedCar(pos2, size, direction);
         
 
@@ -93,10 +93,15 @@ public class VehicleTesting implements TCSConstant{
         while (car.is_turning) {
             count++;
             car.turn(turn, des, true);
-            car2.accelerate(TIMEINCREMENTS, true);
-            System.out.println(car.rounder(car.position[0])
-                    + ", " + car.rounder(car.position[1]) + "\t" + car.rounder(car2.position[0])
-                    + ", " + car.rounder(car2.position[1]));
+            car2.accelerate(true);
+            /*
+            System.out.println(car.rounder(car.position[0]) + ", " + car.rounder(car.position[1])
+                    + ", " + car.rounder(car.direction) + "\t\t" + car.rounder(car2.position[0])
+                    + ", " + car.rounder(car2.position[1]) + ", " + car.rounder(car2.direction));
+            */
+            System.out.println(car.rounder(car.getCenterPos()[0]) + ", " + car.rounder(car.getCenterPos()[1])
+                    + ", " + car.rounder(car.direction) + "\t\t" + car.rounder(car2.getCenterPos()[0])
+                    + ", " + car.rounder(car2.getCenterPos()[1]) + ", " + car.rounder(car2.direction));
 
         }
         

@@ -100,10 +100,28 @@ public abstract class Vehicle implements TCSConstant {
 
     // this will get a point that is the center of width but the front of one side of the vehicle
     public double[] getCarFrontPos() {
-        double[] frontPos = new double[2];
-        frontPos[0] = this.rounder(position[0] + 1 / 2 * size[0] * Math.cos(Math.toRadians(direction)));
-        frontPos[1] = this.rounder(position[1] + 1 / 2 * size[0] * Math.sin(Math.toRadians(direction)));
-        return frontPos;
+        double[] front_pos = new double[2];
+        front_pos[0] = this.rounder(position[0] + 1 / 2 * size[0] * Math.cos(Math.toRadians(direction)));
+        front_pos[1] = this.rounder(position[1] + 1 / 2 * size[0] * Math.sin(Math.toRadians(direction)));
+        return front_pos;
+    }
+    
+    //this will make graphing in matlab much simpler
+    public double[] getLeftBottomCornerPos(){
+        double[] pos = new double[2];
+        double dist = Math.sqrt(Math.pow(size[0], 2.0) + Math.pow(size[1], 2.0));
+        double angle = direction + Math.toDegrees(Math.atan((size[1]/2.0)/size[0]));
+        System.out.println(angle);
+        pos[0] = position[0] - dist * Math.cos(Math.toRadians(angle));
+        pos[1] = position[1] - dist * Math.sin(Math.toRadians(angle));
+        return pos;
+    }
+    
+    public double[] getCenterPos(){
+        double[] pos = new double[2];
+        pos[0] = position[0] - size[0] / 2.0 * Math.cos(Math.toRadians(direction));
+        pos[1] = position[1] - size[0] / 2.0 * Math.sin(Math.toRadians(direction));
+        return pos;
     }
 
     public abstract void travelWithConstantSpeed();
