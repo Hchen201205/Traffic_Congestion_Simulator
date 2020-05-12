@@ -60,13 +60,11 @@ public interface TCSConstant {
     
     public final int LIGHTPOSY = 150;
     
-    // This value will be changed.
-    //public final double LIGHTCYCLER = 10;
     
-    // This value will be changed.
-    public final double LIGHTCYCLEG = 8;
+    // This value can be changed.
+    public final double LIGHTCYCLEG = 20;
     
-    // This value will be changed.
+    // This value can be changed.
     public final double LIGHTCYCLEY = 3;
     
     public final double LIGHTCYCDEADTIME = 1;

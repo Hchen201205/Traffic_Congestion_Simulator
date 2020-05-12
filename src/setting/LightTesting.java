@@ -6,12 +6,13 @@
 package setting;
 
 import java.util.Arrays;
+import traffic_congestion_simulator.TCSConstant;
 
 /**
  *
  * @author Christine
  */
-public class LightTesting {
+public class LightTesting implements TCSConstant{
 
     public LightTesting() {
         double[] pos = {1, 1};
@@ -21,12 +22,12 @@ public class LightTesting {
         }
 
         test.startLightSetCycle();
-
+        System.out.println("Inc in one sec: " + 1.0 / TIMEINCREMENTS);
         System.out.println("     Light 1\t|   Light 2\t|   Light 3\t|   Light 4");
         System.out.println("-------------------------------------------------------");
 
-        for (int i = 0; i < 200000; i++) {
-            if (i % 10 == 0) {
+        for (int i = 0; i < ((1.0 / TIMEINCREMENTS) * 80) ; i++) {
+            if (i % ((1.0 / TIMEINCREMENTS))  == 0) {
                 System.out.printf("     %s\t|     %s\t|     %s\t|     %s\n",
                         test.getLight_Set()[0].getColorString(), test.getLight_Set()[1].getColorString(),
                         test.getLight_Set()[2].getColorString(), test.getLight_Set()[3].getColorString());
