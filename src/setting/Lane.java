@@ -35,7 +35,7 @@ public class Lane {
     boolean overflow;
 
     ArrayList<Vehicle> overflowVehicles;
-    
+
     boolean reset;
 
     public Lane(double[] position, double[] size, double direction, Light light) {
@@ -94,8 +94,8 @@ public class Lane {
     // This will check whether the car can make it to the other end or not.
     // Using this method, you are assuming an excessDistance variable is passed along from the simulation class to this specific lane.
     // Kevin, This class is completed and you can use it. It will tell you how many spots there are left in the lane ahead of this one.
-    public int checkSpotLeft(Lane2 lane2, double time) {
-        double excessDistance = lane2.checkLaneStatus();
+    public int checkSpotLeft(Lane lane, double time) {
+        double excessDistance = lane.checkLaneStatus();
         int spotLeft = 0;
         for (int i = 0; i < carList.size(); i++) {
             Vehicle car = carList.get(i);
@@ -124,10 +124,16 @@ public class Lane {
     // This will run for one millisecond and update carList
     public void green() {
         for (int i = 0; i < carList.size(); i++) {
-            if (carList.get(i).getReactionTime() == 0) {
-                carList.get(i).accelerate(true);
+            Vehicle c = carList.get(i);
+            if (c.getReactionTime() <= 0) {
+                if (Math.sqrt(Math.pow(c.getSpeed()[0], 2) + Math.pow(c.getSpeed()[1], 2)) <= c.getSpeedLimit()) {
+                    c.accelerate(true);
+
+                } else {
+                    c.travelWithConstantSpeed();
+                }
             } else {
-                carList.get(i).reduceReactionTimeUnit();
+                c.reduceReactionTimeUnit();
                 break;
             }
 
@@ -249,16 +255,21 @@ public class Lane {
         double[] size = {280, 10};
         double direction = 0;
         System.out.println("hi");
-        
+
         double[] carpos = {0, 5};
         double[] carsize = {3, 2};
-        Vehicle c = new AutomatedCar(carpos, carsize,direction);
+        Vehicle c = new NormalCar(carpos, carsize, direction);
+
+        Light l = new Light(0);
+        Lane lane = new Lane(carpos, size, direction, l);
+
+        lane.addCar(c);
 
         for (int i = 0; i < 7000; i++) {
-            c.move(direction);
+            lane.green();
+            System.out.println(c.getReactionTime());
             System.out.println(Arrays.toString(c.getSpeed()) + " : " + Arrays.toString(c.getPosition()));
         }
-        
-        
+
     }
 }

@@ -46,26 +46,25 @@ public class AutomatedCar extends Vehicle implements TCSConstant {
             acceleration = deceleration_rate;
         }
 
-            double deltaPosX = (speed[0] * TCSConstant.TIMEINCREMENTS + 1.0 / 2 * acceleration * TCSConstant.TIMEINCREMENTS * TCSConstant.TIMEINCREMENTS)
-                    * Math.abs(Math.cos(Math.toRadians(direction)));
-            position[0] += deltaPosX;
-            position[0] = this.rounder(position[0]);
-            speed[0] += this.rounder(acceleration * TCSConstant.TIMEINCREMENTS * Math.abs(Math.cos(Math.toRadians(direction))));
+        double deltaPosX = (speed[0] * TCSConstant.TIMEINCREMENTS + 1.0 / 2 * acceleration * TCSConstant.TIMEINCREMENTS * TCSConstant.TIMEINCREMENTS)
+                * Math.abs(Math.cos(Math.toRadians(direction)));
+        position[0] += deltaPosX;
+        position[0] = this.rounder(position[0]);
+        speed[0] += this.rounder(acceleration * TCSConstant.TIMEINCREMENTS * Math.abs(Math.cos(Math.toRadians(direction))));
 
-            double deltaPosY = (speed[1] * TCSConstant.TIMEINCREMENTS + 1.0 / 2 * acceleration * TCSConstant.TIMEINCREMENTS * TCSConstant.TIMEINCREMENTS)
-                    * Math.abs(Math.sin(Math.toRadians(direction)));
-            position[1] += deltaPosY;
-            position[1] = this.rounder(position[1]);
-            speed[1] += this.rounder(acceleration * TCSConstant.TIMEINCREMENTS * Math.abs(Math.sin(Math.toRadians(direction))));
+        double deltaPosY = (speed[1] * TCSConstant.TIMEINCREMENTS + 1.0 / 2 * acceleration * TCSConstant.TIMEINCREMENTS * TCSConstant.TIMEINCREMENTS)
+                * Math.abs(Math.sin(Math.toRadians(direction)));
+        position[1] += deltaPosY;
+        position[1] = this.rounder(position[1]);
+        speed[1] += this.rounder(acceleration * TCSConstant.TIMEINCREMENTS * Math.abs(Math.sin(Math.toRadians(direction))));
 
-            /* I don't know why we need this...
+        /* I don't know why we need this...
             if (speed[0] * Math.abs(Math.cos(Math.toRadians(direction))) < 0
                     || speed[1] * Math.abs(Math.sin(Math.toRadians(direction))) < 0) {
                 speed[0] = 0;
                 speed[1] = 1;
             }
-             */
-
+         */
         updateSafetyDistance();
         time_moving += TCSConstant.TIMEINCREMENTS;
         is_accelerating = false;
@@ -391,10 +390,23 @@ public class AutomatedCar extends Vehicle implements TCSConstant {
         this.decelerateToStop();
     }
      */
-
+    
+    
     @Override
     public void decelerate(double[] pos) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        double ax = -Math.pow(speed[0], 2) / (2 * pos[0] - position[0]);
+        double ay = -Math.pow(speed[1], 2) / (2 * pos[1] - position[1]);
+
+        double deltaPosX = (speed[0] * TCSConstant.TIMEINCREMENTS + 1.0 / 2 * ax * TCSConstant.TIMEINCREMENTS * TCSConstant.TIMEINCREMENTS);
+        position[0] += deltaPosX;
+        position[0] = this.rounder(position[0]);
+        speed[0] += this.rounder(ax * TCSConstant.TIMEINCREMENTS);
         
+        double deltaPosY = (speed[1] * TCSConstant.TIMEINCREMENTS + 1.0 / 2 * ax * TCSConstant.TIMEINCREMENTS * TCSConstant.TIMEINCREMENTS);
+        position[1] += deltaPosY;
+        position[1] = this.rounder(position[1]);
+        speed[1] += this.rounder(ay * TCSConstant.TIMEINCREMENTS);
+        updateSafetyDistance();
+        time_moving += TCSConstant.TIMEINCREMENTS;
     }
 }

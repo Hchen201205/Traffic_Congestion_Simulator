@@ -118,10 +118,10 @@ public class NormalCar extends Vehicle implements TCSConstant {
             this.genRandReactionTime();
             
         }
-        */
-        
+         */
+
         double acceleration;
-        if (accelerate){
+        if (accelerate) {
             acceleration = acceleration_rate;
         } else {
             acceleration = deceleration_rate;
@@ -147,18 +147,17 @@ public class NormalCar extends Vehicle implements TCSConstant {
             speed[0] = 0;
             speed[1] = 1;
         }
-*/
-        
+         */
         updateSafetyDistance();
         time_moving += TCSConstant.TIMEINCREMENTS;
         is_accelerating = false;
     }
 
-        @Override
+    @Override
     public void travelWithConstantSpeed() {
         // Can you implement this?
     }
-    
+
     public double getDistanceFromFrontVehicle(Vehicle front_car) {
         if (front_car.isTravelingHorizontal()) {
             return Math.abs(this.position[0] - front_car.position[0])
@@ -299,7 +298,6 @@ public class NormalCar extends Vehicle implements TCSConstant {
         return distance;
     }
      */
-    
     //Getters
     public double getReactionTime() {
         return reaction_time;
@@ -343,7 +341,21 @@ public class NormalCar extends Vehicle implements TCSConstant {
 
     @Override
     public void decelerate(double[] pos) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        // what kind of random variable do I want...
+        double ax = -this.rounder(Math.pow(speed[0], 2) / (2 * pos[0] - position[0]) + rand.nextGaussian() / 10);
+        double ay = -this.rounder(Math.pow(speed[1], 2) / (2 * pos[1] - position[1]) + rand.nextGaussian() / 10);
+
+        double deltaPosX = (speed[0] * TCSConstant.TIMEINCREMENTS + 1.0 / 2 * ax * TCSConstant.TIMEINCREMENTS * TCSConstant.TIMEINCREMENTS);
+        position[0] += deltaPosX;
+        position[0] = this.rounder(position[0]);
+        speed[0] += this.rounder(ax * TCSConstant.TIMEINCREMENTS);
+
+        double deltaPosY = (speed[1] * TCSConstant.TIMEINCREMENTS + 1.0 / 2 * ax * TCSConstant.TIMEINCREMENTS * TCSConstant.TIMEINCREMENTS);
+        position[1] += deltaPosY;
+        position[1] = this.rounder(position[1]);
+        speed[1] += this.rounder(ay * TCSConstant.TIMEINCREMENTS);
+        updateSafetyDistance();
+        time_moving += TCSConstant.TIMEINCREMENTS;
     }
 
 }
