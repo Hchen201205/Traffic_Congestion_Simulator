@@ -126,6 +126,8 @@ public class Lane {
         for (int i = 0; i < carList.size(); i++) {
             Vehicle c = carList.get(i);
             if (c.getReactionTime() <= 0) {
+                // Here have an if-else statement to account for the time when two cars are too close.
+                
                 if (Math.sqrt(Math.pow(c.getSpeed()[0], 2) + Math.pow(c.getSpeed()[1], 2)) <= c.getSpeedLimit()) {
                     c.accelerate(true);
 
@@ -261,7 +263,7 @@ public class Lane {
         Vehicle c = new NormalCar(carpos, carsize, direction);
 
         Light l = new Light(0);
-        Lane lane = new Lane(carpos, size, direction, l);
+        Lane lane = new Lane(position, size, direction, l);
 
         lane.addCar(c);
 

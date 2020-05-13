@@ -28,6 +28,7 @@ public class NormalCar extends Vehicle implements TCSConstant {
         rand = new Random();
         speed[0] = 0;
         speed[1] = 0;
+        speed_limit = AUTOMATEDFINALVELOCITY + rand.nextGaussian();
         safety_distance_min = 0;
         safety_distance = 0;
         time_moving = 0;
@@ -156,6 +157,13 @@ public class NormalCar extends Vehicle implements TCSConstant {
     @Override
     public void travelWithConstantSpeed() {
         // Can you implement this?
+        double acceleration = this.acceleration_rate;
+        this.acceleration_rate = 0;
+        speed[0] = rounder(speed_limit * Math.cos(Math.toRadians(direction)));
+        speed[1] = rounder(speed_limit * Math.sin(Math.toRadians(direction)));
+        accelerate(true);
+
+        this.acceleration_rate = acceleration;
     }
 
     public double getDistanceFromFrontVehicle(Vehicle front_car) {
