@@ -13,7 +13,7 @@ import traffic_congestion_simulator.TCSConstant;
  *
  * @author Christine
  */
-public class VehicleTesting implements TCSConstant{
+public class VehicleTesting implements TCSConstant {
 
     public static void accelerateTesting() {
 
@@ -56,7 +56,7 @@ public class VehicleTesting implements TCSConstant{
                 car.turn(turn, des[i], true);
                 if (count % 1 == 0) {
                     System.out.println("Position: [" + car.rounder(car.position[0])
-                           + ", " + car.rounder(car.position[1]) + "]");
+                            + ", " + car.rounder(car.position[1]) + "]");
                     System.out.println("Direction: " + car.rounder(car.direction));
                 }
             }
@@ -73,39 +73,39 @@ public class VehicleTesting implements TCSConstant{
         double[] pos1 = {2, 5};
         double[] des1 = {9, 12};
         AutomatedCar car1 = new AutomatedCar(pos1, size, 0);
-        
+
         double[] pos2 = {2, 3};
         AutomatedCar car2 = new AutomatedCar(pos2, size, 0);
-        
+
         double[] pos3 = {14, 9};
         AutomatedCar car3 = new AutomatedCar(pos3, size, 180);
-        
+
         double[] pos4 = {14, 7};
-        double[] des4 = {7,0};
+        double[] des4 = {7, 0};
         AutomatedCar car4 = new AutomatedCar(pos4, size, 180);
-        
+
         for (int i = 0; i < 60; i++) {
-            if (i > 55){
-                System.out.println(car1.rounder(car1.getCenterPos()[0]) + ", " + car1.rounder(car1.getCenterPos()[1])
-                    + ", " + car1.rounder(car1.direction) + "\t\t" + car1.rounder(car2.getCenterPos()[0])
-                    + ", " + car1.rounder(car2.getCenterPos()[1]) + ", " + car1.rounder(car2.direction) + 
-                    "\t\t" + car1.rounder(car3.getCenterPos()[0]) + ", " + car1.rounder(car3.getCenterPos()[1])
-                    + ", " + car1.rounder(car3.direction) + 
-                    "\t\t" + car1.rounder(car4.getCenterPos()[0]) + ", " + car1.rounder(car4.getCenterPos()[1])
-                    + ", " + car1.rounder(car4.direction));
+            if (i > 55) {
+                System.out.println(car1.rounder(car1.getLeftBottomCornerPos()[0]) + ", " + car1.rounder(car1.getLeftBottomCornerPos()[1])
+                        + ", " + car1.rounder(car1.direction) + "\t\t" + car1.rounder(car2.getLeftBottomCornerPos()[0])
+                        + ", " + car1.rounder(car2.getLeftBottomCornerPos()[1]) + ", " + car1.rounder(car2.direction)
+                        + "\t\t" + car1.rounder(car3.getLeftBottomCornerPos()[0]) + ", " + car1.rounder(car3.getLeftBottomCornerPos()[1])
+                        + ", " + car1.rounder(car3.direction)
+                        + "\t\t" + car1.rounder(car4.getLeftBottomCornerPos()[0]) + ", " + car1.rounder(car4.getLeftBottomCornerPos()[1])
+                        + ", " + car1.rounder(car4.direction));
             } else {
-            car2.accelerate(true);
-            car3.accelerate(true);
-            System.out.println(car1.rounder(car1.getCenterPos()[0]) + ", " + car1.rounder(car1.getCenterPos()[1])
-                    + ", " + car1.rounder(car1.direction) + "\t\t" + car1.rounder(car2.getCenterPos()[0])
-                    + ", " + car1.rounder(car2.getCenterPos()[1]) + ", " + car1.rounder(car2.direction) + 
-                    "\t\t" + car1.rounder(car3.getCenterPos()[0]) + ", " + car1.rounder(car3.getCenterPos()[1])
-                    + ", " + car1.rounder(car3.direction) + 
-                    "\t\t" + car1.rounder(car4.getCenterPos()[0]) + ", " + car1.rounder(car4.getCenterPos()[1])
-                    + ", " + car1.rounder(car4.direction));
+                car2.accelerate(true);
+                car3.accelerate(true);
+                System.out.println(car1.rounder(car1.getLeftBottomCornerPos()[0]) + ", " + car1.rounder(car1.getLeftBottomCornerPos()[1])
+                        + ", " + car1.rounder(car1.direction) + "\t\t" + car1.rounder(car2.getLeftBottomCornerPos()[0])
+                        + ", " + car1.rounder(car2.getLeftBottomCornerPos()[1]) + ", " + car1.rounder(car2.direction)
+                        + "\t\t" + car1.rounder(car3.getLeftBottomCornerPos()[0]) + ", " + car1.rounder(car3.getLeftBottomCornerPos()[1])
+                        + ", " + car1.rounder(car3.direction)
+                        + "\t\t" + car1.rounder(car4.getLeftBottomCornerPos()[0]) + ", " + car1.rounder(car4.getLeftBottomCornerPos()[1])
+                        + ", " + car1.rounder(car4.direction));
             }
         }
-        
+
         car1.turn(90, des1, true);
         car4.turn(90, des4, true);
         while (car1.is_turning) {
@@ -115,16 +115,16 @@ public class VehicleTesting implements TCSConstant{
             System.out.println(car.rounder(car.getCenterPos()[0]) + ", " + car.rounder(car.getCenterPos()[1])
                     + ", " + car.rounder(car.direction) + "\t\t" + car.rounder(car2.getCenterPos()[0])
                     + ", " + car.rounder(car2.getCenterPos()[1]) + ", " + car.rounder(car2.direction));
-            */
-            System.out.println(car1.rounder(car1.getCenterPos()[0]) + ", " + car1.rounder(car1.getCenterPos()[1])
-                    + ", " + car1.rounder(car1.direction) + "\t\t" + car1.rounder(car2.getCenterPos()[0])
-                    + ", " + car1.rounder(car2.getCenterPos()[1]) + ", " + car1.rounder(car2.direction) + 
-                    "\t\t" + car1.rounder(car3.getCenterPos()[0]) + ", " + car1.rounder(car3.getCenterPos()[1])
-                    + ", " + car1.rounder(car3.direction) + 
-                    "\t\t" + car1.rounder(car4.getCenterPos()[0]) + ", " + car1.rounder(car4.getCenterPos()[1])
+             */
+            System.out.println(car1.rounder(car1.getLeftBottomCornerPos()[0]) + ", " + car1.rounder(car1.getLeftBottomCornerPos()[1])
+                    + ", " + car1.rounder(car1.direction) + "\t\t" + car1.rounder(car2.getLeftBottomCornerPos()[0])
+                    + ", " + car1.rounder(car2.getLeftBottomCornerPos()[1]) + ", " + car1.rounder(car2.direction)
+                    + "\t\t" + car1.rounder(car3.getLeftBottomCornerPos()[0]) + ", " + car1.rounder(car3.getLeftBottomCornerPos()[1])
+                    + ", " + car1.rounder(car3.direction)
+                    + "\t\t" + car1.rounder(car4.getLeftBottomCornerPos()[0]) + ", " + car1.rounder(car4.getLeftBottomCornerPos()[1])
                     + ", " + car1.rounder(car4.direction));
         }
-        
+
     }
 
 }

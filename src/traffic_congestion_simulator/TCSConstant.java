@@ -33,6 +33,8 @@ public interface TCSConstant {
             
     public final double REACTIONTIMEAVG = 2;
     
+    public final double AUTOMATEDFINALVELOCITY = 10.0;
+    
     
     public final int FRAMEWIDTH = 600;
     
@@ -84,5 +86,4 @@ public interface TCSConstant {
     
     public final int NUMOFINTERSECTION = 0;
     
-    public final double AUTOMATEDFINALVELOCITY = 10.0;
 }

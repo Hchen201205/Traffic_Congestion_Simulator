@@ -28,7 +28,8 @@ public class NormalCar extends Vehicle implements TCSConstant {
         rand = new Random();
         speed[0] = 0;
         speed[1] = 0;
-        speed_limit = AUTOMATEDFINALVELOCITY + rand.nextGaussian();
+        //created a method to generate random speed limit so it is consistent with other variables
+        //speed_limit = AUTOMATEDFINALVELOCITY + rand.nextGaussian();
         safety_distance_min = 0;
         safety_distance = 0;
         time_moving = 0;
@@ -43,9 +44,11 @@ public class NormalCar extends Vehicle implements TCSConstant {
         this.genReactionTimeMean();
         this.genAccelerationMean();
         this.genDecelerationMean();
+        
         this.genRandAcceleration();
         this.genRandDeceleration();
         this.genRandReactionTime();
+        this.genRandSpeedLimit();
 
         this.position = position;
         this.size = size;
@@ -70,14 +73,14 @@ public class NormalCar extends Vehicle implements TCSConstant {
     //may mess with the variance for the next three methods
     //will asign a new rand acceleration based on mean, 
     public void genRandAcceleration() {
-        acceleration_rate = rand.nextGaussian() * acceleration_mean / 5
+        acceleration_rate = rand.nextGaussian() * acceleration_mean / 5.0
                 + acceleration_mean;
         acceleration_rate = this.rounder(acceleration_rate);
     }
 
     //will asign a new rand deceleration based on mean
     public void genRandDeceleration() {
-        deceleration_rate = rand.nextGaussian() * deceleration_mean / 5
+        deceleration_rate = rand.nextGaussian() * deceleration_mean / 5.0
                 + deceleration_mean;
         deceleration_rate = this.rounder(deceleration_rate);
     }
@@ -89,18 +92,25 @@ public class NormalCar extends Vehicle implements TCSConstant {
         System.out.println("This reaction time is" + reaction_time);
     }
 
+    public void genRandSpeedLimit() {
+        speed_limit = rand.nextGaussian() * AUTOMATEDFINALVELOCITY / 9.0 + AUTOMATEDFINALVELOCITY;
+        //System.out.println(speed_limit);
+    }
+    
     //generates the minimum value that saftey_distance can randomly generate to
     public void genSafetyDistanceMin() {
         safety_distance_min = Math.pow(this.getDirectionalSpeed(), 2)
                 / (2 * -deceleration_rate);
     }
+    
+    
 
     //will asign a new rand safety_distance each time it is called
     public void updateSafetyDistance() {
         if (this.is_turning) {
             this.genSafetyDistanceMin();
             //safety_distance will always be at least the minimum distance to deccelerate to stop
-            safety_distance = Math.abs(rand.nextGaussian() * safety_distance_min / 7)
+            safety_distance = Math.abs(rand.nextGaussian() * safety_distance_min / 7.0)
                     + safety_distance_min;
             safety_distance = this.rounder(safety_distance);
         } else {
