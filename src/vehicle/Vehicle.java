@@ -111,7 +111,6 @@ public abstract class Vehicle implements TCSConstant {
         double[] pos = new double[2];
         double dist = Math.sqrt(Math.pow(size[0], 2.0) + Math.pow(size[1], 2.0));
         double angle = direction + Math.toDegrees(Math.atan((size[1]/2.0)/size[0]));
-        System.out.println(angle);
         pos[0] = position[0] - dist * Math.cos(Math.toRadians(angle));
         pos[1] = position[1] - dist * Math.sin(Math.toRadians(angle));
         return pos;

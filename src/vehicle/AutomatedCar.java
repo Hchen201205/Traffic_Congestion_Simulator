@@ -47,13 +47,13 @@ public class AutomatedCar extends Vehicle implements TCSConstant {
         }
 
             double deltaPosX = (speed[0] * TCSConstant.TIMEINCREMENTS + 1.0 / 2 * acceleration * TCSConstant.TIMEINCREMENTS * TCSConstant.TIMEINCREMENTS)
-                    * Math.abs(Math.cos(Math.toRadians(direction)));
+                    * Math.cos(Math.toRadians(direction));
             position[0] += deltaPosX;
             position[0] = this.rounder(position[0]);
             speed[0] += this.rounder(acceleration * TCSConstant.TIMEINCREMENTS * Math.abs(Math.cos(Math.toRadians(direction))));
 
             double deltaPosY = (speed[1] * TCSConstant.TIMEINCREMENTS + 1.0 / 2 * acceleration * TCSConstant.TIMEINCREMENTS * TCSConstant.TIMEINCREMENTS)
-                    * Math.abs(Math.sin(Math.toRadians(direction)));
+                    * Math.sin(Math.toRadians(direction));
             position[1] += deltaPosY;
             position[1] = this.rounder(position[1]);
             speed[1] += this.rounder(acceleration * TCSConstant.TIMEINCREMENTS * Math.abs(Math.sin(Math.toRadians(direction))));
