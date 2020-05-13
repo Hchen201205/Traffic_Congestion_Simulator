@@ -59,15 +59,15 @@ public class NormalCar extends Vehicle implements TCSConstant {
     //randomly generates a mean value for each changing variable
     //may mess with variance
     public void genReactionTimeMean() {
-        reaction_time_mean = rand.nextGaussian() * 0.3 + REACTIONTIMEAVG;
+        reaction_time_mean = rand.nextGaussian() * REACTIONTIMEAVG / 8.0 + REACTIONTIMEAVG;
     }
 
     public void genAccelerationMean() {
-        acceleration_mean = rand.nextGaussian() * ACCELERATIONAVG / 8 + ACCELERATIONAVG;
+        acceleration_mean = rand.nextGaussian() * ACCELERATIONAVG / 8.0 + ACCELERATIONAVG;
     }
 
     public void genDecelerationMean() {
-        deceleration_mean = rand.nextGaussian() * DECELERATIONAVG / 8 + DECELERATIONAVG;
+        deceleration_mean = rand.nextGaussian() * DECELERATIONAVG / 8.0 + DECELERATIONAVG;
     }
 
     //may mess with the variance for the next three methods
