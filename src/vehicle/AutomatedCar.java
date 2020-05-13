@@ -28,6 +28,7 @@ public class AutomatedCar extends Vehicle implements TCSConstant {
         turning_velocity = 0;
         turn_initial_position = new double[2];
         turn_initial_direction = 0;
+        turn_safety_angle = 0;
 
         //may change/dump these two methods later
         this.genRandAcceleration();
@@ -38,6 +39,7 @@ public class AutomatedCar extends Vehicle implements TCSConstant {
         this.direction = direction;
     }
 
+    @Override
     public void accelerate(boolean accelerate) {
         double acceleration;
         if (accelerate) {
@@ -58,37 +60,27 @@ public class AutomatedCar extends Vehicle implements TCSConstant {
         position[1] = this.rounder(position[1]);
         speed[1] += this.rounder(acceleration * TCSConstant.TIMEINCREMENTS * Math.abs(Math.sin(Math.toRadians(direction))));
 
-        /* I don't know why we need this...
-            if (speed[0] * Math.abs(Math.cos(Math.toRadians(direction))) < 0
-                    || speed[1] * Math.abs(Math.sin(Math.toRadians(direction))) < 0) {
-                speed[0] = 0;
-                speed[1] = 1;
-            }
-         */
+        //just a precaution in case estimating the decelerating to stop gives a negative speed
+        if (speed[0] * Math.abs(Math.cos(Math.toRadians(direction))) < 0
+                || speed[1] * Math.abs(Math.sin(Math.toRadians(direction))) < 0) {
+            speed[0] = 0;
+            speed[1] = 1;
+        }
+
         updateSafetyDistance();
         time_moving += TCSConstant.TIMEINCREMENTS;
         is_accelerating = false;
 
     }
 
-    //car will travel for one increment without changing speed
-    public void travelWithConstantSpeed() {
-        double acceleration = this.acceleration_rate;
-        this.acceleration_rate = 0;
-        speed[0] = rounder(speed_limit * Math.cos(Math.toRadians(direction)));
-        speed[1] = rounder(speed_limit * Math.sin(Math.toRadians(direction)));
-        accelerate(true);
-
-        this.acceleration_rate = acceleration;
-
-    }
-
     //For automated car there is no reaction time.
+    @Override
     public void genRandReactionTime() {
         reaction_time = 0;
     }
 
     //Updates car safe distances, so the car will avoid accident.
+    @Override
     public void updateSafetyDistance() {
         if (this.is_turning) {
             safety_distance = Math.pow(this.getDirectionalSpeed(), 2) / (2 * -deceleration_rate);
@@ -101,28 +93,22 @@ public class AutomatedCar extends Vehicle implements TCSConstant {
     //Randomly generating acceleration and deceleration functions:
     //randomly generated from gaussian distribution of average values
     //may change variance if necessary
+    @Override
     public void genRandAcceleration() {
         acceleration_rate = Math.abs(rand.nextGaussian() * ACCELERATIONAVGMAX / 10 + ACCELERATIONAVGMAX);
         acceleration_rate = this.rounder(acceleration_rate);
     }
 
     //deceleration relys on generated acceleration to avoid unrealistic/conflicting rates
+    @Override
     public void genRandDeceleration() {
         double scaled_dec_avg_max = DECELERATIONAVGMAX / ACCELERATIONAVGMAX * acceleration_rate;
         deceleration_rate = rand.nextGaussian() * scaled_dec_avg_max / 10 + scaled_dec_avg_max;
         deceleration_rate = this.rounder(deceleration_rate);
     }
 
-    //front bumper of car to back bumper of front car plus buffer
-    public double getDistanceFromFrontVehicle(Vehicle front_car) {
-        if (front_car.isTravelingHorizontal()) {
-            return Math.abs(this.position[0] - front_car.position[0])
-                    - front_car.size[0] + buffer;
-        }
-        return Math.abs(this.position[1] - front_car.position[1])
-                - front_car.size[1] + buffer;
-    }
 
+    @Override
     public void setTurningConstants(double[] destination, boolean accelerate) {
         //slighty dimished acceleration rate to more realistically model a turn
         //also acceleration is assumed to be constant
@@ -144,6 +130,7 @@ public class AutomatedCar extends Vehicle implements TCSConstant {
 
     }
 
+    @Override
     public void turn(int direction, double[] destination, boolean accelerate) {
         //  this will run one time when turn() is first called, sets the constants 
         //and positions car halfway in the intersection to prepare to begin turn
@@ -240,30 +227,24 @@ public class AutomatedCar extends Vehicle implements TCSConstant {
         }
 
     }
-
-    //runs a turn increment with no acceleration
-    //car will continue along turn for one increment with whatever speed it currently has
-    public void turnWithConstantSpeed(int direction, double[] destination) {
-        double turning_acceleration = this.turning_acceleration;
-        double acceleration_rate = this.acceleration_rate;
-        this.turning_acceleration = 0;
-        this.acceleration_rate = 0;
-
-        turn(direction, destination, true);
-
-        this.turning_acceleration = turning_acceleration;
-        this.acceleration_rate = acceleration_rate;
+    
+    
+    @Override
+    public void updateTurnSafetyAngle(){
+        
     }
+    
 
     /**
      * This method will give the point at which the driver (robot in this case)
-     * will take the break;
+     * will start to break;
      *
      * @param x_value
      * @param y_value
      * @param destination
      * @return
      */
+    @Override
     public double[] estimateBreakingPoint(double x_value, double y_value) {
         // general equation (deceleration_rate * destination - acceleration_rate * position + 1 / 2 * velocity * velocity) / (deceleration_rate - acceleration_rate)
         double[] breakingPoint = new double[2];
@@ -275,12 +256,13 @@ public class AutomatedCar extends Vehicle implements TCSConstant {
 
     /**
      * This method will give the point at which the driver (robot in this case)
-     * will take the break;
+     * will start to break;
      *
      * @param v
      * @param destination
      * @return
      */
+    @Override
     public double[] estimateBreakingPoint(Vehicle v) {
         // general equation (deceleration_rate * destination - acceleration_rate * position + 1 / 2 * velocity * velocity) / (deceleration_rate - acceleration_rate)
         double[] destination = new double[2];
@@ -295,6 +277,7 @@ public class AutomatedCar extends Vehicle implements TCSConstant {
         return breakingPoint;
     }
 
+    @Override
     public boolean getAutomated() {
         return true;
     }
@@ -339,15 +322,6 @@ public class AutomatedCar extends Vehicle implements TCSConstant {
         return (int) Math.floor(increments);
     }
 
-    @Override
-    public double getDistanceFromTurningVehicle(Vehicle front_car) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public double getDistanceFromLimitLine(Lane lane) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
 
     //Obsolete functions, explained in abstract Vehicle class
     //still might find a use for code/logic in other classes
@@ -390,7 +364,6 @@ public class AutomatedCar extends Vehicle implements TCSConstant {
         this.decelerateToStop();
     }
      */
-    @Override
     public void decelerate(double[] pos) {
         double ax = -Math.pow(speed[0], 2) / (2 * pos[0] - position[0]);
         double ay = -Math.pow(speed[1], 2) / (2 * pos[1] - position[1]);

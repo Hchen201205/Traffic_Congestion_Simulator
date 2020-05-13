@@ -23,6 +23,7 @@ public class NormalCar extends Vehicle implements TCSConstant {
     protected double acceleration_mean;   //randomly generated once, then fixed
     protected double deceleration_mean;  //randomly generated once, then fixed
     protected double safety_distance_min;
+    protected double turn_safety_angle_min;
 
     public NormalCar(double[] position, double[] size, double direction) {
         rand = new Random();
@@ -40,6 +41,8 @@ public class NormalCar extends Vehicle implements TCSConstant {
         turning_velocity = 0;
         turn_initial_position = new double[2];
         turn_initial_direction = 0;
+        turn_safety_angle_min = 0;
+        turn_safety_angle = 0;
 
         this.genReactionTimeMean();
         this.genAccelerationMean();
@@ -72,6 +75,7 @@ public class NormalCar extends Vehicle implements TCSConstant {
 
     //may mess with the variance for the next three methods
     //will asign a new rand acceleration based on mean, 
+    @Override
     public void genRandAcceleration() {
         acceleration_rate = rand.nextGaussian() * acceleration_mean / 5.0
                 + acceleration_mean;
@@ -79,6 +83,7 @@ public class NormalCar extends Vehicle implements TCSConstant {
     }
 
     //will asign a new rand deceleration based on mean
+    @Override
     public void genRandDeceleration() {
         deceleration_rate = rand.nextGaussian() * deceleration_mean / 5.0
                 + deceleration_mean;
@@ -86,6 +91,7 @@ public class NormalCar extends Vehicle implements TCSConstant {
     }
 
     //will asign a new rand reaction time based on mean
+    @Override
     public void genRandReactionTime() {
         reaction_time = rand.nextGaussian() * 0.1 + reaction_time_mean;
         reaction_time = this.rounder(reaction_time);
@@ -103,9 +109,8 @@ public class NormalCar extends Vehicle implements TCSConstant {
                 / (2 * -deceleration_rate);
     }
     
-    
-
     //will asign a new rand safety_distance each time it is called
+    @Override
     public void updateSafetyDistance() {
         if (this.is_turning) {
             this.genSafetyDistanceMin();
@@ -120,16 +125,10 @@ public class NormalCar extends Vehicle implements TCSConstant {
 
     }
 
+    @Override
     public void accelerate(boolean accelerate) {
         //reaction time randomizes each time it is used to begin accelerating from stop
-        //actual delay from reaction time must be handled in an outside class
-        // there is a problem here... I'm going to handle it in lane class.
-        /*
-        if (this.isStopped()) {
-            this.genRandReactionTime();
-            
-        }
-         */
+        //actual delay and ranomization reaction time must be handled in an outside class
 
         double acceleration;
         if (accelerate) {
@@ -152,39 +151,19 @@ public class NormalCar extends Vehicle implements TCSConstant {
         position[1] = this.rounder(position[1]);
         speed[1] += this.rounder(acceleration * TCSConstant.TIMEINCREMENTS * Math.abs(Math.sin(Math.toRadians(direction))));
 
-        /*
+        //just a precaution in case estimating the decelerating to stop gives a negative speed
         if (speed[0] * Math.abs(Math.cos(Math.toRadians(direction))) < 0
                 || speed[1] * Math.abs(Math.sin(Math.toRadians(direction))) < 0) {
             speed[0] = 0;
             speed[1] = 1;
         }
-         */
+         
         updateSafetyDistance();
         time_moving += TCSConstant.TIMEINCREMENTS;
         is_accelerating = false;
     }
 
     @Override
-    public void travelWithConstantSpeed() {
-        // Can you implement this?
-        double acceleration = this.acceleration_rate;
-        this.acceleration_rate = 0;
-        speed[0] = rounder(speed_limit * Math.cos(Math.toRadians(direction)));
-        speed[1] = rounder(speed_limit * Math.sin(Math.toRadians(direction)));
-        accelerate(true);
-
-        this.acceleration_rate = acceleration;
-    }
-
-    public double getDistanceFromFrontVehicle(Vehicle front_car) {
-        if (front_car.isTravelingHorizontal()) {
-            return Math.abs(this.position[0] - front_car.position[0])
-                    - this.size[0] / 2 - front_car.size[0] / 2 + buffer;
-        }
-        return Math.abs(this.position[1] - front_car.position[1])
-                - this.size[1] / 2 - front_car.size[1] / 2 + buffer;
-    }
-
     public void setTurningConstants(double[] destination, boolean accelerate) {
         //slighty dimished acceleration rate to more realistically model a turn
         //also acceleration is assumed to be constant
@@ -206,6 +185,7 @@ public class NormalCar extends Vehicle implements TCSConstant {
 
     }
 
+    @Override
     public void turn(int direction, double[] destination, boolean accelerate) {
         //  this will run one time when turn() is first called, sets the constants 
         //and positions car halfway in the intersection to prepare to begin turn
@@ -300,23 +280,22 @@ public class NormalCar extends Vehicle implements TCSConstant {
         }
 
     }
+    
+    public double getTurnSafetyAngleMin(){
+        
+        
+        
+        return turn_safety_angle_min;
+    }
+    
+    @Override
+    public void updateTurnSafetyAngle(){
+        
+    }
 
 
-    /*
-    public double getDistanceFromTurningVehicle(Vehicle2 front_car){
-        //no implementation yet
-        
-        return distance;
-    }
-     */
- /*
-    public double getDistanceFromLimitLine (Lane lane){
-        //not implemented yet
-        
-        return distance;
-    }
-     */
     //Getters
+    @Override
     public double getReactionTime() {
         return reaction_time;
     }
@@ -333,16 +312,10 @@ public class NormalCar extends Vehicle implements TCSConstant {
         return deceleration_mean;
     }
 
+    
+    
+    
     @Override
-    public double getDistanceFromTurningVehicle(Vehicle front_car) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public double getDistanceFromLimitLine(Lane lane) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
     public double[] estimateBreakingPoint(double x_value, double y_value) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }

@@ -38,6 +38,7 @@ public abstract class Vehicle implements TCSConstant {
     protected double turning_velocity;       //calculated from turning_acceleration value
     protected double[] turn_initial_position;//position before turn (with center at limit line)
     protected double turn_initial_direction; //direction car was facing before turn
+    protected double turn_safety_angle;
 
     protected Random rand = new Random(100); // Instead of initializing random in each car class, it can be created here.
 
@@ -51,17 +52,6 @@ public abstract class Vehicle implements TCSConstant {
     public abstract void accelerate(boolean accelerate);
 
     public abstract void decelerate(double[] pos);
-    
-    /*
-    public void move(double direction) {
-        if (this.direction == direction) {
-            if (Math.sqrt(Math.pow(speed[0], 2) + Math.pow(speed[1], 2)) < speed_limit) {
-                accelerate(true);
-            } else {
-                travelWithConstantSpeed();
-            }
-        }
-    }*/
 
     public abstract boolean getAutomated();
     
@@ -94,18 +84,9 @@ public abstract class Vehicle implements TCSConstant {
     // has finished the turn, is_turning will be set to false
     //accelerate = true to accelerate & accelerate = false to decelerate
     public abstract void turn(int direction, double[] destination, boolean accelerate);
-
-    //distance between front bumper of vehicle to back bumper of front car plus the buffer
-    public abstract double getDistanceFromFrontVehicle(Vehicle front_car);
-
-
-    // this will get a point that is the center of width but the front of one side of the vehicle
-    public double[] getCarFrontPos() {
-        double[] front_pos = new double[2];
-        front_pos[0] = this.rounder(position[0] + 1 / 2 * size[0] * Math.cos(Math.toRadians(direction)));
-        front_pos[1] = this.rounder(position[1] + 1 / 2 * size[0] * Math.sin(Math.toRadians(direction)));
-        return front_pos;
-    }
+    
+    public abstract void updateTurnSafetyAngle();
+    //Non-abstract functions:
     
     //this will make graphing in matlab much simpler
     public double[] getLeftBottomCornerPos(){
@@ -124,17 +105,60 @@ public abstract class Vehicle implements TCSConstant {
         return pos;
     }
 
-    public abstract void travelWithConstantSpeed();
+        //distance from front bumper of car to back bumper of front car plus buffer
+    public double getDistanceFromFrontVehicle(Vehicle front_car) {
+        if (front_car.isTravelingHorizontal()) {
+            return Math.abs(this.position[0] - front_car.position[0])
+                    - front_car.size[0] + buffer;
+        }
+        return Math.abs(this.position[1] - front_car.position[1])
+                - front_car.size[1] + buffer;
+    }
+    
+    //car will travel for one increment at it's speed limit value with no acceleration
+    public void travelWithConstantSpeed(){
+        double acceleration = this.acceleration_rate;
+        this.acceleration_rate = 0;
+        speed[0] = rounder(speed_limit * Math.cos(Math.toRadians(direction)));
+        speed[1] = rounder(speed_limit * Math.sin(Math.toRadians(direction)));
+        accelerate(true);
+
+        this.acceleration_rate = acceleration;
+    };
+    
+    //runs a turn increment with no acceleration
+    //car will continue along turn for one increment with whatever speed it currently has
+    public void turnWithConstantSpeed(int direction, double[] destination) {
+        double turning_acceleration = this.turning_acceleration;
+        double acceleration_rate = this.acceleration_rate;
+        this.turning_acceleration = 0;
+        this.acceleration_rate = 0;
+
+        turn(direction, destination, true);
+
+        this.turning_acceleration = turning_acceleration;
+        this.acceleration_rate = acceleration_rate;
+    }
     
     //no implementation yet
     //for use when car is turning
-    public abstract double getDistanceFromTurningVehicle(Vehicle front_car);
+    public double getAngleFromTurningVehicle(Vehicle front_car){
+        
+    };
 
-    //no implementation yet
-    //returns distance needed to reach the limit line of the lane (begining of intersection)
-    public abstract double getDistanceFromLimitLine(Lane lane);
+    
+        
+    /*
+    public void move(double direction) {
+        if (this.direction == direction) {
+            if (Math.sqrt(Math.pow(speed[0], 2) + Math.pow(speed[1], 2)) < speed_limit) {
+                accelerate(true);
+            } else {
+                travelWithConstantSpeed();
+            }
+        }
+    }*/
 
-    //Non-abstract functions:
     //returns true vehicle is facing east or west
     public boolean isTravelingHorizontal() {
         if (direction == 0 || direction == 180) {
@@ -161,7 +185,6 @@ public abstract class Vehicle implements TCSConstant {
         return num / Math.pow(10, rounded_dec_pos);
     }
 
-    //Basic getters
     public boolean isAccelerating() {
         return is_accelerating;
     }
@@ -177,16 +200,6 @@ public abstract class Vehicle implements TCSConstant {
         return false;
     }
 
-    /*
-    public boolean isAtLimitLine(){
-        //no implementation yet
-        double limit_line_pos = ;
-        if (this.getDirectionalPos() == limit_line_pos){
-            return true;
-        }
-            return false;    
-    }
-     */
     public double getDirection() {
         return direction;
     }
