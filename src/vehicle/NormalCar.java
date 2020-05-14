@@ -47,7 +47,7 @@ public class NormalCar extends Vehicle implements TCSConstant {
         this.genReactionTimeMean();
         this.genAccelerationMean();
         this.genDecelerationMean();
-        
+
         this.genRandAcceleration();
         this.genRandDeceleration();
         this.genRandReactionTime();
@@ -102,25 +102,26 @@ public class NormalCar extends Vehicle implements TCSConstant {
         speed_limit = rand.nextGaussian() * AUTOMATEDFINALVELOCITY / 9.0 + AUTOMATEDFINALVELOCITY;
         //System.out.println(speed_limit);
     }
-    
+
     //generates the minimum value that saftey_distance can randomly generate to
     public void genSafetyDistanceMin() {
         safety_distance_min = Math.pow(this.getDirectionalSpeed(), 2)
                 / (2 * -deceleration_rate);
     }
-    
+
     //will asign a new rand safety_distance each time it is called
     @Override
     public void updateSafetyDistance() {
-        if (!this.is_turning) {
+        if (this.is_turning) {
+            //safety distance while turning
+            //not implemented yet
+
+        } else {
             this.genSafetyDistanceMin();
             //safety_distance will always be at least the minimum distance to deccelerate to stop
             safety_distance = Math.abs(rand.nextGaussian() * safety_distance_min / 7.0)
                     + safety_distance_min;
             safety_distance = this.rounder(safety_distance);
-        } else {
-            //safety distance while turning
-            //not implemented yet
         }
 
     }
@@ -139,27 +140,25 @@ public class NormalCar extends Vehicle implements TCSConstant {
 
         is_accelerating = true;
 
-        position[0] += speed[0] * TCSConstant.TIMEINCREMENTS 
+        position[0] += speed[0] * TCSConstant.TIMEINCREMENTS
                 + 1.0 / 2 * acceleration * TCSConstant.TIMEINCREMENTS * TCSConstant.TIMEINCREMENTS * Math.cos(Math.toRadians(direction));
         position[0] = this.rounder(position[0]);
         speed[0] += acceleration * TCSConstant.TIMEINCREMENTS * Math.abs(Math.cos(Math.toRadians(direction)));
         speed[0] = this.rounder(speed[0]);
 
-        position[1] += speed[1] * TCSConstant.TIMEINCREMENTS 
+        position[1] += speed[1] * TCSConstant.TIMEINCREMENTS
                 + 1.0 / 2 * acceleration * TCSConstant.TIMEINCREMENTS * TCSConstant.TIMEINCREMENTS * Math.sin(Math.toRadians(direction));
         position[1] = this.rounder(position[1]);
         speed[1] += acceleration * TCSConstant.TIMEINCREMENTS * Math.abs(Math.sin(Math.toRadians(direction)));
         speed[1] = this.rounder(speed[1]);
 
-        
-        
         //just a precaution in case estimating the decelerating to stop gives a negative speed
         if (speed[0] * Math.abs(Math.cos(Math.toRadians(direction))) < 0
                 || speed[1] * Math.abs(Math.sin(Math.toRadians(direction))) < 0) {
             speed[0] = 0;
             speed[1] = 1;
         }
-         
+
         updateSafetyDistance();
         time_moving += TCSConstant.TIMEINCREMENTS;
         is_accelerating = false;
@@ -282,19 +281,16 @@ public class NormalCar extends Vehicle implements TCSConstant {
         }
 
     }
-    
-    public double getTurnSafetyAngleMin(){
-        
-        
-        
+
+    public double getTurnSafetyAngleMin() {
+
         return turn_safety_angle_min;
     }
-    
-    @Override
-    public void updateTurnSafetyAngle(){
-        
-    }
 
+    @Override
+    public void updateTurnSafetyAngle() {
+
+    }
 
     //Getters
     @Override
@@ -314,9 +310,6 @@ public class NormalCar extends Vehicle implements TCSConstant {
         return deceleration_mean;
     }
 
-    
-    
-    
     @Override
     public double[] estimateBreakingPoint(double x_value, double y_value) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.

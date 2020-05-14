@@ -19,26 +19,26 @@ import static traffic_congestion_simulator.TCSConstant.ROUNDEDDECPOS;
  * @author chenhanxi
  */
 public class Lane {
-    
+
     ArrayList<Vehicle> carList;// a list of all the cars on the road.
 
     double[] position; // 0 is x, 1 is y
 
     double[] frontPos;
-    
+
     double[] size; // 0 is length, 1 is width
 
     double direction; //  angle
 
-    Light light;
-    
+    Light2 light;
+
     boolean overflow;
-    
+
     ArrayList<Vehicle> overflowVehicles;
-    
+
     boolean reset;
-    
-    public Lane(double[] position, double[] size, double direction, Light light) {
+
+    public Lane(double[] position, double[] size, double direction, Light2 light) {
         carList = new ArrayList<>();
         // Both x and y are defining the center position of the lane.
         this.position = position;
@@ -47,17 +47,17 @@ public class Lane {
 
         // I need to fix the car class based on this. That the length will always be the length and the width will always be the width. It's the direction that dominate.
         this.light = light;
-        
+
         overflow = false;
-        
+
         overflowVehicles = new ArrayList<>();
-        
+
         frontPos = new double[2];
         frontPos[0] = position[0] + 1 / 2.0 * size[0] * rounder(Math.abs(Math.cos(Math.toRadians(direction))));
         frontPos[1] = position[1] + 1 / 2.0 * size[0] * rounder(Math.abs(Math.sin(Math.toRadians(direction))));
         reset = false;
     }
-    
+
     public double rounder(double num) {
         num = num * Math.pow(10, ROUNDEDDECPOS);
         num = Math.round(num);
@@ -108,15 +108,15 @@ public class Lane {
         }
         return spotLeft;
     }
-    
+
     public void addCar(Vehicle car) {
         carList.add(car);
     }
-    
+
     public void addCar(int[] position, int[] size) {
         // I still have to add this part.
     }
-    
+
     public void removeCar(int index) {
         carList.remove(index);
     }
@@ -127,11 +127,11 @@ public class Lane {
             Vehicle c = carList.get(i);
             if (c.getReactionTime() <= 0) {
                 // Here have an if-else statement to account for the time when two cars are too close.
-                if (i > 0 && c.distanceCheck(carList.get(i - 1))) {
+                if (i > 0 && !c.distanceCheck(carList.get(i - 1))) {
                     c.accelerate(false);
                 } else if (Math.sqrt(Math.pow(c.getSpeed()[0], 2) + Math.pow(c.getSpeed()[1], 2)) < c.getSpeedLimit()) {
                     c.accelerate(true);
-                    
+
                 } else {
                     c.travelWithConstantSpeed();
                 }
@@ -139,7 +139,7 @@ public class Lane {
                 c.reduceReactionTimeUnit();
                 break;
             }
-            
+
         }
     }
 
@@ -158,14 +158,14 @@ public class Lane {
             carList.get(i).accelerate(false);
         }
     }
-    
+
     public void red() {
         double[] destination = new double[2];
         // Wait for position to be switched.
         destination[0] = frontPos[0] - (carList.get(1).getSize()[0] * rounder(Math.abs(Math.cos(Math.toRadians(direction)))));
         destination[1] = frontPos[1] - (carList.get(1).getSize()[1] * rounder(Math.abs(Math.cos(Math.toRadians(direction)))));
         carList.get(1).setPosition(destination);
-        
+
         for (int i = 1; i < carList.size(); i++) {
             destination[0] = carList.get(i - 1).getPosition()[0] - (rounder(Math.abs(Math.cos(Math.toRadians(direction))) * (1 / 2 * carList.get(i - 1).getSize()[0] - carList.get(i).getSafetyDistance() - 1 / 2 * carList.get(i).getSize()[0])));
             destination[1] = carList.get(i - 1).getPosition()[1] - (rounder(Math.abs(Math.cos(Math.toRadians(direction))) * (1 / 2 * carList.get(i - 1).getSize()[1] - carList.get(i).getSafetyDistance() - 1 / 2 * carList.get(i).getSize()[1])));
@@ -186,12 +186,12 @@ public class Lane {
             for (int i = 1; i < carList.size(); i++) {
                 destination[0] = carList.get(i - 1).getPosition()[0] - (rounder(Math.abs(Math.cos(Math.toRadians(direction))) * (carList.get(i - 1).getSize()[0] + carList.get(i).getBuffer())));
                 destination[1] = carList.get(i - 1).getPosition()[1] - (rounder(Math.abs(Math.sin(Math.toRadians(direction))) * (carList.get(i - 1).getSize()[0] + carList.get(i).getBuffer())));
-                
+
                 carList.get(i).setPosition(destination);
             }
         }
     }
-    
+
     public void updateCarList() {
         for (int i = 0; i < carList.size(); i++) {
             // Distance formula
@@ -200,35 +200,35 @@ public class Lane {
                 // Remember to check this tomorrow.
                 overflowVehicles.add(carList.get(i));
                 carList.remove(i--);
-                
+
                 overflow = true;
             } else {
                 break;
             }
         }
     }
-    
+
     public boolean haveLight() {
         return light != null;
     }
-    
+
     public boolean getOverFlow() {
         return overflow;
     }
-    
+
     public ArrayList<Vehicle> getOverFlowList() {
         return overflowVehicles;
     }
-    
+
     public void removeOverFlow() {
         overflow = false;
         overflowVehicles.clear();
     }
-    
+
     public double getDirection() {
         return direction;
     }
-    
+
     public String getCarPos() {
         String result = "";
         for (int i = 0; i < carList.size(); i++) {
@@ -236,7 +236,7 @@ public class Lane {
         }
         return result;
     }
-    
+
     public double[][] getPoints() {
         double[][] points = new double[4][2];
         double v1 = direction;
@@ -246,33 +246,41 @@ public class Lane {
                 points[i + j][0] = position[0] + 1 / 2 * size[0] * Math.cos(Math.toRadians(v1)) + 1 / 2 * size[1] * Math.cos(Math.toRadians(v2));
                 points[i + j][1] = position[1] + 1 / 2 * size[0] * Math.sin(Math.toRadians(v1)) + 1 / 2 * size[1] * Math.sin(Math.toRadians(v2));
                 v2 -= 180;
-                
+
             }
             v1 -= 180;
         }
         return points;
     }
-    
+
     public static void main(String[] args) {
         double[] position = {140, 310};
         double[] size = {280, 10};
         double direction = 0;
         System.out.println("hi");
-        
-        double[] carpos = {0, 5};
+
+        double[] carpos = {15, 5};
         double[] carsize = {3, 2};
-        Vehicle c = new NormalCar(carpos, carsize, direction);
-        
-        Light l = new Light(0);
+
+        Vehicle c = new AutomatedCar(carpos, carsize, direction);
+        System.out.println(c.getAcceleration_rate());
+        double[] carpos2 = {10, 5};
+        Vehicle c2 = new AutomatedCar(carpos2, carsize, direction);
+        System.out.println(c2.getAcceleration_rate());
+
+        Light2 l = new Light2(Color.GREEN, true, false);
         Lane lane = new Lane(position, size, direction, l);
-        
+
         lane.addCar(c);
-        
+        lane.addCar(c2);
+
         for (int i = 0; i < 7000; i++) {
             lane.green();
-            System.out.println(c.getReactionTime());
+            System.out.println("safety: " + c2.getSafetyDistance());
+            System.out.println(c.getReactionTime() + " : " + c2.getReactionTime());
             System.out.println(Arrays.toString(c.getSpeed()) + " : " + Arrays.toString(c.getPosition()));
+            System.out.println(Arrays.toString(c2.getSpeed()) + " : " + Arrays.toString(c2.getPosition()));
         }
-        
+
     }
 }

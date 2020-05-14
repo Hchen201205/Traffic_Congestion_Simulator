@@ -76,7 +76,7 @@ public class Lane_Pool implements Runnable {
     // Check whether the point of the front end of the vehicle is in a lane.
     private boolean inLane(Lane lane, Vehicle vehicle) {
         double[][] lanePoints = lane.getPoints();
-        double[] vpos = vehicle.getCarFrontPos();
+        double[] vpos = vehicle.getPosition();
 
         int i;
         int j;
