@@ -48,13 +48,13 @@ public class AutomatedCar extends Vehicle implements TCSConstant {
             acceleration = deceleration_rate;
         }
 
-        position[0] += speed[0] * TCSConstant.TIMEINCREMENTS 
+        position[0] += speed[0] * TCSConstant.TIMEINCREMENTS
                 + 1.0 / 2 * acceleration * TCSConstant.TIMEINCREMENTS * TCSConstant.TIMEINCREMENTS * Math.cos(Math.toRadians(direction));
         position[0] = this.rounder(position[0]);
         speed[0] += acceleration * TCSConstant.TIMEINCREMENTS * Math.abs(Math.cos(Math.toRadians(direction)));
         speed[0] = this.rounder(speed[0]);
 
-        position[1] += speed[1] * TCSConstant.TIMEINCREMENTS 
+        position[1] += speed[1] * TCSConstant.TIMEINCREMENTS
                 + 1.0 / 2 * acceleration * TCSConstant.TIMEINCREMENTS * TCSConstant.TIMEINCREMENTS * Math.sin(Math.toRadians(direction));;
         position[1] = this.rounder(position[1]);
         speed[1] += acceleration * TCSConstant.TIMEINCREMENTS * Math.abs(Math.sin(Math.toRadians(direction)));
@@ -83,10 +83,11 @@ public class AutomatedCar extends Vehicle implements TCSConstant {
     @Override
     public void updateSafetyDistance() {
         if (this.is_turning) {
-            safety_distance = Math.pow(this.getDirectionalSpeed(), 2) / (2 * -deceleration_rate);
-        } else {
             //safety distance while turning
             //not implemented yet
+
+        } else {
+            safety_distance = Math.pow(this.getDirectionalSpeed(), 2) / (2 * -deceleration_rate);
         }
     }
 
@@ -106,7 +107,6 @@ public class AutomatedCar extends Vehicle implements TCSConstant {
         deceleration_rate = rand.nextGaussian() * scaled_dec_avg_max / 10 + scaled_dec_avg_max;
         deceleration_rate = this.rounder(deceleration_rate);
     }
-
 
     @Override
     public void setTurningConstants(double[] destination, boolean accelerate) {
@@ -227,13 +227,11 @@ public class AutomatedCar extends Vehicle implements TCSConstant {
         }
 
     }
-    
-    
+
     @Override
-    public void updateTurnSafetyAngle(){
-        
+    public void updateTurnSafetyAngle() {
+
     }
-    
 
     /**
      * This method will give the point at which the driver (robot in this case)
@@ -321,7 +319,6 @@ public class AutomatedCar extends Vehicle implements TCSConstant {
         double increments = this.timeToSpeedLimit() / time_increments;
         return (int) Math.floor(increments);
     }
-
 
     //Obsolete functions, explained in abstract Vehicle class
     //still might find a use for code/logic in other classes
