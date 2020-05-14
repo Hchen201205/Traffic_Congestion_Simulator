@@ -21,19 +21,23 @@ public interface TCSConstant {
     //Vehicle classes constants
     public final double BUFFER = 1;
     
-    public final double LENGTHAVG = 4.1;
+    public final double LENGTHAVG = 4.0;
     
-    public final double WIDTHAVG = 1.75;
+    public final double LENGTHMIN = 3.4;
+            
+    public final double WIDTHAVG = 1.8;
+    
+    public final double WIDTHMIN = 1.75;
     
     public final double WIDTHMAX = 2.4;
     
-    public final double ACCELERATIONAVG = 3.5;
+    public final double ACCELERATIONAVG = 3.6;
     
-    public final double ACCELERATIONAVGMAX = 4.1;
+    public final double ACCELERATIONAVGMAX = 4.2;
             
-    public final double DECELERATIONAVG = -2;
+    public final double DECELERATIONAVG = -2.2;
     
-    public final double DECELERATIONAVGMAX = -3;
+    public final double DECELERATIONAVGMAX = -3.2;
             
     public final double REACTIONTIMEAVG = 2;
     

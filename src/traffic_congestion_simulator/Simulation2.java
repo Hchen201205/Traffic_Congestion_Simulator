@@ -18,6 +18,7 @@ import vehicle.Vehicle;
  */
 public class Simulation2 {
     public Simulation2(boolean automated) {
+        
         double[] position = {140, 310};
         double[] size = {280, 10};
         double direction = 0;

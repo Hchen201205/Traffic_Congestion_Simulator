@@ -5,6 +5,9 @@
  */
 package vehicle;
 
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import traffic_congestion_simulator.TCSConstant;
@@ -69,62 +72,74 @@ public class VehicleTesting implements TCSConstant {
     }
 
     public void graphDataTesting() {
-        double[] size = {2, 1};
-        double[] pos1 = {2, 5};
-        double[] des1 = {9, 12};
+        double left = 5;
+        double lower = 5;
+        double lane = LSIZE[1];
+        ArrayList<Vehicle> cars = new ArrayList<>();
+
+        double[] pos1 = {left, lower + 2.5 * lane};
+        double[] des1 = {left + 3.5 * lane, lower + 6 * lane};
         AutomatedCar car1 = new AutomatedCar(pos1, 0);
+        cars.add(car1);
 
-        double[] pos2 = {2, 3};
+        double[] pos2 = {left, lower + 1.5 * lane};
         AutomatedCar car2 = new AutomatedCar(pos2, 0);
+        cars.add(car2);
 
-        double[] pos3 = {14, 9};
+        double[] pos3 = {left + 6 * lane, lower + 4.5 * lane};
         AutomatedCar car3 = new AutomatedCar(pos3, 180);
+        cars.add(car3);
 
-        double[] pos4 = {14, 7};
-        double[] des4 = {7, 0};
+        double[] pos4 = {left + 6 * lane, lower + 3.5 * lane};
+        double[] des4 = {left + 2.5 * lane, lower};
         AutomatedCar car4 = new AutomatedCar(pos4, 180);
+        cars.add(car4);
 
-        for (int i = 0; i < 60; i++) {
-            if (i > 55) {
-                System.out.println(car1.rounder(car1.getLeftBottomCornerPos()[0]) + ", " + car1.rounder(car1.getLeftBottomCornerPos()[1])
-                        + ", " + car1.rounder(car1.direction) + "\t\t" + car1.rounder(car2.getLeftBottomCornerPos()[0])
-                        + ", " + car1.rounder(car2.getLeftBottomCornerPos()[1]) + ", " + car1.rounder(car2.direction)
-                        + "\t\t" + car1.rounder(car3.getLeftBottomCornerPos()[0]) + ", " + car1.rounder(car3.getLeftBottomCornerPos()[1])
-                        + ", " + car1.rounder(car3.direction)
-                        + "\t\t" + car1.rounder(car4.getLeftBottomCornerPos()[0]) + ", " + car1.rounder(car4.getLeftBottomCornerPos()[1])
-                        + ", " + car1.rounder(car4.direction));
+        int i;
+        for (i = 0; i < 70; i++) {
+            if (i > 65) {
+                output(cars, i);
             } else {
                 car2.accelerate(true);
                 car3.accelerate(true);
-                System.out.println(car1.rounder(car1.getLeftBottomCornerPos()[0]) + ", " + car1.rounder(car1.getLeftBottomCornerPos()[1])
-                        + ", " + car1.rounder(car1.direction) + "\t\t" + car1.rounder(car2.getLeftBottomCornerPos()[0])
-                        + ", " + car1.rounder(car2.getLeftBottomCornerPos()[1]) + ", " + car1.rounder(car2.direction)
-                        + "\t\t" + car1.rounder(car3.getLeftBottomCornerPos()[0]) + ", " + car1.rounder(car3.getLeftBottomCornerPos()[1])
-                        + ", " + car1.rounder(car3.direction)
-                        + "\t\t" + car1.rounder(car4.getLeftBottomCornerPos()[0]) + ", " + car1.rounder(car4.getLeftBottomCornerPos()[1])
-                        + ", " + car1.rounder(car4.direction));
+                output(cars, i);
             }
         }
 
         car1.turn(90, des1, true);
         car4.turn(90, des4, true);
-        while (car1.is_turning) {
-            car1.turn(90, des1, true);
-            car4.turn(90, des4, true);
-            /*
-            System.out.println(car.rounder(car.getCenterPos()[0]) + ", " + car.rounder(car.getCenterPos()[1])
-                    + ", " + car.rounder(car.direction) + "\t\t" + car.rounder(car2.getCenterPos()[0])
-                    + ", " + car.rounder(car2.getCenterPos()[1]) + ", " + car.rounder(car2.direction));
-             */
-            System.out.println(car1.rounder(car1.getLeftBottomCornerPos()[0]) + ", " + car1.rounder(car1.getLeftBottomCornerPos()[1])
-                    + ", " + car1.rounder(car1.direction) + "\t\t" + car1.rounder(car2.getLeftBottomCornerPos()[0])
-                    + ", " + car1.rounder(car2.getLeftBottomCornerPos()[1]) + ", " + car1.rounder(car2.direction)
-                    + "\t\t" + car1.rounder(car3.getLeftBottomCornerPos()[0]) + ", " + car1.rounder(car3.getLeftBottomCornerPos()[1])
-                    + ", " + car1.rounder(car3.direction)
-                    + "\t\t" + car1.rounder(car4.getLeftBottomCornerPos()[0]) + ", " + car1.rounder(car4.getLeftBottomCornerPos()[1])
-                    + ", " + car1.rounder(car4.direction));
+        while (car1.is_turning || car4.is_turning) {
+            i++;
+            if (!car1.isTurning()) {
+                car4.turn(90, des4, true);
+                car1.accelerate(true);
+            } else if (!car4.isTurning()) {
+                car1.turn(90, des1, true);
+                car4.accelerate(true);
+            } else {
+                car1.turn(90, des1, true);
+                car4.turn(90, des4, true);
+            }
+            output(cars, i);
         }
 
+        for (int j = 0; j < 10; j++) {
+            car1.accelerate(true);
+            car4.accelerate(true);
+            output(cars, j);
+        }
+
+    }
+
+    public void output(ArrayList<Vehicle> cars, int i) {
+        String output = "";
+        if (i % 2 == 0) {
+            for (Vehicle car : cars) {
+                output += String.format("%7f, %7f; %7f, %7f; %7f\t\t", car.rounder(car.getCenterPos()[0]),
+                        car.rounder(car.getCenterPos()[1]), car.size[0], car.size[1], car.rounder(car.direction));
+            }
+            System.out.println(output);
+        }
     }
 
 }

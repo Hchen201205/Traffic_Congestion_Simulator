@@ -110,13 +110,20 @@ public abstract class Vehicle implements TCSConstant {
     }
 
     public void genRandSize(){
-        size[0] = rand.nextGaussian()*LENGTHAVG / 9.0 + LENGTHAVG;
+        size[0] = this.rounder(rand.nextGaussian() * LENGTHAVG / 20.0 + LENGTHAVG);
+        if (size[0] < LENGTHMIN){
+            size[0] = LENGTHMIN;
+        }
         
-        double scaled_width_avg = WIDTHAVG / (LENGTHAVG) * size[0];
-        size[1] = rand.nextGaussian()*scaled_width_avg / 10.0 + scaled_width_avg;
+        //double scaled_width_avg = WIDTHAVG / (LENGTHAVG) * size[0];
+        //size[1] = rounder(Math.abs(rand.nextGaussian()*scaled_width_avg / 15.0) + scaled_width_avg);
+        size[1] = rand.nextGaussian()* WIDTHAVG / 20.0 + WIDTHAVG;
         if (size[1] > WIDTHMAX){
             size[1] = WIDTHMAX;
+        } else if (size[1] < WIDTHMIN){
+            size[1] = WIDTHMIN;
         }
+
     }
     
     //distance from front bumper of car to back bumper of front car plus buffer
@@ -160,7 +167,7 @@ public abstract class Vehicle implements TCSConstant {
         if (front_car.is_turning){
             return Math.abs(front_car.direction - this.direction);
         }
-            return 0;
+        return 0;
     };
 
     

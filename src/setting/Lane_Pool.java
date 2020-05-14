@@ -31,13 +31,14 @@ public class Lane_Pool implements Runnable {
         vpool = new Vehicle_Pool();
 
         for (int i = 0; i < lanepool.length; i++) {
-            lanepool[i] = new Lane_Set(TCSConstant.LANEPOSITION[i], TCSConstant.LANESIZE[i], TCSConstant.LANEDIRECTION[i], TCSConstant.NUMOFLANE[i], lightpool.getLight_Set(i));
+            //lanepool[i] = new Lane_Set(TCSConstant.LANEPOSITION[i], TCSConstant.LANESIZE[i], TCSConstant.LANEDIRECTION[i], TCSConstant.NUMOFLANE[i], lightpool.getLight_Set(i));
         }
 
         this.shared = shared;
     }
 
     private void runUnit() {
+        
         for (Lane_Set laneset : lanepool) {
             laneset.runUnit();
             for (int i = 0; i < laneset.size(); i++) {
