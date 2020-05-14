@@ -82,7 +82,7 @@ public class AutomatedCar extends Vehicle implements TCSConstant {
     //Updates car safe distances, so the car will avoid accident.
     @Override
     public void updateSafetyDistance() {
-        if (this.is_turning) {
+        if (!this.is_turning) {
             safety_distance = Math.pow(this.getDirectionalSpeed(), 2) / (2 * -deceleration_rate);
         } else {
             //safety distance while turning

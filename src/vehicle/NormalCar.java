@@ -112,7 +112,7 @@ public class NormalCar extends Vehicle implements TCSConstant {
     //will asign a new rand safety_distance each time it is called
     @Override
     public void updateSafetyDistance() {
-        if (this.is_turning) {
+        if (!this.is_turning) {
             this.genSafetyDistanceMin();
             //safety_distance will always be at least the minimum distance to deccelerate to stop
             safety_distance = Math.abs(rand.nextGaussian() * safety_distance_min / 7.0)
