@@ -15,7 +15,7 @@ import traffic_congestion_simulator.TCSConstant;
 public class AutomatedCar extends Vehicle implements TCSConstant {
 
     //Creates a Automated car.
-    public AutomatedCar(double[] position, double[] size, double direction) {
+    public AutomatedCar(double[] position, double direction) {
         speed[0] = 0;
         speed[1] = 0;
         safety_distance = 0;
@@ -30,12 +30,11 @@ public class AutomatedCar extends Vehicle implements TCSConstant {
         turn_initial_direction = 0;
         turn_safety_angle = 0;
 
-        //may change/dump these two methods later
+        this.genRandSize();
         this.genRandAcceleration();
         this.genRandDeceleration();
 
         this.position = position;
-        this.size = size;
         this.direction = direction;
     }
 
@@ -276,25 +275,23 @@ public class AutomatedCar extends Vehicle implements TCSConstant {
         return breakingPoint;
     }
 
-    @Override
-    public boolean getAutomated() {
-        return true;
-    }
+    public void decelerateToStop(double[] pos) {
+        double ax = -Math.pow(speed[0], 2) / (2 * pos[0] - position[0]);
+        double ay = -Math.pow(speed[1], 2) / (2 * pos[1] - position[1]);
 
-    /*
-    public double getDistanceFromTurningVehicle(Vehicle2 front_car){
-        //no implementation yet
-        
-        return distance;
+        double deltaPosX = (speed[0] * TCSConstant.TIMEINCREMENTS + 1.0 / 2 * ax * TCSConstant.TIMEINCREMENTS * TCSConstant.TIMEINCREMENTS);
+        position[0] += deltaPosX;
+        position[0] = this.rounder(position[0]);
+        speed[0] += this.rounder(ax * TCSConstant.TIMEINCREMENTS);
+
+        double deltaPosY = (speed[1] * TCSConstant.TIMEINCREMENTS + 1.0 / 2 * ax * TCSConstant.TIMEINCREMENTS * TCSConstant.TIMEINCREMENTS);
+        position[1] += deltaPosY;
+        position[1] = this.rounder(position[1]);
+        speed[1] += this.rounder(ay * TCSConstant.TIMEINCREMENTS);
+        updateSafetyDistance();
+        time_moving += TCSConstant.TIMEINCREMENTS;
     }
-     
- 
-    public double getDistanceFromLimitLine (Lane lane){
-        //not implemented yet
-        
-        return distance;
-    }
-     */
+    
     //returns exact time needed to decelerate to stop
     public double timeToStop() {
         double speed = this.getDirectionalSpeed();
@@ -320,62 +317,10 @@ public class AutomatedCar extends Vehicle implements TCSConstant {
         double increments = this.timeToSpeedLimit() / time_increments;
         return (int) Math.floor(increments);
     }
-
-    //Obsolete functions, explained in abstract Vehicle class
-    //still might find a use for code/logic in other classes
-    /*
-    public void accelerateToSpeed(double speed) throws InterruptedException {
-        double speed_dir = this.getDirectionalSpeed();
-        while (speed_dir < speed) {
-            accelerate(time_increments, acceleration_rate);
-            speed_dir = this.getDirectionalSpeed();
-        }
+    
+    @Override
+    public boolean getAutomated() {
+        return true;
     }
 
-    public void decelerateToSpeed(double speed) throws InterruptedException {
-        double speed_dir = this.getDirectionalSpeed();
-        while (speed_dir > speed) {
-            accelerate(time_increments, deceleration_rate);
-            speed_dir = this.getDirectionalSpeed();
-        }
-    }
-
-    public void accelerateToSpeedLimit() throws InterruptedException {
-        accelerateToSpeed(speed_limit);
-    }
-
-    public void decelerateToStop() throws InterruptedException {
-        decelerateToSpeed(0);
-    }
-
-    public void travelDistanceToStop(double distance) throws InterruptedException {
-        double initial_pos = this.getDirectionalPos();
-        while (distance > safety_distance) {
-            if (this.getDirectionalSpeed() < speed_limit) {
-                accelerate(time_increments, acceleration_rate);
-            } else {
-                accelerate(time_increments, 0);
-            }
-            distance -= Math.abs(initial_pos - this.getDirectionalPos());
-            initial_pos = this.getDirectionalPos();
-        }
-        this.decelerateToStop();
-    }
-     */
-    public void decelerate(double[] pos) {
-        double ax = -Math.pow(speed[0], 2) / (2 * pos[0] - position[0]);
-        double ay = -Math.pow(speed[1], 2) / (2 * pos[1] - position[1]);
-
-        double deltaPosX = (speed[0] * TCSConstant.TIMEINCREMENTS + 1.0 / 2 * ax * TCSConstant.TIMEINCREMENTS * TCSConstant.TIMEINCREMENTS);
-        position[0] += deltaPosX;
-        position[0] = this.rounder(position[0]);
-        speed[0] += this.rounder(ax * TCSConstant.TIMEINCREMENTS);
-
-        double deltaPosY = (speed[1] * TCSConstant.TIMEINCREMENTS + 1.0 / 2 * ax * TCSConstant.TIMEINCREMENTS * TCSConstant.TIMEINCREMENTS);
-        position[1] += deltaPosY;
-        position[1] = this.rounder(position[1]);
-        speed[1] += this.rounder(ay * TCSConstant.TIMEINCREMENTS);
-        updateSafetyDistance();
-        time_moving += TCSConstant.TIMEINCREMENTS;
-    }
 }

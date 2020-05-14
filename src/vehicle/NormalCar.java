@@ -25,7 +25,7 @@ public class NormalCar extends Vehicle implements TCSConstant {
     protected double safety_distance_min;
     protected double turn_safety_angle_min;
 
-    public NormalCar(double[] position, double[] size, double direction) {
+    public NormalCar(double[] position, double direction) {
         rand = new Random();
         speed[0] = 0;
         speed[1] = 0;
@@ -44,6 +44,7 @@ public class NormalCar extends Vehicle implements TCSConstant {
         turn_safety_angle_min = 0;
         turn_safety_angle = 0;
 
+        this.genRandSize();
         this.genReactionTimeMean();
         this.genAccelerationMean();
         this.genDecelerationMean();
@@ -54,7 +55,6 @@ public class NormalCar extends Vehicle implements TCSConstant {
         this.genRandSpeedLimit();
 
         this.position = position;
-        this.size = size;
         this.direction = direction;
     }
 
@@ -291,7 +291,28 @@ public class NormalCar extends Vehicle implements TCSConstant {
     public void updateTurnSafetyAngle() {
 
     }
+    
+        @Override
+    public void decelerateToStop(double[] pos) {
+        double ax_avg = -Math.pow(speed[0], 2) / (2 * pos[0] - position[0]);
+        double ax = this.rounder(rand.nextGaussian()* ax_avg / 10.0 + ax_avg);
+        
+        double ay_avg = -Math.pow(speed[1], 2) / (2 * pos[1] - position[1]);
+        double ay = this.rounder(rand.nextGaussian()* ay_avg / 10.0 + ay_avg);
+        
+        double deltaPosX = (speed[0] * TCSConstant.TIMEINCREMENTS + 1.0 / 2 * ax * TCSConstant.TIMEINCREMENTS * TCSConstant.TIMEINCREMENTS);
+        position[0] += deltaPosX;
+        position[0] = this.rounder(position[0]);
+        speed[0] += this.rounder(ax * TCSConstant.TIMEINCREMENTS);
 
+        double deltaPosY = (speed[1] * TCSConstant.TIMEINCREMENTS + 1.0 / 2 * ax * TCSConstant.TIMEINCREMENTS * TCSConstant.TIMEINCREMENTS);
+        position[1] += deltaPosY;
+        position[1] = this.rounder(position[1]);
+        speed[1] += this.rounder(ay * TCSConstant.TIMEINCREMENTS);
+        updateSafetyDistance();
+        time_moving += TCSConstant.TIMEINCREMENTS;
+    }
+    
     //Getters
     @Override
     public double getReactionTime() {
@@ -309,7 +330,15 @@ public class NormalCar extends Vehicle implements TCSConstant {
     public double getDecelerationMean() {
         return deceleration_mean;
     }
+    
+    @Override
+    public boolean getAutomated() {
+        return false;
+    }
 
+    
+    
+    
     @Override
     public double[] estimateBreakingPoint(double x_value, double y_value) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
@@ -318,30 +347,6 @@ public class NormalCar extends Vehicle implements TCSConstant {
     @Override
     public double[] estimateBreakingPoint(Vehicle v) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public boolean getAutomated() {
-        return false;
-    }
-
-    @Override
-    public void decelerate(double[] pos) {
-        // what kind of random variable do I want...
-        double ax = -this.rounder(Math.pow(speed[0], 2) / (2 * pos[0] - position[0]) + rand.nextGaussian() / 10);
-        double ay = -this.rounder(Math.pow(speed[1], 2) / (2 * pos[1] - position[1]) + rand.nextGaussian() / 10);
-
-        double deltaPosX = (speed[0] * TCSConstant.TIMEINCREMENTS + 1.0 / 2 * ax * TCSConstant.TIMEINCREMENTS * TCSConstant.TIMEINCREMENTS);
-        position[0] += deltaPosX;
-        position[0] = this.rounder(position[0]);
-        speed[0] += this.rounder(ax * TCSConstant.TIMEINCREMENTS);
-
-        double deltaPosY = (speed[1] * TCSConstant.TIMEINCREMENTS + 1.0 / 2 * ax * TCSConstant.TIMEINCREMENTS * TCSConstant.TIMEINCREMENTS);
-        position[1] += deltaPosY;
-        position[1] = this.rounder(position[1]);
-        speed[1] += this.rounder(ay * TCSConstant.TIMEINCREMENTS);
-        updateSafetyDistance();
-        time_moving += TCSConstant.TIMEINCREMENTS;
     }
 
 }

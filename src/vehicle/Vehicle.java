@@ -19,7 +19,7 @@ public abstract class Vehicle implements TCSConstant {
     protected double[] speed = new double[2];//{speed left/right, speed up/down} in m/s (always positive)               
     protected double[] position;             //Position as the top of the car but half of the , in m
     protected double[] size;                 //{length, width} in m
-    protected double[] breakingPoint;
+    protected double[] breaking_point;
 
     protected double acceleration_rate;      //in m/s^2
     protected double deceleration_rate;      //in m/s^2
@@ -32,7 +32,7 @@ public abstract class Vehicle implements TCSConstant {
     protected boolean is_accelerating;       //true if accelerate method is running
     protected boolean is_turning;            //true if car is turning in intersection
 
-    //temporary turning constants (only called before a car starts a turn)
+    //turning constants (called before a car starts a turn)
     protected double turning_acceleration;   //acceleration value used only for turning
     protected double turn_radius;            //radius of quarter circle modeling turn
     protected double turning_velocity;       //calculated from turning_acceleration value
@@ -51,7 +51,7 @@ public abstract class Vehicle implements TCSConstant {
     //accelerate = true to accelerate & accelerate = false to decelerate
     public abstract void accelerate(boolean accelerate);
 
-    public abstract void decelerate(double[] pos);
+    public abstract void decelerateToStop(double[] pos);
 
     public abstract boolean getAutomated();
     
@@ -86,6 +86,8 @@ public abstract class Vehicle implements TCSConstant {
     public abstract void turn(int direction, double[] destination, boolean accelerate);
     
     public abstract void updateTurnSafetyAngle();
+    
+
     //Non-abstract functions:
     
     //this will make graphing in matlab much simpler
@@ -105,7 +107,17 @@ public abstract class Vehicle implements TCSConstant {
         return pos;
     }
 
-        //distance from front bumper of car to back bumper of front car plus buffer
+    public void genRandSize(){
+        size[0] = rand.nextGaussian()*LENGTHAVG / 9.0 + LENGTHAVG;
+        
+        double scaled_width_avg = WIDTHAVG / (LENGTHAVG) * size[0];
+        size[1] = rand.nextGaussian()*scaled_width_avg / 10.0 + scaled_width_avg;
+        if (size[1] > WIDTHMAX){
+            size[1] = WIDTHMAX;
+        }
+    }
+    
+    //distance from front bumper of car to back bumper of front car plus buffer
     public double getDistanceFromFrontVehicle(Vehicle front_car) {
         if (front_car.isTravelingHorizontal()) {
             return Math.abs(this.position[0] - front_car.position[0])
@@ -309,21 +321,4 @@ public abstract class Vehicle implements TCSConstant {
         this.position[1] = position[1];
     }
 
-    //The following functions are now obsolete with the way Vehicle classes function
-    //But the logic is still helpful and might be able to be reused in other classes
-    //See AutomatedCar for fleshed out functions and code
-    /*
-    
-    public abstract void accelerateToSpeed(double speed) throws InterruptedException;
-    
-    public abstract void accelerateToSpeedLimit() throws InterruptedException;
-    
-    public abstract void decelerateToSpeed(double speed) throws InterruptedException;
-    
-    public abstract void decelerateToStop() throws InterruptedException;
-    
-    //vehicle will travel a certain distance to a stop, accelerating to speed limit 
-    //until it needs to begin decelerating based on saftey distance 
-    public abstract void travelDistanceToStop(double distance) throws InterruptedException;
-     */
 }
