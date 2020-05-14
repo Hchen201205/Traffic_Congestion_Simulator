@@ -27,7 +27,7 @@ public class Light_Pool implements Runnable {
 
         for (int i = 0; i < lightpool.length - 1; i++) {
             // I'm using TCSConstant for now. We will change to have a specific file for it.
-            lightpool[i] = new LightSet(TCSConstant.LIGHTPOSITION[i], TCSConstant.NUMOFLANE[i]);
+            //lightpool[i] = new LightSet(TCSConstant.LIGHTPOSITION[i], TCSConstant.NUMOFLANE[i]);
         }
         // Export lane.
         lightpool[lightpool.length - 1] = null;

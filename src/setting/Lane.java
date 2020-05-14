@@ -30,7 +30,7 @@ public class Lane {
 
     double direction; //  angle
 
-    Light2 light;
+    Light light;
 
     boolean overflow;
 
@@ -38,7 +38,7 @@ public class Lane {
 
     boolean reset;
 
-    public Lane(double[] position, double[] size, double direction, Light2 light) {
+    public Lane(double[] position, double[] size, double direction, Light light) {
         carList = new ArrayList<>();
         // Both x and y are defining the center position of the lane.
         this.position = position;
@@ -268,7 +268,7 @@ public class Lane {
         Vehicle c2 = new AutomatedCar(carpos2, carsize, direction);
         System.out.println(c2.getAcceleration_rate());
 
-        Light2 l = new Light2(Color.GREEN, true, false);
+        Light l = new Light(Color.GREEN, true, false);
         Lane lane = new Lane(position, size, direction, l);
 
         lane.addCar(c);
