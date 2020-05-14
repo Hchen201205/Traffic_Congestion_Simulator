@@ -23,9 +23,9 @@ public abstract class Vehicle implements TCSConstant {
 
     protected double acceleration_rate;      //in m/s^2
     protected double deceleration_rate;      //in m/s^2
-    protected double direction;              //degrees, 0° -> right, 90° -> up, etc. Should always be positive     
+    protected double direction;              //degrees, 0° -> right, 90° -> up, etc. Should always >= 0 and < 360  
     protected double speed_limit;            //in m/s, set for AutomatedCar, randomized for NormalCar
-    protected double safety_distance;        //distance needed for car to safely decelerate to 0
+    protected double safety_distance;        //distance needed for car to decelerate to stop
     protected double time_moving;            //total time vehicle has been moving, helpful for testing/checking
     protected double reaction_time;          //time it takes vehicle to begin accelerating from stop
 
@@ -34,14 +34,14 @@ public abstract class Vehicle implements TCSConstant {
 
     //turning constants (called before a car starts a turn)
     protected double turning_acceleration;   //acceleration value used only for turning
+    protected double turning_deceleration;   //deceleration value used only for turning
     protected double turn_radius;            //radius of quarter circle modeling turn
     protected double turning_velocity;       //calculated from turning_acceleration value
     protected double[] turn_initial_position;//position before turn (with center at limit line)
     protected double turn_initial_direction; //direction car was facing before turn
-    protected double turn_safety_angle;
-    protected double turning_deceleration;
+    protected double turn_safety_angle;      //angle needed for car to decelerate to stop while turning
 
-    protected Random rand = new Random(100); // Instead of initializing random in each car class, it can be created here.
+    protected Random rand = new Random(); // Instead of initializing random in each car class, it can be created here.
 
     protected final double buffer = BUFFER;  //gap between cars when stopped, in m
     protected final int rounded_dec_pos = ROUNDEDDECPOS;     //the decimal position accuracy of functions
@@ -86,6 +86,7 @@ public abstract class Vehicle implements TCSConstant {
     //accelerate = true to accelerate & accelerate = false to decelerate
     public abstract void turn(int direction, double[] destination, boolean accelerate);
     
+    //calculates and assigns new saftey angle based on current speed while turning
     public abstract void updateTurnSafetyAngle();
     
 

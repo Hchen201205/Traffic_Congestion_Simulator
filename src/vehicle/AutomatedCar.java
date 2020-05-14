@@ -24,6 +24,7 @@ public class AutomatedCar extends Vehicle implements TCSConstant {
         is_turning = false;
         reaction_time = 0;
         turning_acceleration = 0;
+        turning_deceleration = 0;
         turn_radius = 0;
         turning_velocity = 0;
         turn_initial_position = new double[2];
