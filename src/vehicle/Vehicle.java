@@ -142,7 +142,7 @@ public abstract class Vehicle implements TCSConstant {
     
     //no implementation yet
     //for use when car is turning
-    public double getAngleFromTurningVehicle(Vehicle front_car){
+    public double getAngleFromTurningFrontVehicle(Vehicle front_car){
         
     };
 
