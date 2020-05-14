@@ -83,6 +83,7 @@ public class AutomatedCar extends Vehicle implements TCSConstant {
     @Override
     public void updateSafetyDistance() {
         if (this.is_turning) {
+
             //safety distance while turning
             //not implemented yet
 
