@@ -139,18 +139,20 @@ public class NormalCar extends Vehicle implements TCSConstant {
 
         is_accelerating = true;
 
-        double deltaPosX = (speed[0] * TCSConstant.TIMEINCREMENTS + 1.0 / 2 * acceleration * TCSConstant.TIMEINCREMENTS * TCSConstant.TIMEINCREMENTS)
-                * Math.cos(Math.toRadians(direction));
-        position[0] += deltaPosX;
+        position[0] += speed[0] * TCSConstant.TIMEINCREMENTS 
+                + 1.0 / 2 * acceleration * TCSConstant.TIMEINCREMENTS * TCSConstant.TIMEINCREMENTS * Math.cos(Math.toRadians(direction));
         position[0] = this.rounder(position[0]);
-        speed[0] += this.rounder(acceleration * TCSConstant.TIMEINCREMENTS * Math.abs(Math.cos(Math.toRadians(direction))));
+        speed[0] += acceleration * TCSConstant.TIMEINCREMENTS * Math.abs(Math.cos(Math.toRadians(direction)));
+        speed[0] = this.rounder(speed[0]);
 
-        double deltaPosY = (speed[1] * TCSConstant.TIMEINCREMENTS + 1.0 / 2 * acceleration * TCSConstant.TIMEINCREMENTS * TCSConstant.TIMEINCREMENTS)
-                * Math.sin(Math.toRadians(direction));
-        position[1] += deltaPosY;
+        position[1] += speed[1] * TCSConstant.TIMEINCREMENTS 
+                + 1.0 / 2 * acceleration * TCSConstant.TIMEINCREMENTS * TCSConstant.TIMEINCREMENTS * Math.sin(Math.toRadians(direction));
         position[1] = this.rounder(position[1]);
-        speed[1] += this.rounder(acceleration * TCSConstant.TIMEINCREMENTS * Math.abs(Math.sin(Math.toRadians(direction))));
+        speed[1] += acceleration * TCSConstant.TIMEINCREMENTS * Math.abs(Math.sin(Math.toRadians(direction)));
+        speed[1] = this.rounder(speed[1]);
 
+        
+        
         //just a precaution in case estimating the decelerating to stop gives a negative speed
         if (speed[0] * Math.abs(Math.cos(Math.toRadians(direction))) < 0
                 || speed[1] * Math.abs(Math.sin(Math.toRadians(direction))) < 0) {
