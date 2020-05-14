@@ -17,53 +17,42 @@ import java.util.concurrent.TimeUnit;
 public class Light implements TCSConstant {
 
     boolean start;
-    double direction;                //0 = 'n', 1 = 's', 2 = 'e' or 3 = 'w'
-    private int[] change_times;   //array of light cycle timing between color changes (milliseconds)
+    private double[] change_times;   //array of light cycle timing between color changes (milliseconds)
     private Color color;
-    private double time_passed;   // time that has passed in this cycle;
+    private double cycle_time;      //time that has passed in this light's current cycle;
+    //resets after each complete cycle
 
-    private final int rounded_dec_pos = ROUNDEDDECPOS;
+    private boolean is_horizontal;      //if light is assigned to lanes facing left and right
+    private boolean is_left_turn_light; //if light is assignedned to lanes facing up and down
 
-    //Creates a traffic light.
-    public Light(int direction) {
-        this.direction = direction;
+    //  Add a color so that we can set which color the light is starting on
+    //  Since lights need to be offset by specific calculated times, the cycle_time 
+    //will no longer be assigned until setCycleTime is called
+    public Light(Color color, boolean horizontal, boolean left_turn) {
+        this.color = this.color = color;
+        this.is_horizontal = horizontal;
+        this.is_left_turn_light = left_turn;
         start = false;
-        color = Color.RED;
-        change_times = new int[3];
+        change_times = new double[3];
     }
 
-    //Add a color so that we can set which color the light is starting on
-    public Light(double direction, Color color) {
-        this.direction = direction;
-        start = false;
-        this.color = color; // red -> 0; green -> 0 + red interval; yellow -> 0 + red interval + yellow interval;
-        time_passed = 0;
-        change_times = new int[3];
-
-        /*
-        if (color == Color.GREEN) {
-            time_passed = TCSConstant.LIGHTCYCLER;
-        } else if (color == Color.YELLOW) {
-            time_passed = TCSConstant.LIGHTCYCLER + TCSConstant.LIGHTCYCLEG;
-        }
-*/
-    }
-
-    //runs light in real time based on change times
     /**
-     * This is a method that will change the boolean start into true.
+     * This is a method that will change the boolean start to true.
      */
     public void startCycle() {
         start = true;
     }
 
-    //A cycle of traffic light.
+    //Runs a single increment of traffic light cycle.
     public void runCycleUnit() {
         if (start) {
-            time_passed = time_passed + TIMEINCREMENTS;
+            cycle_time += TIMEINCREMENTS;
             changeColor();
 
-            time_passed = rounder(time_passed);
+            //Need this line. Java has a rounding error without it...
+            cycle_time = rounder(cycle_time);
+                    
+                    //Math.round(cycle_time * Math.pow(10, ROUNDEDDECPOS)) / Math.pow(10, ROUNDEDDECPOS);
 
         }
 
@@ -75,42 +64,48 @@ public class Light implements TCSConstant {
         return num / Math.pow(10, ROUNDEDDECPOS);
     }
 
+    /**
+     * This is a method that will change the boolean start to false.
+     */
     public void endCycle() {
         start = false;
     }
 
     public void changeColor() {
-        if (time_passed == change_times[0]) {
+        if (cycle_time == change_times[0]) {
             color = Color.GREEN;
-            System.out.println("\n\n\n\n\n\nLight Switch to Green\n\n\n\n\n\n");
-        } else if (time_passed == change_times[0] + change_times[1]) {
+        } else if (cycle_time == change_times[0] + change_times[1]) {
             color = Color.YELLOW;
-            System.out.println("\n\n\n\n\n\nLight Switch to Yellow\n\n\n\n\n\n");
-        } else if (time_passed == change_times[0] + change_times[1] + change_times[2]) {
+        } else if (cycle_time == change_times[0] + change_times[1] + change_times[2]) {
             color = Color.RED;
-            time_passed = 0;
-            System.out.println("\n\n\n\n\n\nLight Switch to Red\n\n\n\n\n\n");
+            cycle_time = 0;
         }
     }
 
-    //Getters and Setters
+    //Getter and setters:
+    //for properly offsetting lights from eachother when cycle starts
+    public void setCycleTime(double time) {
+        cycle_time = time;
+        if (cycle_time > change_times[0] + change_times[1] + change_times[2]) {
+            cycle_time -= change_times[0] + change_times[1] + change_times[2];
+        } else if (cycle_time < 0) {
+            cycle_time += change_times[0] + change_times[1] + change_times[2];
+        }
+    }
+
     public boolean getStart() {
         return start;
     }
 
     //setting cycle times
-    public void setChangeTimes(int rtg, int gty, int ytr) {
+    public void setChangeTimes(double rtg, double gty, double ytr) {
         change_times[0] = rtg;
         change_times[1] = gty;
         change_times[2] = ytr;
     }
 
-    public int[] getChangeTimes() {
+    public double[] getChangeTimes() {
         return change_times;
-    }
-
-    public Color getColor() {
-        return color;
     }
 
     public String getColorString() {
@@ -126,34 +121,20 @@ public class Light implements TCSConstant {
         }
     }
 
-    public double getDirection() {
-        return direction;
+    public Color getColor() {
+        return color;
+    }
+
+    public boolean isHorizontal() {
+        return this.is_horizontal;
+    }
+
+    public boolean isLeftTurnLight() {
+        return this.is_left_turn_light;
     }
 
     public double getTimePassed() {
-        return time_passed;
+        return cycle_time;
     }
 
-    /**
-     * This is the testing code. Try it out. I believe there is no more bug.
-     * When you confirm it just delete the following.
-     *
-     * @param arg
-     */
-    /*
-    public static void main(String[] arg) {
-        Light testing = new Light(1, Color.GREEN);
-        System.out.println(testing.getColorString());
-        System.out.println(testing.getDirection());
-        testing.setChangeTimes(LIGHTCYCLER, LIGHTCYCLEG, LIGHTCYCLEY);
-        System.out.println(Arrays.toString(testing.getChangeTimes()));
-        System.out.println(testing.getTimePassed());
-        testing.startCycle();
-        for (int i = 0; i < 8000; i++) {
-            testing.runCycleUnit();
-            System.out.println(testing.getTimePassed());
-        }
-        System.out.println(testing.getColorString());
-    }
-     */
 }

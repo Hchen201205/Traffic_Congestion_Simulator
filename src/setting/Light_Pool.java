@@ -16,18 +16,18 @@ import traffic_congestion_simulator.TCSConstant;
 //Creates different situations for cars, and to mimic real life traffic light.
 public class Light_Pool implements Runnable {
 
-    Light_Set[] lightpool;
+    LightSet[] lightpool;
 
     final Buffer shared;
     
     //Creates all the traffic lights.
     public Light_Pool(Buffer shared) {
 
-        lightpool = new Light_Set[TCSConstant.NUMOFINTERSECTION + 1];
+        lightpool = new LightSet[TCSConstant.NUMOFINTERSECTION + 1];
 
         for (int i = 0; i < lightpool.length - 1; i++) {
             // I'm using TCSConstant for now. We will change to have a specific file for it.
-            lightpool[i] = new Light_Set(TCSConstant.LIGHTPOSITION[i], TCSConstant.NUMOFLANE[i]);
+            lightpool[i] = new LightSet(TCSConstant.LIGHTPOSITION[i], TCSConstant.NUMOFLANE[i]);
         }
         // Export lane.
         lightpool[lightpool.length - 1] = null;
@@ -35,12 +35,12 @@ public class Light_Pool implements Runnable {
         this.shared = shared;
     }
 
-    public Light_Set getLight_Set(int index) {
+    public LightSet getLight_Set(int index) {
         return lightpool[index];
     }
     
     private void runCycleUnit() {
-        for (Light_Set lightpool1 : lightpool) {
+        for (LightSet lightpool1 : lightpool) {
             lightpool1.runCycleUnit();
         }
     }

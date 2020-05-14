@@ -16,7 +16,7 @@ public class LightTesting implements TCSConstant{
 
     public LightTesting() {
         double[] pos = {1, 1};
-        Light_Set2 test = new Light_Set2(pos);
+        LightSet test = new LightSet(pos);
         for (int i = 0; i < 4; i++) {
             System.out.println("Light " + (i + 1) + " change times: " + Arrays.toString(test.getLight_Set()[i].getChangeTimes()));
         }

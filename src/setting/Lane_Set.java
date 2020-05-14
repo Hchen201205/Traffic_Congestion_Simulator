@@ -20,7 +20,7 @@ public class Lane_Set implements TCSConstant {
     ArrayList<Vehicle> overflowList;
 
     // Creates a lane.
-    public Lane_Set(double[][] position_set, double[][] size_set, double[] direction, int numOfLane, Light_Set light_set) {
+    public Lane_Set(double[][] position_set, double[][] size_set, double[] direction, int numOfLane, LightSet light_set) {
         lane_set = new Lane[numOfLane];
         for (int i = 0; i < lane_set.length; i++) {
             lane_set[i] = new Lane(position_set[i], size_set[i], direction[i], light_set.getLight_Set()[i]);
