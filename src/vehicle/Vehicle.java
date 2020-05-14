@@ -255,6 +255,19 @@ public abstract class Vehicle implements TCSConstant {
         return 0;
     }
 
+    // Done. This will check it's distance with the car in front of it. Straight only.
+    public boolean distanceCheck(Vehicle v) {
+        double[] point = new double[2];
+        point[0] = v.getPosition()[0] + v.getSize()[0] * Math.cos(Math.toRadians(v.direction));
+        point[1] = v.getPosition()[1] + v.getSize()[1] * Math.sin(Math.toRadians(v.direction)); 
+        double distance = Math.sqrt(Math.pow(point[0] - position[0], 2) + Math.pow(point[1] - position[1], 2));
+        if (distance < safety_distance) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+    
     public double getSafetyDistance() {
         return safety_distance;
     }
