@@ -81,14 +81,7 @@ public class AutomatedCar extends Vehicle implements TCSConstant {
     //Updates car safe distances, so the car will avoid accident.
     @Override
     public void updateSafetyDistance() {
-        if (this.is_turning) {
-
-            //safety distance while turning
-            //not implemented yet
-
-        } else {
-            safety_distance = Math.pow(this.getDirectionalSpeed(), 2) / (2 * -deceleration_rate);
-        }
+        safety_distance = Math.pow(this.getDirectionalSpeed(), 2) / (2 * -deceleration_rate);
     }
 
     //Randomly generating acceleration and deceleration functions:
@@ -109,14 +102,11 @@ public class AutomatedCar extends Vehicle implements TCSConstant {
     }
 
     @Override
-    public void setTurningConstants(double[] destination, boolean accelerate) {
-        //slighty dimished acceleration rate to more realistically model a turn
-        //also acceleration is assumed to be constant
-        if (accelerate) {
-            turning_acceleration = 2.0 / 3.0 * this.acceleration_rate;
-        } else {
-            turning_acceleration = 3.0 / 4.0 * this.deceleration_rate;
-        }
+    public void setTurningConstants(double[] destination) {
+        //slighty dimished acceleration/deceleration rate to more realistically model a turn
+        //also they are assumed to be constant
+        turning_acceleration = 2.0 / 3.0 * this.acceleration_rate;
+        turning_deceleration = 2.0 / 3.0 * this.deceleration_rate;
 
         turning_velocity = this.getDirectionalSpeed() * 3.0 / 4.0;
 
@@ -135,23 +125,20 @@ public class AutomatedCar extends Vehicle implements TCSConstant {
         //  this will run one time when turn() is first called, sets the constants 
         //and positions car halfway in the intersection to prepare to begin turn
         if (!this.is_turning) {
-
-            /*
-            if (this.isTravelingHorizontal()) {
-                position[0] += size[0] * Math.cos(Math.toRadians(this.direction)) / 2;
-            } else {
-                position[1] += size[0] * Math.sin(Math.toRadians(this.direction)) / 2;
-            }
-             */
-            this.setTurningConstants(destination, accelerate);
+            this.setTurningConstants(destination);
             //for testing:
             //System.out.println("I ran. Position: " + Arrays.toString(position));
         }
         is_turning = true;
 
+        double turning_acceleration_value = turning_acceleration;
+        if (!accelerate) {
+            turning_acceleration_value = turning_deceleration;
+        }
+
         //the change of angle is used to model acceleration
         //the change is calculated based on one time increment of turning
-        turning_velocity += turning_acceleration * time_increments;
+        turning_velocity += turning_acceleration_value * time_increments;
         if (turning_velocity < 0) {
             turning_velocity = 0;
         }
@@ -199,6 +186,7 @@ public class AutomatedCar extends Vehicle implements TCSConstant {
         }
 
         time_moving += time_increments;
+        updateTurnSafetyAngle();
 
         //checks if the car has finished the turn or not
         if (direction == -90 && this.direction <= turn_initial_direction - 90
@@ -224,13 +212,18 @@ public class AutomatedCar extends Vehicle implements TCSConstant {
             }
 
             is_turning = false;
+
+            //when turn is called for the last time, it switches to treating the car as traveling straight
+            updateSafetyDistance();
         }
 
     }
 
     @Override
     public void updateTurnSafetyAngle() {
-
+        double angular_deceleration = this.turning_deceleration / this.turn_radius; 
+        double angular_speed = this.turning_velocity / this.turn_radius;
+        this.turn_safety_angle = Math.pow(angular_speed, 2) / (-2 * angular_deceleration);
     }
 
     /**
@@ -291,7 +284,7 @@ public class AutomatedCar extends Vehicle implements TCSConstant {
         updateSafetyDistance();
         time_moving += TCSConstant.TIMEINCREMENTS;
     }
-    
+
     //returns exact time needed to decelerate to stop
     public double timeToStop() {
         double speed = this.getDirectionalSpeed();
@@ -317,7 +310,7 @@ public class AutomatedCar extends Vehicle implements TCSConstant {
         double increments = this.timeToSpeedLimit() / time_increments;
         return (int) Math.floor(increments);
     }
-    
+
     @Override
     public boolean getAutomated() {
         return true;

@@ -33,7 +33,7 @@ public class VehicleTesting implements TCSConstant {
         for (int i = 0; i < 8; i++) {
             double direction = 0;
             direction += ((int) ((i) / 2.0)) * 90;
-            AutomatedCar car = new AutomatedCar(pos[i], size, direction);
+            AutomatedCar car = new AutomatedCar(pos[i], direction);
 
             int turn;
             if (i % 2 == 0) {
@@ -72,17 +72,17 @@ public class VehicleTesting implements TCSConstant {
         double[] size = {2, 1};
         double[] pos1 = {2, 5};
         double[] des1 = {9, 12};
-        AutomatedCar car1 = new AutomatedCar(pos1, size, 0);
+        AutomatedCar car1 = new AutomatedCar(pos1, 0);
 
         double[] pos2 = {2, 3};
-        AutomatedCar car2 = new AutomatedCar(pos2, size, 0);
+        AutomatedCar car2 = new AutomatedCar(pos2, 0);
 
         double[] pos3 = {14, 9};
-        AutomatedCar car3 = new AutomatedCar(pos3, size, 180);
+        AutomatedCar car3 = new AutomatedCar(pos3, 180);
 
         double[] pos4 = {14, 7};
         double[] des4 = {7, 0};
-        AutomatedCar car4 = new AutomatedCar(pos4, size, 180);
+        AutomatedCar car4 = new AutomatedCar(pos4, 180);
 
         for (int i = 0; i < 60; i++) {
             if (i > 55) {

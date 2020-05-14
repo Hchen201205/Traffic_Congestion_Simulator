@@ -39,6 +39,7 @@ public abstract class Vehicle implements TCSConstant {
     protected double[] turn_initial_position;//position before turn (with center at limit line)
     protected double turn_initial_direction; //direction car was facing before turn
     protected double turn_safety_angle;
+    protected double turning_deceleration;
 
     protected Random rand = new Random(100); // Instead of initializing random in each car class, it can be created here.
 
@@ -72,7 +73,7 @@ public abstract class Vehicle implements TCSConstant {
 
     //used when turn() is first called, sets starting constants so the function 
     //can be called on many times and edit Vehicle vairables
-    public abstract void setTurningConstants(double[] destination, boolean accelerate);
+    public abstract void setTurningConstants(double[] destination);
 
     //      - Direction is 90 for left turn and -90 for right turn
     //      - Destination is the middle of the limit line of the lane the car should turn to 
@@ -152,10 +153,13 @@ public abstract class Vehicle implements TCSConstant {
         this.acceleration_rate = acceleration_rate;
     }
     
-    //no implementation yet
+
     //for use when car is turning
     public double getAngleFromTurningFrontVehicle(Vehicle front_car){
-        
+        if (front_car.is_turning){
+            return Math.abs(front_car.direction - this.direction);
+        }
+            return 0;
     };
 
     
