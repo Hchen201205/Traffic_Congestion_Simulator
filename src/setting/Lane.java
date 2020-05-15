@@ -69,9 +69,16 @@ public class Lane {
      */
     public void runUnit() {
         if (light == null || light.getColor().equals(Color.GREEN)) {
+            if (reset) {
+                reset = false;
+            }
             green();
         } else if (light.getColor().equals(Color.RED)) {
-            setCars();
+            if (!reset) {
+                reset = true;
+                setCars();
+            }
+
         } else {
             yellow();
         }
@@ -128,6 +135,7 @@ public class Lane {
             if (c.getReactionTime() <= 0) {
                 // Here have an if-else statement to account for the time when two cars are too close.
                 if (i > 0 && !c.distanceCheck(carList.get(i - 1))) {
+                    // two reaction time will happen here.
                     c.accelerate(false);
                 } else if (Math.sqrt(Math.pow(c.getSpeed()[0], 2) + Math.pow(c.getSpeed()[1], 2)) < c.getSpeedLimit()) {
                     c.accelerate(true);
@@ -154,7 +162,8 @@ public class Lane {
     public void yellow(/*double excessDistance, Lane2 lane2*/) {
         //int spotLeft = checkSpotLeft(lane2, excessDistance);
         for (int i = 0; i < carList.size(); i++) {
-            // destination check...
+            Vehicle c = carList.get(i);
+            // All decelerate if it's capable for them to slide...
             carList.get(i).accelerate(false);
         }
     }
@@ -261,13 +270,12 @@ public class Lane {
         System.out.println("hi");
 
         double[] carpos = {15, 5};
-        double[] carsize = {3, 2};
 
-        Vehicle c = new AutomatedCar(carpos, carsize, direction);
-        System.out.println(c.getAcceleration_rate());
+        Vehicle c = new AutomatedCar(carpos, direction);
+        System.out.println(c.getAcceleration_rate() + " ha " + c.getDeceleration_rate());
         double[] carpos2 = {10, 5};
-        Vehicle c2 = new AutomatedCar(carpos2, carsize, direction);
-        System.out.println(c2.getAcceleration_rate());
+        Vehicle c2 = new AutomatedCar(carpos2, direction);
+        System.out.println(c2.getAcceleration_rate() + " ha " + c.getDeceleration_rate());
 
         Light l = new Light(Color.GREEN, true, false);
         Lane lane = new Lane(position, size, direction, l);
@@ -275,7 +283,7 @@ public class Lane {
         lane.addCar(c);
         lane.addCar(c2);
 
-        for (int i = 0; i < 7000; i++) {
+        for (int i = 0; i < 300; i++) {
             lane.green();
             System.out.println("safety: " + c2.getSafetyDistance());
             System.out.println(c.getReactionTime() + " : " + c2.getReactionTime());

@@ -42,6 +42,7 @@ public class AutomatedCar extends Vehicle implements TCSConstant {
 
     @Override
     public void accelerate(boolean accelerate) {
+        is_accelerating = true;
         double acceleration;
         if (accelerate) {
             acceleration = acceleration_rate;
@@ -70,7 +71,6 @@ public class AutomatedCar extends Vehicle implements TCSConstant {
 
         updateSafetyDistance();
         time_moving += TCSConstant.TIMEINCREMENTS;
-        is_accelerating = false;
 
     }
 
@@ -271,6 +271,7 @@ public class AutomatedCar extends Vehicle implements TCSConstant {
     }
 
     public void decelerateToStop(double[] pos) {
+        is_accelerating = false;
         double ax = -Math.pow(speed[0], 2) / (2 * pos[0] - position[0]);
         double ay = -Math.pow(speed[1], 2) / (2 * pos[1] - position[1]);
 

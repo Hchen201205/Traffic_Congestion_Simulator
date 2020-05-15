@@ -308,6 +308,10 @@ public abstract class Vehicle implements TCSConstant {
         return acceleration_rate;
     }
 
+    public double getDeceleration_rate() {
+        return deceleration_rate;
+    }
+    
     public double getTimeMoving() {
         return time_moving;
     }
