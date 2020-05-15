@@ -33,15 +33,15 @@ public abstract class Vehicle implements TCSConstant {
     protected boolean is_turning;            //true if car is turning in intersection
 
     //turning constants (called before a car starts a turn)
-    protected double turning_acceleration;   //acceleration value used only for turning
-    protected double turning_deceleration;   //deceleration value used only for turning
+    protected double turn_tangential_acceleration;   //acceleration value used only for turning
+    protected double turn_tangential_deceleration;   //deceleration value used only for turning
     protected double turn_radius;            //radius of quarter circle modeling turn
-    protected double turning_velocity;       //calculated from turning_acceleration value
+    protected double turn_tangential_velocity;       //calculated from turning_acceleration value
     protected double[] turn_initial_position;//position before turn (with center at limit line)
     protected double turn_initial_direction; //direction car was facing before turn
     protected double turn_safety_angle;      //angle needed for car to decelerate to stop while turning
 
-    protected Random rand = new Random(); // Instead of initializing random in each car class, it can be created here.
+    protected Random rand = new Random(100); // Instead of initializing random in each car class, it can be created here.
 
     protected final double buffer = BUFFER;  //gap between cars when stopped, in m
     protected final int rounded_dec_pos = ROUNDEDDECPOS;     //the decimal position accuracy of functions
@@ -150,14 +150,14 @@ public abstract class Vehicle implements TCSConstant {
     //runs a turn increment with no acceleration
     //car will continue along turn for one increment with whatever speed it currently has
     public void turnWithConstantSpeed(int direction, double[] destination) {
-        double turning_acceleration = this.turning_acceleration;
+        double turning_acceleration = this.turn_tangential_acceleration;
         double acceleration_rate = this.acceleration_rate;
-        this.turning_acceleration = 0;
+        this.turn_tangential_acceleration = 0;
         this.acceleration_rate = 0;
 
         turn(direction, destination, true);
 
-        this.turning_acceleration = turning_acceleration;
+        this.turn_tangential_acceleration = turning_acceleration;
         this.acceleration_rate = acceleration_rate;
     }
     
@@ -170,7 +170,17 @@ public abstract class Vehicle implements TCSConstant {
         return 0;
     };
 
+    public void changePosition(double[] pos){
+        this.position = pos;
+    }
     
+    public void changeXPosition (double pos_x){
+        this.position[0] = pos_x;
+    }
+    
+    public void changeYPosition (double pos_y){
+        this.position[1] = pos_y;
+    }
         
     /*
     public void move(double direction) {
