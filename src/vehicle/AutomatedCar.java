@@ -23,10 +23,10 @@ public class AutomatedCar extends Vehicle implements TCSConstant {
         time_moving = 0;
         is_turning = false;
         reaction_time = 0;
-        turning_acceleration = 0;
-        turning_deceleration = 0;
+        turn_tangential_acceleration = 0;
+        turn_tangential_deceleration = 0;
         turn_radius = 0;
-        turning_velocity = 0;
+        turn_tangential_velocity = 0;
         turn_initial_position = new double[2];
         turn_initial_direction = 0;
         turn_safety_angle = 0;
@@ -107,10 +107,10 @@ public class AutomatedCar extends Vehicle implements TCSConstant {
     public void setTurningConstants(double[] destination) {
         //slighty dimished acceleration/deceleration rate to more realistically model a turn
         //also they are assumed to be constant
-        turning_acceleration = 2.0 / 3.0 * this.acceleration_rate;
-        turning_deceleration = 2.0 / 3.0 * this.deceleration_rate;
+        turn_tangential_acceleration = 2.0 / 3.0 * this.acceleration_rate;
+        turn_tangential_deceleration = 2.0 / 3.0 * this.deceleration_rate;
 
-        turning_velocity = this.getDirectionalSpeed() * 3.0 / 4.0;
+        turn_tangential_velocity = this.getDirectionalSpeed() * 3.0 / 4.0;
 
         //radius of quarter circle that is being used to model the turn
         turn_radius = Math.abs(destination[0] - this.position[0]);
@@ -133,19 +133,19 @@ public class AutomatedCar extends Vehicle implements TCSConstant {
         }
         is_turning = true;
 
-        double turning_acceleration_value = turning_acceleration;
+        double turning_acceleration_value = turn_tangential_acceleration;
         if (!accelerate) {
-            turning_acceleration_value = turning_deceleration;
+            turning_acceleration_value = turn_tangential_deceleration;
         }
 
         //the change of angle is used to model acceleration
         //the change is calculated based on one time increment of turning
-        turning_velocity += turning_acceleration_value * time_increments;
-        if (turning_velocity < 0) {
-            turning_velocity = 0;
+        turn_tangential_velocity += turning_acceleration_value * time_increments;
+        if (turn_tangential_velocity < 0) {
+            turn_tangential_velocity = 0;
         }
 
-        double angle_increment = turning_velocity * time_increments / turn_radius;
+        double angle_increment = turn_tangential_velocity * time_increments / turn_radius;
         //testing:
         //System.out.println("Angle inc: " + Math.toDegrees(angle_increment));
 
@@ -205,14 +205,22 @@ public class AutomatedCar extends Vehicle implements TCSConstant {
 
             //  moves car slightly forward in whatever direction it is facing so 
             //the whole car is past limit line (with back tires on it)
+            
             if (this.isTravelingHorizontal()) {
                 position[0] = destination[0] + size[0] * Math.cos(Math.toRadians(this.direction));
                 position[1] = destination[1];
+                speed[0] = turn_tangential_velocity;
+                speed[1] = 0;
             } else {
                 position[1] = destination[1] + size[0] * Math.sin(Math.toRadians(this.direction));
                 position[0] = destination[0];
+                speed[1] = turn_tangential_velocity;
+                speed[0] = 0;
             }
-
+            
+            //speed[1] = turn_tangential_velocity;
+            //speed[0] = 0;
+            
             is_turning = false;
 
             //when turn is called for the last time, it switches to treating the car as traveling straight
@@ -223,8 +231,8 @@ public class AutomatedCar extends Vehicle implements TCSConstant {
 
     @Override
     public void updateTurnSafetyAngle() {
-        double angular_deceleration = this.turning_deceleration / this.turn_radius; 
-        double angular_speed = this.turning_velocity / this.turn_radius;
+        double angular_deceleration = this.turn_tangential_deceleration / this.turn_radius; 
+        double angular_speed = this.turn_tangential_velocity / this.turn_radius;
         this.turn_safety_angle = Math.pow(angular_speed, 2) / (-2 * angular_deceleration);
     }
 

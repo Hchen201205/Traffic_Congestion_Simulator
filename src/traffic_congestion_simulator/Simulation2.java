@@ -63,5 +63,9 @@ public class Simulation2 {
     public static void main(String[] args) {
         boolean automated = true;
         Simulation2 test = new Simulation2(automated);
+
     }
+    
 }
+
+
