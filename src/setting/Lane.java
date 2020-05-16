@@ -392,14 +392,16 @@ public class Lane {
         System.out.println(Arrays.toString(c.getPosition()) + " : " + Arrays.toString(c2.getPosition()));
          */
         for (int i = 0; i < 300; i++) {
-            String output = "";
-            for (Vehicle car : lane.carList) {
-                output += String.format("%7f, %7f; %7f, %7f; %7f\t\t", car.rounder(car.getCenterPos()[0]),
-                        car.rounder(car.getCenterPos()[1]), car.getSize()[0], car.getSize()[1], car.rounder(car.getDirection()));
-            }
-            System.out.println(output);
-            lane.green();
+            if (i % 2 == 0) {
+                String output = "";
+                for (Vehicle car : lane.carList) {
+                    output += String.format("%7f, %7f; %7f, %7f; %7f\t\t", car.rounder(car.getCenterPos()[0]),
+                            car.rounder(car.getCenterPos()[1]), car.getSize()[0], car.getSize()[1], car.rounder(car.getDirection()));
+                }
+                System.out.println(output);
 
+            }
+            lane.green();
 
             /*
             System.out.println("safety: " + c2.getSafetyDistance());

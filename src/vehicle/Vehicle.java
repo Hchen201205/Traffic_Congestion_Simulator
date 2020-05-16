@@ -42,7 +42,7 @@ public abstract class Vehicle implements TCSConstant {
     protected double turn_initial_direction; //direction car was facing before turn
     protected double turn_safety_angle;      //angle needed for car to decelerate to stop while turning
 
-    protected Random rand = new Random(100); // Instead of initializing random in each car class, it can be created here.
+    protected static Random rand = new Random(100); // Instead of initializing random in each car class, it can be created here.
 
     protected final double buffer = BUFFER;  //gap between cars when stopped, in m
     protected final int rounded_dec_pos = ROUNDEDDECPOS;     //the decimal position accuracy of functions

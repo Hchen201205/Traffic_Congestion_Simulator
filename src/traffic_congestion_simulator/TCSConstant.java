@@ -39,7 +39,7 @@ public interface TCSConstant {
     
     public final double DECELERATIONAVGMAX = -3.2;
             
-    public final double REACTIONTIMEAVG = 2;
+    public final double REACTIONTIMEAVG = 1;
     
     public final double AUTOMATEDFINALVELOCITY = 10.0;
     
