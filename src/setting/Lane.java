@@ -92,7 +92,7 @@ public class Lane {
                 for (int i = 0; i < carList.size(); i++) {
                     Vehicle c = carList.get(i);
                     c.genRandReactionTime();
-                    if (((i > 0 && !carList.get(i - 1).isAccelerating()) || i == 0) && c.getDecelerate_rate(frontPos) <= c.getDeceleration_rate() * 2) {
+                    if (((i > 0 && !carList.get(i - 1).isAccelerating()) || i == 0) && c.getDecelerateToStopRate(frontPos) <= c.getDeceleration_rate() * 2) {
                         c.setAccelerating(false);
                         c.setDestination(stackPos);
                     }
@@ -234,7 +234,7 @@ public class Lane {
         for (int i = 1; i < carList.size(); i++) {
             destination[0] = carList.get(i - 1).getPosition()[0] - (rounder(Math.abs(Math.cos(Math.toRadians(direction))) * (1 / 2 * carList.get(i - 1).getSize()[0] - carList.get(i).getSafetyDistance() - 1 / 2 * carList.get(i).getSize()[0])));
             destination[1] = carList.get(i - 1).getPosition()[1] - (rounder(Math.abs(Math.cos(Math.toRadians(direction))) * (1 / 2 * carList.get(i - 1).getSize()[1] - carList.get(i).getSafetyDistance() - 1 / 2 * carList.get(i).getSize()[1])));
-            if (carList.get(i).getAutomated()) {
+            if (carList.get(i).isAutomated()) {
                 carList.get(i).setPosition(position);
             } else {
                 // This is where the safety distance + random comes in.
@@ -379,7 +379,7 @@ public class Lane {
         lane.addCar(c2);
          */
         for (int i = 0; i < 6; i++) {
-            Vehicle c = new AutomatedCar(carpos, direction);
+            Vehicle c = new NormalCar(carpos, direction);
             carpos[0]--;
             lane.addCar(c);
             System.out.println(Arrays.toString(c.getPosition()));

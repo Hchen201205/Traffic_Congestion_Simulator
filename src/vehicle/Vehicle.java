@@ -17,10 +17,10 @@ import traffic_congestion_simulator.TCSConstant;
 public abstract class Vehicle implements TCSConstant {
 
     protected double[] speed = new double[2];//{speed left/right, speed up/down} in m/s (always positive)               
-    protected double[] position;             //Position as the top of the car but half of the , in m
+    protected double[] position;             //Position as center of front of car, in m
     protected double[] size;                 //{length, width} in m
     protected double[] breaking_point;
-    protected double[] d = new double[2];
+    protected double[] des = new double[2];  
 
     protected double acceleration_rate;      //in m/s^2
     protected double deceleration_rate;      //in m/s^2
@@ -37,8 +37,8 @@ public abstract class Vehicle implements TCSConstant {
     protected double turn_tangential_acceleration;   //acceleration value used only for turning
     protected double turn_tangential_deceleration;   //deceleration value used only for turning
     protected double turn_radius;            //radius of quarter circle modeling turn
-    protected double turn_tangential_speed;       //calculated from turning_acceleration value
-    protected double[] turn_initial_position;//position before turn (with center at limit line)
+    protected double turn_tangential_speed;  //used to calculate angle increment
+    protected double[] turn_initial_position;//position before turn
     protected double turn_initial_direction; //direction car was facing before turn
     protected double turn_safety_angle;      //angle needed for car to decelerate to stop while turning
 
@@ -47,16 +47,22 @@ public abstract class Vehicle implements TCSConstant {
 
     protected final double buffer = BUFFER;  //gap between cars when stopped, in m
     protected final int rounded_dec_pos = ROUNDEDDECPOS;     //the decimal position accuracy of functions
-    protected final double time_increments = TIMEINCREMENTS; //milliseconds 
+    protected final double time_increment = TIMEINCREMENTS; //milliseconds 
 
+    
     //Abstract functions:
-    //simple acceleration function, updates position, speed, saftey_distance, time_moving
+    
+    //true for AutomatedCar, false for NormalCar
+    public abstract boolean isAutomated();
+    
+    //simple acceleration function, based on time_increment 
+    //updates position, speed, saftey_distance, time_moving
     //accelerate = true to accelerate & accelerate = false to decelerate
     public abstract void accelerate(boolean accelerate);
 
+    //calculates deceleration rate needed for car to come to stop at pos
+    //based on time_increment
     public abstract void decelerateToStop(double[] pos);
-
-    public abstract boolean getAutomated();
     
     //calculates and assigns new saftey distance based on current speed
     public abstract void updateSafetyDistance();
@@ -67,6 +73,7 @@ public abstract class Vehicle implements TCSConstant {
     //assigns each car a random deceleration rate
     public abstract void genRandDeceleration();
 
+    //random for NormalCar, 0 for AutomatedCar
     public abstract void genRandReactionTime();
 
     public abstract double[] estimateBreakingPoint(double x_value, double y_value);
@@ -77,21 +84,21 @@ public abstract class Vehicle implements TCSConstant {
     //can be called on many times and edit Vehicle vairables
     public abstract void setTurningConstants(double[] destination);
 
-    //      - Direction is 90 for left turn and -90 for right turn
-    //      - Destination is the middle of the limit line of the lane the car should turn to 
-    //      - Accounts for the back half of the car still being in the intersection 
-    // after the car has reached the destination by moving car forward till back 
-    // is past the limit line
-    //      - Only use method once car has front tires at limit line
-    //      - When the car begins turn, is_turning will be set to true and once the car 
-    // has finished the turn, is_turning will be set to false
-    //accelerate = true to accelerate & accelerate = false to decelerate
+    //  Direction is 90 for left turn and -90 for right turn
+    //  Destination is the middle of the limit line of the lane the car should turn to 
+    //  Only use method once car has front tires at limit line
+    //  When the car begins turn, is_turning will be set to true and turn constants 
+    //will be set and once the car has finished the turn, is_turning will be set to false
+    //  accelerate = true to accelerate & accelerate = false to decelerate
     public abstract void turn(int direction, double[] destination, boolean accelerate);
     
     //calculates and assigns new saftey angle based on current speed while turning
     public abstract void updateTurnSafetyAngle();
     
+    public abstract double getDecelerateToStopRate(double[] pos);
+    
 
+    
     //Non-abstract functions:
     
     //this will make graphing in matlab much simpler
@@ -117,8 +124,6 @@ public abstract class Vehicle implements TCSConstant {
             size[0] = LENGTHMIN;
         }
         
-        //double scaled_width_avg = WIDTHAVG / (LENGTHAVG) * size[0];
-        //size[1] = rounder(Math.abs(rand.nextGaussian()*scaled_width_avg / 15.0) + scaled_width_avg);
         size[1] = rand.nextGaussian()* WIDTHAVG / 25.0 + WIDTHAVG;
         if (size[1] > WIDTHMAX){
             size[1] = WIDTHMAX;
@@ -136,6 +141,19 @@ public abstract class Vehicle implements TCSConstant {
         }
         return Math.abs(this.position[1] - front_car.position[1])
                 - front_car.size[1] + buffer;
+    }
+    
+    //Checks distance between car and the car in front of it. Straight only.
+    public boolean distanceCheck(Vehicle front_vehicle) {
+        double[] point = new double[2];
+        point[0] = front_vehicle.getPosition()[0] - front_vehicle.getSize()[0] * Math.cos(Math.toRadians(front_vehicle.direction));
+        point[1] = front_vehicle.getPosition()[1] - front_vehicle.getSize()[1] * Math.sin(Math.toRadians(front_vehicle.direction)); 
+        double distance = Math.sqrt(Math.pow(point[0] - position[0], 2) + Math.pow(point[1] - position[1], 2));
+        if (distance < safety_distance) {
+            return false;
+        } else {
+            return true;
+        }
     }
     
     //car will travel for one increment at it's speed limit value with no acceleration
@@ -183,17 +201,6 @@ public abstract class Vehicle implements TCSConstant {
     public void changeYPosition (double pos_y){
         this.position[1] = pos_y;
     }
-        
-    /*
-    public void move(double direction) {
-        if (this.direction == direction) {
-            if (Math.sqrt(Math.pow(speed[0], 2) + Math.pow(speed[1], 2)) < speed_limit) {
-                accelerate(true);
-            } else {
-                travelWithConstantSpeed();
-            }
-        }
-    }*/
 
     //returns true vehicle is facing east or west
     public boolean isTravelingHorizontal() {
@@ -208,6 +215,7 @@ public abstract class Vehicle implements TCSConstant {
         
     }
      */
+    
     public boolean isTravelingVertical() {
         if (direction == 90 || direction == 270) {
             return true;
@@ -294,21 +302,6 @@ public abstract class Vehicle implements TCSConstant {
         System.out.println("This vehicle is not traveling in a cardinal direction");
         return 0;
     }
-
-    // Done. This will check it's distance with the car in front of it. Straight only.
-    public boolean distanceCheck(Vehicle front_vehicle) {
-        double[] point = new double[2];
-        point[0] = front_vehicle.getPosition()[0] - front_vehicle.getSize()[0] * Math.cos(Math.toRadians(front_vehicle.direction));
-        point[1] = front_vehicle.getPosition()[1] - front_vehicle.getSize()[1] * Math.sin(Math.toRadians(front_vehicle.direction)); 
-        double distance = Math.sqrt(Math.pow(point[0] - position[0], 2) + Math.pow(point[1] - position[1], 2));
-        if (distance < safety_distance) {
-            return false;
-        } else {
-            return true;
-        }
-    }
-    
-    public abstract double getDecelerate_rate(double[] pos);
     
     public double getSafetyDistance() {
         return safety_distance;
@@ -356,10 +349,10 @@ public abstract class Vehicle implements TCSConstant {
     }
 
     public void setDestination(double[] stackPos) {
-        d = stackPos.clone();
+        des = stackPos.clone();
     }
     
     public double[] getDestination() {
-        return d;
+        return des;
     }
 }

@@ -150,12 +150,12 @@ public class AutomatedCar extends Vehicle implements TCSConstant {
 
         //the change of angle is used to model acceleration
         //the change is calculated based on one time increment of turning
-        turn_tangential_speed += turning_acceleration_value * time_increments;
+        turn_tangential_speed += turning_acceleration_value * time_increment;
         if (turn_tangential_speed < 0) {
             turn_tangential_speed = 0;
         }
 
-        double angle_increment = turn_tangential_speed * time_increments / turn_radius;
+        double angle_increment = turn_tangential_speed * time_increment / turn_radius;
         //testing:
         //System.out.println("Angle inc: " + Math.toDegrees(angle_increment));
 
@@ -197,7 +197,7 @@ public class AutomatedCar extends Vehicle implements TCSConstant {
 
         }
 
-        time_moving += time_increments;
+        time_moving += time_increment;
         updateTurnSafetyAngle();
 
         //checks if the car has finished the turn or not
@@ -289,7 +289,7 @@ public class AutomatedCar extends Vehicle implements TCSConstant {
         return breakingPoint;
     }
 
-    public double getDecelerate_rate(double[] pos) {
+    public double getDecelerateToStopRate(double[] pos) {
         double ax = - Math.pow(speed[0], 2) / (2 * pos[0] - position[0]);
         double ay = - Math.pow(speed[1], 2) / (2 * pos[1] - position[1]);
         return Math.sqrt(Math.pow(ax, 2) + Math.pow(ay, 2));
@@ -322,7 +322,7 @@ public class AutomatedCar extends Vehicle implements TCSConstant {
 
     //total number of increments needed to decelerate to stop
     public int incrementsToStop() {
-        double increments = this.timeToStop() / time_increments;
+        double increments = this.timeToStop() / time_increment;
         return (int) Math.floor(increments);
     }
 
@@ -335,12 +335,12 @@ public class AutomatedCar extends Vehicle implements TCSConstant {
 
     //total number of increments needed to accelerate to speed_limit
     public int incrementsToSpeedLimit() {
-        double increments = this.timeToSpeedLimit() / time_increments;
+        double increments = this.timeToSpeedLimit() / time_increment;
         return (int) Math.floor(increments);
     }
 
     @Override
-    public boolean getAutomated() {
+    public boolean isAutomated() {
         return true;
     }
 

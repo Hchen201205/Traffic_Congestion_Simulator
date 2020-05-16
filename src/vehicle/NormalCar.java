@@ -196,12 +196,12 @@ public class NormalCar extends Vehicle implements TCSConstant {
         
         //the change of angle is used to model acceleration
         //the change is calculated based on one time increment of turning
-        turn_tangential_speed += turning_acceleration_value * time_increments;
+        turn_tangential_speed += turning_acceleration_value * time_increment;
         if (turn_tangential_speed < 0) {
             turn_tangential_speed = 0;
         }
 
-        double angle_increment = turn_tangential_speed * time_increments / turn_radius;
+        double angle_increment = turn_tangential_speed * time_increment / turn_radius;
         //testing:
         //System.out.println("Angle inc: " + Math.toDegrees(angle_increment));
 
@@ -243,7 +243,7 @@ public class NormalCar extends Vehicle implements TCSConstant {
 
         }
 
-        time_moving += time_increments;
+        time_moving += time_increment;
         updateTurnSafetyAngle();
         
         //checks if the car has finished the turn or not
@@ -336,7 +336,7 @@ public class NormalCar extends Vehicle implements TCSConstant {
     }
     
     @Override
-    public boolean getAutomated() {
+    public boolean isAutomated() {
         return false;
     }
 
@@ -354,7 +354,7 @@ public class NormalCar extends Vehicle implements TCSConstant {
     }
 
     @Override
-    public double getDecelerate_rate(double[] pos) {
+    public double getDecelerateToStopRate(double[] pos) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
