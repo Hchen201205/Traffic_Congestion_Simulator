@@ -208,11 +208,16 @@ public class VehicleTesting implements TCSConstant {
         cars.add(car6);
 
         //first light
+        for (int k = 0; k < 10; k++) {
+            output(cars, k);
+        }
+        
+        
         int i;
 
         boolean track1 = true;
         boolean track2 = true;
-        for (i = 0; i < 90; i++) {
+        for (i = 0; i < 95; i++) {
             if (i > 80) {
                 output(cars, i);
             } else {
@@ -302,7 +307,7 @@ public class VehicleTesting implements TCSConstant {
 
     public void output(ArrayList<Vehicle> cars, int i) {
         String output = "";
-        if (i % 3 == 0) {
+        if (i % 4 == 0) {
             for (Vehicle car : cars) {
                 output += String.format("%7f, %7f; %7f, %7f; %7f\t\t", car.rounder(car.getCenterPos()[0]),
                         car.rounder(car.getCenterPos()[1]), car.size[0], car.size[1], car.rounder(car.direction));

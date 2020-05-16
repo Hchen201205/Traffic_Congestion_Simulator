@@ -36,12 +36,12 @@ public abstract class Vehicle implements TCSConstant {
     protected double turn_tangential_acceleration;   //acceleration value used only for turning
     protected double turn_tangential_deceleration;   //deceleration value used only for turning
     protected double turn_radius;            //radius of quarter circle modeling turn
-    protected double turn_tangential_velocity;       //calculated from turning_acceleration value
+    protected double turn_tangential_speed;       //calculated from turning_acceleration value
     protected double[] turn_initial_position;//position before turn (with center at limit line)
     protected double turn_initial_direction; //direction car was facing before turn
     protected double turn_safety_angle;      //angle needed for car to decelerate to stop while turning
 
-    protected Random rand = new Random(100); // Instead of initializing random in each car class, it can be created here.
+    protected Random rand = new Random(); // Instead of initializing random in each car class, it can be created here.
 
     protected final double buffer = BUFFER;  //gap between cars when stopped, in m
     protected final int rounded_dec_pos = ROUNDEDDECPOS;     //the decimal position accuracy of functions
@@ -110,14 +110,14 @@ public abstract class Vehicle implements TCSConstant {
     }
 
     public void genRandSize(){
-        size[0] = this.rounder(rand.nextGaussian() * LENGTHAVG / 20.0 + LENGTHAVG);
+        size[0] = this.rounder(rand.nextGaussian() * LENGTHAVG / 25.0 + LENGTHAVG);
         if (size[0] < LENGTHMIN){
             size[0] = LENGTHMIN;
         }
         
         //double scaled_width_avg = WIDTHAVG / (LENGTHAVG) * size[0];
         //size[1] = rounder(Math.abs(rand.nextGaussian()*scaled_width_avg / 15.0) + scaled_width_avg);
-        size[1] = rand.nextGaussian()* WIDTHAVG / 20.0 + WIDTHAVG;
+        size[1] = rand.nextGaussian()* WIDTHAVG / 25.0 + WIDTHAVG;
         if (size[1] > WIDTHMAX){
             size[1] = WIDTHMAX;
         } else if (size[1] < WIDTHMIN){

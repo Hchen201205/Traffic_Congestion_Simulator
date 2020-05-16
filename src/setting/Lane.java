@@ -254,7 +254,7 @@ public class Lane {
     }
 
     public static void main(String[] args) {
-        
+
         double[] position = {140, 310};
         double[] size = {280, 10};
         double direction = 0;

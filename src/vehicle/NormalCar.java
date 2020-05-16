@@ -39,7 +39,7 @@ public class NormalCar extends Vehicle implements TCSConstant {
         turn_tangential_acceleration = 0;
         turn_tangential_deceleration = 0;
         turn_radius = 0;
-        turn_tangential_velocity = 0;
+        turn_tangential_speed = 0;
         turn_initial_position = new double[2];
         turn_initial_direction = 0;
         turn_safety_angle_min = 0;
@@ -166,7 +166,7 @@ public class NormalCar extends Vehicle implements TCSConstant {
         turn_tangential_acceleration = 2.0 / 3.0 * this.acceleration_rate;
         turn_tangential_deceleration = 2.0 / 3.0 * this.deceleration_rate;
 
-        turn_tangential_velocity = this.getDirectionalSpeed() * 3.0 / 4.0;
+        turn_tangential_speed = this.getDirectionalSpeed() * 3.0 / 4.0;
 
         //radius of quarter circle that is being used to model the turn
         turn_radius = Math.abs(destination[0] - this.position[0]);
@@ -196,12 +196,12 @@ public class NormalCar extends Vehicle implements TCSConstant {
         
         //the change of angle is used to model acceleration
         //the change is calculated based on one time increment of turning
-        turn_tangential_velocity += turning_acceleration_value * time_increments;
-        if (turn_tangential_velocity < 0) {
-            turn_tangential_velocity = 0;
+        turn_tangential_speed += turning_acceleration_value * time_increments;
+        if (turn_tangential_speed < 0) {
+            turn_tangential_speed = 0;
         }
 
-        double angle_increment = turn_tangential_velocity * time_increments / turn_radius;
+        double angle_increment = turn_tangential_speed * time_increments / turn_radius;
         //testing:
         //System.out.println("Angle inc: " + Math.toDegrees(angle_increment));
 
@@ -264,12 +264,12 @@ public class NormalCar extends Vehicle implements TCSConstant {
             if (this.isTravelingHorizontal()) {
                 position[0] = destination[0] + size[0] * Math.cos(Math.toRadians(this.direction));
                 position[1] = destination[1];
-                speed[0] = turn_tangential_velocity;
+                speed[0] = turn_tangential_speed;
                 speed[1] = 0;
             } else {
                 position[1] = destination[1] + size[0] * Math.sin(Math.toRadians(this.direction));
                 position[0] = destination[0];
-                speed[1] = turn_tangential_velocity;
+                speed[1] = turn_tangential_speed;
                 speed[0] = 0;
             }
 
@@ -283,7 +283,7 @@ public class NormalCar extends Vehicle implements TCSConstant {
 
     public void genTurnSafetyAngleMin() {
         double angular_deceleration = this.turn_tangential_deceleration / this.turn_radius; 
-        double angular_speed = this.turn_tangential_velocity / this.turn_radius;
+        double angular_speed = this.turn_tangential_speed / this.turn_radius;
         this.turn_safety_angle_min = Math.pow(angular_speed, 2) / (-2 * angular_deceleration);
     }
 
