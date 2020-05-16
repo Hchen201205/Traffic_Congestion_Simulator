@@ -220,7 +220,7 @@ public class Lane {
             }
             // All decelerate if it's capable for them to slide...
             carList.get(i).accelerate(false);
-            */
+             */
         }
     }
 
@@ -245,6 +245,7 @@ public class Lane {
     // This method will take care of setting up the lane.
     // Debugged
     public void setCars() {
+
         if (carList.size() > 0) {
             carList.get(0).setPosition(frontPos);
             double[] destination = new double[2];
@@ -255,6 +256,38 @@ public class Lane {
                 destination[1] = carList.get(i - 1).getPosition()[1] + (rounder(Math.sin(Math.toRadians(direction)) * (carList.get(i - 1).getSize()[0] + carList.get(i).getBuffer())));
 
                 carList.get(i).setPosition(destination);
+            }
+        }
+    }
+
+    public void setCars2() {
+        double[] carpos = {1000, 1000};
+        carList.get(0).setPosition(carpos);
+        /*
+        if (carList.size() > 0) {
+            double[] carPos = frontPos.clone();
+            carList.get(0).setPosition(carPos);
+        }
+         */
+    }
+
+    public void setCarsSpecial() {
+        if (carList.size() > 0) {
+            carList.get(0).setPosition(frontPos);
+            double[] destination = new double[2];
+            for (int i = 1; i < carList.size(); i++) {
+                destination[0] = carList.get(i - 1).getPosition()[0] - (rounder(Math.cos(Math.toRadians(direction)) * (carList.get(i - 1).getSize()[0] + carList.get(i).getBuffer())));
+                // I change this one to + instead of minus because of our system.
+
+                destination[1] = carList.get(i - 1).getPosition()[1] + (rounder(Math.sin(Math.toRadians(direction)) * (carList.get(i - 1).getSize()[0] + carList.get(i).getBuffer())));
+
+                carList.get(i).setPosition(destination);
+            }
+            for (int i = 0; i < carList.size(); i++) {
+                double[] tempPos = carList.get(i).getCenterPos().clone();
+                tempPos[0] = tempPos[0] - (rounder(Math.cos(Math.toRadians(direction)) * carList.get(i).getSize()[0] * 1 / 2));
+                tempPos[1] = tempPos[1] + (rounder(Math.sin(Math.toRadians(direction)) * carList.get(i).getSize()[0] * 1 / 2));
+                carList.get(i).setPosition(tempPos);
             }
         }
     }
@@ -322,37 +355,59 @@ public class Lane {
 
     public static void main(String[] args) {
 
-        double[] position = {140, 310};
-        double[] size = {280, 10};
-        double direction = 270;
+        double[] position = {0, 0};
+        double[] size = {30, 10};
+        double direction = 0;
         System.out.println("hi");
 
-        double[] carpos = {15, 5};
+        double[] carpos = {10, 5};
 
+        Light l = new Light(Color.GREEN, true, false);
+        Lane lane = new Lane(position, size, direction, l);
+
+        /*
         Vehicle c = new AutomatedCar(carpos, direction);
         System.out.println(c.getAcceleration_rate() + " ha " + c.getDeceleration_rate());
         double[] carpos2 = {10, 5};
         Vehicle c2 = new AutomatedCar(carpos2, direction);
         System.out.println(c2.getAcceleration_rate() + " ha " + c.getDeceleration_rate());
-
-        Light l = new Light(Color.GREEN, true, false);
-        Lane lane = new Lane(position, size, direction, l);
-
+         */
+ /*
         System.out.println(Arrays.toString(lane.frontPos));
         lane.addCar(c);
         lane.addCar(c2);
+         */
+        for (int i = 0; i < 6; i++) {
+            Vehicle c = new NormalCar(carpos, direction);
+            carpos[0]--;
+            lane.addCar(c);
+            System.out.println(Arrays.toString(c.getPosition()));
+        }
 
         lane.setCars();
-        System.out.println(Arrays.toString(c.getPosition()) + " : " + Arrays.toString(c2.getPosition()));
+
         /*
+        System.out.println(Arrays.toString(c.getPosition()) + " : " + Arrays.toString(c2.getPosition()));
+        lane.setCarsSpecial();
+        System.out.println(Arrays.toString(c.getPosition()) + " : " + Arrays.toString(c2.getPosition()));
+         */
         for (int i = 0; i < 300; i++) {
+            String output = "";
+            for (Vehicle car : lane.carList) {
+                output += String.format("%7f, %7f; %7f, %7f; %7f\t\t", car.rounder(car.getCenterPos()[0]),
+                        car.rounder(car.getCenterPos()[1]), car.getSize()[0], car.getSize()[1], car.rounder(car.getDirection()));
+            }
+            System.out.println(output);
             lane.green();
+
+
+            /*
             System.out.println("safety: " + c2.getSafetyDistance());
             System.out.println(c.getReactionTime() + " : " + c2.getReactionTime());
             System.out.println(Arrays.toString(c.getSpeed()) + " : " + Arrays.toString(c.getPosition()));
             System.out.println(Arrays.toString(c2.getSpeed()) + " : " + Arrays.toString(c2.getPosition()));
+             */
         }
-         */
 
     }
 }

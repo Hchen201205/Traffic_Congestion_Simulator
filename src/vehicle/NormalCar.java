@@ -56,7 +56,7 @@ public class NormalCar extends Vehicle implements TCSConstant {
         this.genRandReactionTime();
         this.genRandSpeedLimit();
 
-        this.position = position;
+        this.position = position.clone();
         this.direction = direction;
     }
 
@@ -350,6 +350,11 @@ public class NormalCar extends Vehicle implements TCSConstant {
 
     @Override
     public double[] estimateBreakingPoint(Vehicle v) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public double getDecelerate_rate(double[] pos) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 

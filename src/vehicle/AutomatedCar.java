@@ -36,7 +36,10 @@ public class AutomatedCar extends Vehicle implements TCSConstant {
         this.genRandAcceleration();
         this.genRandDeceleration();
 
-        this.position = position;
+        /*
+        this.position[0] = position[0];
+        this.position[1] = position[1];*/
+        this.position = position.clone();
         this.direction = direction;
     }
 
