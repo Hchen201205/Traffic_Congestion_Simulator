@@ -20,6 +20,7 @@ public abstract class Vehicle implements TCSConstant {
     protected double[] position;             //Position as the top of the car but half of the , in m
     protected double[] size;                 //{length, width} in m
     protected double[] breaking_point;
+    protected double[] d = new double[2];
 
     protected double acceleration_rate;      //in m/s^2
     protected double deceleration_rate;      //in m/s^2
@@ -222,6 +223,10 @@ public abstract class Vehicle implements TCSConstant {
     public boolean isAccelerating() {
         return is_accelerating;
     }
+    
+    public void setAccelerating(boolean is_accelerating) {
+        this.is_accelerating = is_accelerating;
+    }
 
     public boolean isTurning() {
         return is_turning;
@@ -302,6 +307,8 @@ public abstract class Vehicle implements TCSConstant {
         }
     }
     
+    public abstract double getDecelerate_rate(double[] pos);
+    
     public double getSafetyDistance() {
         return safety_distance;
     }
@@ -347,4 +354,11 @@ public abstract class Vehicle implements TCSConstant {
         this.position[1] = position[1];
     }
 
+    public void setDestination(double[] stackPos) {
+        d = stackPos.clone();
+    }
+    
+    public double[] getDestination() {
+        return d;
+    }
 }
