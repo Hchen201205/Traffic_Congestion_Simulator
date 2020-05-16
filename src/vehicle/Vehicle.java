@@ -20,6 +20,7 @@ public abstract class Vehicle implements TCSConstant {
     protected double[] position;             //Position as the top of the car but half of the , in m
     protected double[] size;                 //{length, width} in m
     protected double[] breaking_point;
+    protected double[] d = new double[2];
 
     protected double acceleration_rate;      //in m/s^2
     protected double deceleration_rate;      //in m/s^2
@@ -41,7 +42,11 @@ public abstract class Vehicle implements TCSConstant {
     protected double turn_initial_direction; //direction car was facing before turn
     protected double turn_safety_angle;      //angle needed for car to decelerate to stop while turning
 
+<<<<<<< HEAD
     protected Random rand = new Random(); // Instead of initializing random in each car class, it can be created here.
+=======
+    protected static Random rand = new Random(100); // Instead of initializing random in each car class, it can be created here.
+>>>>>>> b50cfe9e3ce03feed099f770e0c49088c3eb29f7
 
     protected final double buffer = BUFFER;  //gap between cars when stopped, in m
     protected final int rounded_dec_pos = ROUNDEDDECPOS;     //the decimal position accuracy of functions
@@ -222,6 +227,10 @@ public abstract class Vehicle implements TCSConstant {
     public boolean isAccelerating() {
         return is_accelerating;
     }
+    
+    public void setAccelerating(boolean is_accelerating) {
+        this.is_accelerating = is_accelerating;
+    }
 
     public boolean isTurning() {
         return is_turning;
@@ -302,6 +311,8 @@ public abstract class Vehicle implements TCSConstant {
         }
     }
     
+    public abstract double getDecelerate_rate(double[] pos);
+    
     public double getSafetyDistance() {
         return safety_distance;
     }
@@ -318,6 +329,10 @@ public abstract class Vehicle implements TCSConstant {
         return acceleration_rate;
     }
 
+    public double getDeceleration_rate() {
+        return deceleration_rate;
+    }
+    
     public double getTimeMoving() {
         return time_moving;
     }
@@ -343,4 +358,11 @@ public abstract class Vehicle implements TCSConstant {
         this.position[1] = position[1];
     }
 
+    public void setDestination(double[] stackPos) {
+        d = stackPos.clone();
+    }
+    
+    public double[] getDestination() {
+        return d;
+    }
 }

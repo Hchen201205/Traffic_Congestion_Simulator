@@ -36,12 +36,16 @@ public class AutomatedCar extends Vehicle implements TCSConstant {
         this.genRandAcceleration();
         this.genRandDeceleration();
 
-        this.position = position;
+        /*
+        this.position[0] = position[0];
+        this.position[1] = position[1];*/
+        this.position = position.clone();
         this.direction = direction;
     }
 
     @Override
     public void accelerate(boolean accelerate) {
+        is_accelerating = true;
         double acceleration;
         if (accelerate) {
             acceleration = acceleration_rate;
@@ -70,7 +74,6 @@ public class AutomatedCar extends Vehicle implements TCSConstant {
 
         updateSafetyDistance();
         time_moving += TCSConstant.TIMEINCREMENTS;
-        is_accelerating = false;
 
     }
 
@@ -255,7 +258,7 @@ public class AutomatedCar extends Vehicle implements TCSConstant {
         double angular_speed = this.turn_tangential_speed / this.turn_radius;
         this.turn_safety_angle = Math.pow(angular_speed, 2) / (-2 * angular_deceleration);
     }
-
+    
     /**
      * This method will give the point at which the driver (robot in this case)
      * will start to break;
@@ -298,7 +301,14 @@ public class AutomatedCar extends Vehicle implements TCSConstant {
         return breakingPoint;
     }
 
+    public double getDecelerate_rate(double[] pos) {
+        double ax = - Math.pow(speed[0], 2) / (2 * pos[0] - position[0]);
+        double ay = - Math.pow(speed[1], 2) / (2 * pos[1] - position[1]);
+        return Math.sqrt(Math.pow(ax, 2) + Math.pow(ay, 2));
+    }
+    
     public void decelerateToStop(double[] pos) {
+        is_accelerating = false;
         double ax = -Math.pow(speed[0], 2) / (2 * pos[0] - position[0]);
         double ay = -Math.pow(speed[1], 2) / (2 * pos[1] - position[1]);
 

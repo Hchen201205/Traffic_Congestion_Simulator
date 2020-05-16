@@ -22,8 +22,7 @@ public class Lane_Set implements TCSConstant {
 
     // Creates a lane.
 
-    public Lane_Set(double[][] position_set, double[][] size_set, double[] direction, int numOfLane, LightSet light_set) {
- 
+
     public Lane_Set(double[][] position_set, double[][] size_set, double[] direction, int numOfLane, LightSet light_set, int[] lightseq) {
 
         lane_set = new Lane[numOfLane];
@@ -75,6 +74,7 @@ public class Lane_Set implements TCSConstant {
         Lane_Set ls = new Lane_Set(position_set, size_set, direction, numOfLane, lightset2, lightseq);
         
         for (int i = 0; i < ls.getSize(); i++) {
+            
         }
     }
 }
