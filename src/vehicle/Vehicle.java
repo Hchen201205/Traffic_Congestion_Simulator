@@ -42,11 +42,8 @@ public abstract class Vehicle implements TCSConstant {
     protected double turn_initial_direction; //direction car was facing before turn
     protected double turn_safety_angle;      //angle needed for car to decelerate to stop while turning
 
-<<<<<<< HEAD
-    protected Random rand = new Random(); // Instead of initializing random in each car class, it can be created here.
-=======
     protected static Random rand = new Random(100); // Instead of initializing random in each car class, it can be created here.
->>>>>>> b50cfe9e3ce03feed099f770e0c49088c3eb29f7
+
 
     protected final double buffer = BUFFER;  //gap between cars when stopped, in m
     protected final int rounded_dec_pos = ROUNDEDDECPOS;     //the decimal position accuracy of functions
@@ -299,10 +296,10 @@ public abstract class Vehicle implements TCSConstant {
     }
 
     // Done. This will check it's distance with the car in front of it. Straight only.
-    public boolean distanceCheck(Vehicle v) {
+    public boolean distanceCheck(Vehicle front_vehicle) {
         double[] point = new double[2];
-        point[0] = v.getPosition()[0] + v.getSize()[0] * Math.cos(Math.toRadians(v.direction));
-        point[1] = v.getPosition()[1] + v.getSize()[1] * Math.sin(Math.toRadians(v.direction)); 
+        point[0] = front_vehicle.getPosition()[0] - front_vehicle.getSize()[0] * Math.cos(Math.toRadians(front_vehicle.direction));
+        point[1] = front_vehicle.getPosition()[1] - front_vehicle.getSize()[1] * Math.sin(Math.toRadians(front_vehicle.direction)); 
         double distance = Math.sqrt(Math.pow(point[0] - position[0], 2) + Math.pow(point[1] - position[1], 2));
         if (distance < safety_distance) {
             return false;

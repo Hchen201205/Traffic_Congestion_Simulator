@@ -23,7 +23,8 @@ public class Simulation2 {
         double[] size = {280, 10};
         double direction = 0;
         System.out.println("hi");
-        Light light = new Light(direction, Color.GREEN);
+        Light light = new Light(Color.GREEN, true, false);
+
 
         light.startCycle();
 
@@ -36,9 +37,9 @@ public class Simulation2 {
 
             Vehicle c;
             if (automated) {
-                c = new AutomatedCar(carpos, carsize, direction);
+                c = new AutomatedCar(carpos, direction);
             } else {
-                c = new NormalCar(carpos, carsize, direction);
+                c = new NormalCar(carpos, direction);
             }
             
             c.updateSafetyDistance();

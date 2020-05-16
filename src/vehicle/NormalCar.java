@@ -116,7 +116,7 @@ public class NormalCar extends Vehicle implements TCSConstant {
     public void updateSafetyDistance() {
             this.genSafetyDistanceMin();
             //safety_distance will always be at least the minimum distance to deccelerate to stop
-            safety_distance = Math.abs(rand.nextGaussian() * safety_distance_min / 7.0)
+            safety_distance = Math.abs(rand.nextGaussian() * safety_distance_min / 15.0)
                     + safety_distance_min;
             safety_distance = this.rounder(safety_distance);
     }

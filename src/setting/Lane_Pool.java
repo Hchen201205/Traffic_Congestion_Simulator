@@ -41,7 +41,7 @@ public class Lane_Pool implements Runnable {
 
         for (Lane_Set laneset : lanepool) {
             laneset.runUnit();
-            for (int i = 0; i < laneset.size(); i++) {
+            for (int i = 0; i < laneset.getSize(); i++) {
                 Lane lane = laneset.getLane(i);
 
                 // This will make sure any cars getting out from the lane will be accounted.
@@ -54,7 +54,7 @@ public class Lane_Pool implements Runnable {
 
         // This will solve the intersection problem.
         for (Lane_Set laneset : lanepool) {
-            for (int i = 0; i < laneset.size(); i++) {
+            for (int i = 0; i < laneset.getSize(); i++) {
                 // This will make sure any cars getting out from the lane will be accounted.
                 Lane lane = laneset.getLane(i);
                 if (lane.haveLight() && lane.getOverFlow()) {

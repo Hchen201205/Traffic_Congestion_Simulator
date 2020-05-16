@@ -352,16 +352,12 @@ public class Lane {
         }
         return points;
     }
-
+    
     public static void main(String[] args) {
 
-<<<<<<< HEAD
-        double[] position = {140, 310};
-        double[] size = {280, 10};
-=======
         double[] position = {0, 0};
         double[] size = {30, 10};
->>>>>>> b50cfe9e3ce03feed099f770e0c49088c3eb29f7
+
         double direction = 0;
         System.out.println("hi");
 
@@ -383,7 +379,7 @@ public class Lane {
         lane.addCar(c2);
          */
         for (int i = 0; i < 6; i++) {
-            Vehicle c = new NormalCar(carpos, direction);
+            Vehicle c = new AutomatedCar(carpos, direction);
             carpos[0]--;
             lane.addCar(c);
             System.out.println(Arrays.toString(c.getPosition()));

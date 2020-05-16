@@ -86,7 +86,7 @@ public class AutomatedCar extends Vehicle implements TCSConstant {
     //Updates car safe distances, so the car will avoid accident.
     @Override
     public void updateSafetyDistance() {
-        safety_distance = Math.pow(this.getDirectionalSpeed(), 2) / (2 * -deceleration_rate);
+        safety_distance = Math.pow(this.getDirectionalSpeed(), 2) / (-2 * deceleration_rate);
     }
 
     //Randomly generating acceleration and deceleration functions:
@@ -94,7 +94,7 @@ public class AutomatedCar extends Vehicle implements TCSConstant {
     //may change variance if necessary
     @Override
     public void genRandAcceleration() {
-        acceleration_rate = Math.abs(rand.nextGaussian() * ACCELERATIONAVGMAX / 10 + ACCELERATIONAVGMAX);
+        acceleration_rate = Math.abs(rand.nextGaussian() * ACCELERATIONAVGMAX / 12 + ACCELERATIONAVGMAX);
         acceleration_rate = this.rounder(acceleration_rate);
     }
 
@@ -102,7 +102,7 @@ public class AutomatedCar extends Vehicle implements TCSConstant {
     @Override
     public void genRandDeceleration() {
         double scaled_dec_avg_max = DECELERATIONAVGMAX / ACCELERATIONAVGMAX * acceleration_rate;
-        deceleration_rate = rand.nextGaussian() * scaled_dec_avg_max / 10 + scaled_dec_avg_max;
+        deceleration_rate = rand.nextGaussian() * scaled_dec_avg_max / 12 + scaled_dec_avg_max;
         deceleration_rate = this.rounder(deceleration_rate);
     }
 
@@ -135,17 +135,14 @@ public class AutomatedCar extends Vehicle implements TCSConstant {
             //System.out.println("I ran. Position: " + Arrays.toString(position));
         }
         is_turning = true;
-
-        
-        
+      
+        //Testing something for matlab sim 
         /*
         if(direction == -90){
             turn_tangential_acceleration *= 1/3;
         } 
         */
-        
-        
-        
+
         double turning_acceleration_value = turn_tangential_acceleration;
         if (!accelerate) {
             turning_acceleration_value = turn_tangential_deceleration;
@@ -231,18 +228,9 @@ public class AutomatedCar extends Vehicle implements TCSConstant {
                 speed[0] = 0;
             }
             
-            
-            
-            
-            
-            
+            //testing something for matlab sim
             //speed[1] = turn_tangential_speed;
             //speed[0] = 0;
-            
-            
-            
-            
-            
             
             is_turning = false;
 
