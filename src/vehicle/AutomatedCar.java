@@ -4,7 +4,6 @@
 package vehicle;
 
 import java.util.Arrays;
-import setting.Lane;
 import traffic_congestion_simulator.TCSConstant;
 
 /**
@@ -257,7 +256,7 @@ public class AutomatedCar extends Vehicle implements TCSConstant {
      * @return
      */
     @Override
-    public double[] estimateBreakingPoint(double x_value, double y_value) {
+    public double[] estimateBrakingPoint(double x_value, double y_value) {
         // general equation (deceleration_rate * destination - acceleration_rate * position + 1 / 2 * velocity * velocity) / (deceleration_rate - acceleration_rate)
         double[] breakingPoint = new double[2];
         breakingPoint[0] = (deceleration_rate * Math.abs(Math.cos(Math.toRadians(direction))) * x_value - acceleration_rate * Math.abs(Math.cos(Math.toRadians(direction))) * position[0] + 1 / 2 * Math.pow(speed[0], 2)) / (deceleration_rate * Math.abs(Math.cos(Math.toRadians(direction))) - acceleration_rate * Math.abs(Math.cos(Math.toRadians(direction))));
@@ -275,7 +274,7 @@ public class AutomatedCar extends Vehicle implements TCSConstant {
      * @return
      */
     @Override
-    public double[] estimateBreakingPoint(Vehicle v) {
+    public double[] estimateBrakingPoint(Vehicle v) {
         // general equation (deceleration_rate * destination - acceleration_rate * position + 1 / 2 * velocity * velocity) / (deceleration_rate - acceleration_rate)
         double[] destination = new double[2];
         for (int i = 0; i < 2; i++) {

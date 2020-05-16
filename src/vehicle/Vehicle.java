@@ -6,8 +6,6 @@
 package vehicle;
 
 import java.util.Random;
-import java.util.concurrent.TimeUnit;
-import setting.Lane;
 import traffic_congestion_simulator.TCSConstant;
 
 /**
@@ -19,7 +17,7 @@ public abstract class Vehicle implements TCSConstant {
     protected double[] speed = new double[2];//{speed left/right, speed up/down} in m/s (always positive)               
     protected double[] position;             //Position as center of front of car, in m
     protected double[] size;                 //{length, width} in m
-    protected double[] breaking_point;
+    protected double[] braking_point;
     protected double[] des = new double[2];  
 
     protected double acceleration_rate;      //in m/s^2
@@ -76,9 +74,9 @@ public abstract class Vehicle implements TCSConstant {
     //random for NormalCar, 0 for AutomatedCar
     public abstract void genRandReactionTime();
 
-    public abstract double[] estimateBreakingPoint(double x_value, double y_value);
+    public abstract double[] estimateBrakingPoint(double x_value, double y_value);
 
-    public abstract double[] estimateBreakingPoint(Vehicle v);
+    public abstract double[] estimateBrakingPoint(Vehicle front_vehicle);
 
     //used when turn() is first called, sets starting constants so the function 
     //can be called on many times and edit Vehicle vairables

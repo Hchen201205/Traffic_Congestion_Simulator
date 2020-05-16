@@ -7,7 +7,6 @@ package vehicle;
 
 import java.util.Arrays;
 import java.util.Random;
-import setting.Lane;
 import traffic_congestion_simulator.TCSConstant;
 
 /**
@@ -116,7 +115,7 @@ public class NormalCar extends Vehicle implements TCSConstant {
     public void updateSafetyDistance() {
             this.genSafetyDistanceMin();
             //safety_distance will always be at least the minimum distance to deccelerate to stop
-            safety_distance = Math.abs(rand.nextGaussian() * safety_distance_min / 15.0)
+            safety_distance = Math.abs(rand.nextGaussian() * safety_distance_min / 13.0)
                     + safety_distance_min;
             safety_distance = this.rounder(safety_distance);
     }
@@ -344,12 +343,12 @@ public class NormalCar extends Vehicle implements TCSConstant {
     
     
     @Override
-    public double[] estimateBreakingPoint(double x_value, double y_value) {
+    public double[] estimateBrakingPoint(double x_value, double y_value) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public double[] estimateBreakingPoint(Vehicle v) {
+    public double[] estimateBrakingPoint(Vehicle v) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
