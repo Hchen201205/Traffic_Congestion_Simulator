@@ -387,13 +387,13 @@ public class Lane {
         }
         System.out.println();
     }
-
+    
     public static void main(String[] args) {
 
         double[] position = {135, 0};
         double[] size = {270, 10};
 
-        double direction = 0;
+        double direction = 90;
         System.out.println("hi");
 
         double[] carpos = {10, 5};
@@ -404,7 +404,7 @@ public class Lane {
 
         Lane lane = new Lane(position, size, direction, l);
 
-        lane.addCar(true, 6);
+        lane.addCar(false, 6);
         System.out.println(lane.getCarPos());
         /*
         for (int i = 0; i < 30; i++) {
@@ -429,7 +429,7 @@ public class Lane {
                     output += String.format("%7f, %7f; %7f, %7f; %7f\t\t", car.rounder(car.getCenterPos()[0]),
                             car.rounder(car.getCenterPos()[1]), car.getSize()[0], car.getSize()[1], car.rounder(car.getDirection()));
                      */
-                    output += String.format("%s: %s||||", Arrays.toString(car.getSpeed()), Arrays.toString(car.getPosition()));
+                    output += String.format("Speed: %s Direction: %s Position: %s\t\t", Arrays.toString(car.getSpeed()), car.getDirection(), Arrays.toString(car.getPosition()));
                 }
                 System.out.println(output);
 

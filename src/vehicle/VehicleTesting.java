@@ -35,10 +35,20 @@ public class VehicleTesting implements TCSConstant {
         double[] pos2 = {left + 6 * lane, lower + 4.5 * lane};
         AutomatedCar car2 = new AutomatedCar(pos2, 180);
         cars.add(car2);
-
+        
+        double[] pos3 = {left + lane*1.5, lower + lane*6};
+        AutomatedCar car3 = new AutomatedCar(pos3, 90);
+        cars.add(car3);
+                
+        double[] pos4 = {left + lane*4.5, lower};
+        AutomatedCar car4 = new AutomatedCar(pos3, 270);
+        cars.add(car4);
+        
         for (int i = 0; i < 20; i++) {
             car1.accelerate(true);
             car2.accelerate(true);
+            car3.accelerate(true);
+            car4.accelerate(true);
             output(cars, i);
         }
     }
