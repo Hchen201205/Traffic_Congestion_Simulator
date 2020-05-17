@@ -18,7 +18,7 @@ public abstract class Vehicle implements TCSConstant {
     protected double[] position;             //Position as center of front of car, in m
     protected double[] size;                 //{length, width} in m
     protected double[] braking_point;
-    protected double[] des = new double[2];  
+    protected double[] des = new double[2];
 
     protected double acceleration_rate;      //in m/s^2
     protected double deceleration_rate;      //in m/s^2
@@ -42,17 +42,14 @@ public abstract class Vehicle implements TCSConstant {
 
     protected static Random rand = new Random(100); // Instead of initializing random in each car class, it can be created here.
 
-
     protected final double buffer = BUFFER;  //gap between cars when stopped, in m
     protected final int rounded_dec_pos = ROUNDEDDECPOS;     //the decimal position accuracy of functions
     protected final double time_increment = TIMEINCREMENTS; //milliseconds 
 
-    
     //Abstract functions:
-    
     //true for AutomatedCar, false for NormalCar
     public abstract boolean isAutomated();
-    
+
     //simple acceleration function, based on time_increment 
     //updates position, speed, saftey_distance, time_moving
     //accelerate = true to accelerate & accelerate = false to decelerate
@@ -61,7 +58,7 @@ public abstract class Vehicle implements TCSConstant {
     //calculates deceleration rate needed for car to come to stop at pos
     //based on time_increment
     public abstract void decelerateToStop(double[] pos);
-    
+
     //calculates and assigns new saftey distance based on current speed
     public abstract void updateSafetyDistance();
 
@@ -89,48 +86,43 @@ public abstract class Vehicle implements TCSConstant {
     //will be set and once the car has finished the turn, is_turning will be set to false
     //  accelerate = true to accelerate & accelerate = false to decelerate
     public abstract void turn(int direction, double[] destination, boolean accelerate);
-    
+
     //calculates and assigns new saftey angle based on current speed while turning
     public abstract void updateTurnSafetyAngle();
-    
-    public abstract double getDecelerateToStopRate(double[] pos);
-    
 
-    
     //Non-abstract functions:
-    
     //this will make graphing in matlab much simpler
-    public double[] getLeftBottomCornerPos(){
+    public double[] getLeftBottomCornerPos() {
         double[] pos = new double[2];
         double dist = Math.sqrt(Math.pow(size[0], 2.0) + Math.pow(size[1], 2.0));
-        double angle = direction + Math.toDegrees(Math.atan((size[1]/2.0)/size[0]));
+        double angle = direction + Math.toDegrees(Math.atan((size[1] / 2.0) / size[0]));
         pos[0] = position[0] - dist * Math.cos(Math.toRadians(angle));
         pos[1] = position[1] - dist * Math.sin(Math.toRadians(angle));
         return pos;
     }
-    
-    public double[] getCenterPos(){
+
+    public double[] getCenterPos() {
         double[] pos = new double[2];
         pos[0] = position[0] - size[0] / 2.0 * Math.cos(Math.toRadians(direction));
         pos[1] = position[1] - size[0] / 2.0 * Math.sin(Math.toRadians(direction));
         return pos;
     }
 
-    public void genRandSize(){
+    public void genRandSize() {
         size[0] = this.rounder(rand.nextGaussian() * LENGTHAVG / 25.0 + LENGTHAVG);
-        if (size[0] < LENGTHMIN){
+        if (size[0] < LENGTHMIN) {
             size[0] = LENGTHMIN;
         }
-        
-        size[1] = rand.nextGaussian()* WIDTHAVG / 25.0 + WIDTHAVG;
-        if (size[1] > WIDTHMAX){
+
+        size[1] = rand.nextGaussian() * WIDTHAVG / 25.0 + WIDTHAVG;
+        if (size[1] > WIDTHMAX) {
             size[1] = WIDTHMAX;
-        } else if (size[1] < WIDTHMIN){
+        } else if (size[1] < WIDTHMIN) {
             size[1] = WIDTHMIN;
         }
 
     }
-    
+
     //distance from front bumper of car to back bumper of front car plus buffer
     public double getDistanceFromFrontVehicle(Vehicle front_car) {
         if (front_car.isTravelingHorizontal()) {
@@ -140,12 +132,12 @@ public abstract class Vehicle implements TCSConstant {
         return Math.abs(this.position[1] - front_car.position[1])
                 - front_car.size[1] + buffer;
     }
-    
+
     //Checks distance between car and the car in front of it. Straight only.
     public boolean distanceCheck(Vehicle front_vehicle) {
         double[] point = new double[2];
         point[0] = front_vehicle.getPosition()[0] - front_vehicle.getSize()[0] * Math.cos(Math.toRadians(front_vehicle.direction));
-        point[1] = front_vehicle.getPosition()[1] - front_vehicle.getSize()[1] * Math.sin(Math.toRadians(front_vehicle.direction)); 
+        point[1] = front_vehicle.getPosition()[1] - front_vehicle.getSize()[1] * Math.sin(Math.toRadians(front_vehicle.direction));
         double distance = Math.sqrt(Math.pow(point[0] - position[0], 2) + Math.pow(point[1] - position[1], 2));
         if (distance < safety_distance) {
             return false;
@@ -153,9 +145,9 @@ public abstract class Vehicle implements TCSConstant {
             return true;
         }
     }
-    
+
     //car will travel for one increment at it's speed limit value with no acceleration
-    public void travelWithConstantSpeed(){
+    public void travelWithConstantSpeed() {
         double acceleration = this.acceleration_rate;
         this.acceleration_rate = 0;
         speed[0] = rounder(speed_limit * Math.cos(Math.toRadians(direction)));
@@ -163,7 +155,9 @@ public abstract class Vehicle implements TCSConstant {
         accelerate(true);
 
         this.acceleration_rate = acceleration;
-    };
+    }
+
+    ;
     
     //runs a turn increment with no acceleration
     //car will continue along turn for one increment with whatever speed it currently has
@@ -178,25 +172,26 @@ public abstract class Vehicle implements TCSConstant {
         this.turn_tangential_acceleration = turning_acceleration;
         this.acceleration_rate = acceleration_rate;
     }
-    
 
     //for use when car is turning
-    public double getAngleFromTurningFrontVehicle(Vehicle front_car){
-        if (front_car.is_turning){
+    public double getAngleFromTurningFrontVehicle(Vehicle front_car) {
+        if (front_car.is_turning) {
             return Math.abs(front_car.direction - this.direction);
         }
         return 0;
-    };
+    }
 
-    public void changePosition(double[] pos){
+    ;
+
+    public void changePosition(double[] pos) {
         this.position = pos;
     }
-    
-    public void changeXPosition (double pos_x){
+
+    public void changeXPosition(double pos_x) {
         this.position[0] = pos_x;
     }
-    
-    public void changeYPosition (double pos_y){
+
+    public void changeYPosition(double pos_y) {
         this.position[1] = pos_y;
     }
 
@@ -213,7 +208,6 @@ public abstract class Vehicle implements TCSConstant {
         
     }
      */
-    
     public boolean isTravelingVertical() {
         if (direction == 90 || direction == 270) {
             return true;
@@ -230,7 +224,7 @@ public abstract class Vehicle implements TCSConstant {
     public boolean isAccelerating() {
         return is_accelerating;
     }
-    
+
     public void setAccelerating(boolean is_accelerating) {
         this.is_accelerating = is_accelerating;
     }
@@ -274,7 +268,7 @@ public abstract class Vehicle implements TCSConstant {
     public double getSpeedLimit() {
         return speed_limit;
     }
-    
+
     //the position component that is changing
     public double getDirectionalPos() {
         if (direction == 0 || direction == 180) {
@@ -300,7 +294,7 @@ public abstract class Vehicle implements TCSConstant {
         System.out.println("This vehicle is not traveling in a cardinal direction");
         return 0;
     }
-    
+
     public double getSafetyDistance() {
         return safety_distance;
     }
@@ -320,7 +314,23 @@ public abstract class Vehicle implements TCSConstant {
     public double getDeceleration_rate() {
         return deceleration_rate;
     }
-    
+
+    public double getDeceleration_rate(double[] destination) {
+        double ax, ay;
+        if (destination[0] != position[0]) {
+            ax = -Math.pow(speed[0], 2) / (2 * destination[0] - position[0]);
+        } else {
+            ax = 0;
+        }
+        if (destination[1] != position[1]) {
+            ay = -Math.pow(speed[1], 2) / (2 * destination[1] - position[1]);
+        } else {
+            ay = 0;
+        }
+
+        return Math.sqrt(Math.pow(ax, 2) + Math.pow(ay, 2));
+    }
+
     public double getTimeMoving() {
         return time_moving;
     }
@@ -349,8 +359,12 @@ public abstract class Vehicle implements TCSConstant {
     public void setDestination(double[] stackPos) {
         des = stackPos.clone();
     }
-    
+
     public double[] getDestination() {
         return des;
+    }
+
+    public void setSpeed(double[] speed) {
+        this.speed = speed.clone();
     }
 }

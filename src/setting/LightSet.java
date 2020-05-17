@@ -111,4 +111,10 @@ public class LightSet implements TCSConstant {
         }
     }
 
+    public String toString() {
+
+        return String.format("     %s\t|     %s\t|     %s\t|     %s\n",
+                light_set[0].getColorString(), light_set[1].getColorString(),
+                light_set[2].getColorString(), light_set[3].getColorString());
+    }
 }

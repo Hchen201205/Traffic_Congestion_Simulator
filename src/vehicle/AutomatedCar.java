@@ -287,12 +287,6 @@ public class AutomatedCar extends Vehicle implements TCSConstant {
 
         return breakingPoint;
     }
-
-    public double getDecelerateToStopRate(double[] pos) {
-        double ax = - Math.pow(speed[0], 2) / (2 * pos[0] - position[0]);
-        double ay = - Math.pow(speed[1], 2) / (2 * pos[1] - position[1]);
-        return Math.sqrt(Math.pow(ax, 2) + Math.pow(ay, 2));
-    }
     
     public void decelerateToStop(double[] pos) {
         is_accelerating = false;
@@ -342,5 +336,7 @@ public class AutomatedCar extends Vehicle implements TCSConstant {
     public boolean isAutomated() {
         return true;
     }
+
+
 
 }
