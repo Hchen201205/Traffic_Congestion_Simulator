@@ -80,7 +80,7 @@ public class Lane_Set implements TCSConstant {
 
         Lane_Set ls = new Lane_Set(position_set, size_set, direction, numOfLane, lightset2, lightseq);
 
-        int testingCarNumber = 216;
+        int testingCarNumber = 648;
         int runTime = 0;
         for (int i = 0; i < ls.getSize(); i++) {
             testingCarNumber -= ls.getLane(i).addCar(true, testingCarNumber);

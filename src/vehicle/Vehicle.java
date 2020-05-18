@@ -150,8 +150,8 @@ public abstract class Vehicle implements TCSConstant {
     public void travelWithConstantSpeed() {
         double acceleration = this.acceleration_rate;
         this.acceleration_rate = 0;
-        speed[0] = rounder(speed_limit * Math.cos(Math.toRadians(direction)));
-        speed[1] = rounder(speed_limit * Math.sin(Math.toRadians(direction)));
+        speed[0] = rounder(speed_limit * Math.abs(Math.cos(Math.toRadians(direction))));
+        speed[1] = rounder(speed_limit * Math.abs(Math.sin(Math.toRadians(direction))));
         accelerate(true);
 
         this.acceleration_rate = acceleration;

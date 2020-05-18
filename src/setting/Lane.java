@@ -393,7 +393,7 @@ public class Lane {
         double[] position = {135, 0};
         double[] size = {270, 10};
 
-        double direction = 90;
+        double direction = 270;
         System.out.println("hi");
 
         double[] carpos = {10, 5};
@@ -404,7 +404,7 @@ public class Lane {
 
         Lane lane = new Lane(position, size, direction, l);
 
-        lane.addCar(false, 6);
+        lane.addCar(true, 6);
         System.out.println(lane.getCarPos());
         /*
         for (int i = 0; i < 30; i++) {
@@ -417,9 +417,9 @@ public class Lane {
         //lane.setCars();
 
         l.startCycle();
-        for (int i = 0; i < 300; i++) {
+        for (int i = 0; i < 500; i++) {
             System.out.println(l.getColorString() + l.getTimePassed());
-            l.runCycleUnit();
+            //l.runCycleUnit();
             if (i % 2 == 0) {
                 String output = "";
 
@@ -434,8 +434,8 @@ public class Lane {
                 System.out.println(output);
 
             }
-
-            lane.runUnit();
+            lane.green();
+            //lane.runUnit();
 
             /*
             System.out.println("safety: " + c2.getSafetyDistance());

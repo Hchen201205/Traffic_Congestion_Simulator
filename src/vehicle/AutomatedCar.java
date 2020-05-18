@@ -58,7 +58,7 @@ public class AutomatedCar extends Vehicle implements TCSConstant {
         speed[0] += acceleration * TCSConstant.TIMEINCREMENTS * Math.abs(Math.cos(Math.toRadians(direction)));
         speed[0] = this.rounder(speed[0]);
 
-        position[1] += (speed[1] * TCSConstant.TIMEINCREMENTS + 1.0 / 2 * acceleration 
+        position[1] -= (speed[1] * TCSConstant.TIMEINCREMENTS + 1.0 / 2 * acceleration 
                 * TCSConstant.TIMEINCREMENTS * TCSConstant.TIMEINCREMENTS) * Math.sin(Math.toRadians(direction));;
         position[1] = this.rounder(position[1]);
         speed[1] += acceleration * TCSConstant.TIMEINCREMENTS * Math.abs(Math.sin(Math.toRadians(direction)));
