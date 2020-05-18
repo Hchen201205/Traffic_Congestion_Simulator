@@ -353,6 +353,10 @@ public class Lane {
         return position;
     }
 
+    public int getCarListSizes() {
+        return carList.size();
+    }
+    
     public double[] getSize() {
         return size;
     }
@@ -385,7 +389,6 @@ public class Lane {
             // I probably will need this line.
             //System.out.print(carList.get(i).getDeceleration_rate(stackPos));
         }
-        System.out.println();
     }
     
     public static void main(String[] args) {

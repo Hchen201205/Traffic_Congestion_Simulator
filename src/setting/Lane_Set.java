@@ -20,10 +20,11 @@ public class Lane_Set implements TCSConstant {
     Lane[] lane_set;
 
     ArrayList<Vehicle> overflowList;
+    
+    int numOfLane;
 
     // Creates a lane.
     public Lane_Set(double[][] position_set, double[][] size_set, double[] direction, int numOfLane, LightSet light_set, int[] lightseq) {
-
         lane_set = new Lane[numOfLane];
         for (int i = 0; i < lane_set.length; i++) {
             lane_set[i] = new Lane(position_set[i], size_set[i], direction[i / 3], light_set.getLight_Set()[lightseq[i]]);
@@ -80,10 +81,11 @@ public class Lane_Set implements TCSConstant {
 
         Lane_Set ls = new Lane_Set(position_set, size_set, direction, numOfLane, lightset2, lightseq);
 
-        int testingCarNumber = 648;
+        
+        int testingCarNumber = 54;
         int runTime = 0;
         for (int i = 0; i < ls.getSize(); i++) {
-            testingCarNumber -= ls.getLane(i).addCar(true, testingCarNumber);
+            testingCarNumber -= ls.getLane(i).addCar(false, testingCarNumber);
             System.out.println(ls.getLane(i).getCarPos());
             System.out.printf("Lane %d ahs direction %f", i, ls.getLane(i).getDirection());
         }
@@ -98,8 +100,6 @@ public class Lane_Set implements TCSConstant {
                 }
                 else if (ls.getLane(i).getColor().equals(Color.GREEN)) {
                     System.out.printf("Lane %d is Green now, it has %d car\n", i, ls.getLane(i).carList.size());
-                    System.out.println(ls.getLane(i).getCarPos());
-                    System.out.println(ls.getLane(i).getCarSpeed());
                     
                 }
             }
