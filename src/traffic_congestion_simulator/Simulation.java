@@ -33,11 +33,9 @@ public class Simulation implements TCSConstant {
     }
 
     // This is for graph 2
-    public int run(boolean automated, int numOfCarPerLane) {
+    public int run(boolean automated, int[] carsPerLane) {
         // You have an array that will each account for its own cars.
-        for (int i = 0; i < testingCarNumbers.length; i++) {
-            testingCarNumbers[i] = numOfCarPerLane;
-        }
+        testingCarNumbers = carsPerLane.clone();
         runtime = 0;
         
         // This will add the cars in.
@@ -79,8 +77,15 @@ public class Simulation implements TCSConstant {
     public static void main(String[] args) {
         Simulation s = new Simulation();
         
+        // You need to input twelve numbers here.
+        // In the first graph, You can try to make put any numbers, make sure you have each lane with equal number of cars EXCEPT those you want to be zero.
+        // For the second graph, all the numbers have to be the same.
+        int[] carsPerLane = {54, 54, 54, 
+                             54, 54, 54, 
+                             54, 54, 54, 
+                             54, 54, 54};
         // This means that you input 54 cars to each of the twelve lanes.
         // This is like the no.2 graph I ask you to do. Just do this first.
-        System.out.println(s.run(true, 54));
+        System.out.println(s.run(true, carsPerLane));
     }
 }
