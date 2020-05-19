@@ -6,6 +6,7 @@
 package traffic_congestion_simulator;
 
 import java.awt.Color;
+import java.util.ArrayList;
 import java.util.Arrays;
 import setting.Lane_Set;
 import setting.LightSet;
@@ -55,7 +56,7 @@ public class Simulation implements TCSConstant {
                 } else if (laneset.getLane(i).getColor().equals(Color.GREEN)) {
                     
                     // You can delete this line if necessary.
-                    //System.out.printf("Lane %d is Green now, it has %d car\n", laneset.getLane(i).getCarListSizes());
+                    //System.out.printf("Lane %d is Green now, it has %d car\n", laneset.getLane(i).getCarListSizes(), laneset.getCars());
 
                 }
             }
@@ -78,14 +79,41 @@ public class Simulation implements TCSConstant {
         Simulation s = new Simulation();
         
         // You need to input twelve numbers here.
-        // In the first graph, You can try to make put any numbers, make sure you have each lane with equal number of cars EXCEPT those you want to be zero.
+        // In the first graph, You can try to make put any numbers, 
+        //make sure you have each lane with equal number of cars EXCEPT those you want to be zero.
         // For the second graph, all the numbers have to be the same.
-        int[] carsPerLane = {54, 54, 54, 
-                             54, 54, 54, 
-                             54, 54, 54, 
-                             54, 54, 54};
+        
+        
+        /*int[] carsPerLane = {x, x, x, 
+                            x, 50, 50, 
+                             50, 50, 50, 
+                             50, 50, 50};
+*/
+        //I'll change the numbers in the carsPerLane array ranging from 20 - 120 
+        //using a nested loop
+        //since the no.2 graph will be # car v. time
+        double timeOutput = 0;
+        for (int i = 20; i < 120; i++) {
+            int [] carsPerLane = new int[12];//set number of lanes; creating new array as each loop finishes
+            for (int j = 0; j < 12; j++) {
+                carsPerLane[j] = i; //inputing number cars in each lane 
+            }
+            for (int z = 0; z < 100; z++) { 
+                timeOutput = timeOutput + ((s.run(true, carsPerLane))* (TIMEINCREMENTS));
+            }
+            double timeOutputAverage = timeOutput/100;
+            System.out.printf("# CarsPL: %d ; time: %f",i, timeOutputAverage);
+        }
+        //I'll be looping 100 times to get a more accurate number of the running time 
+        /*
+        for (int i = 0; i < 100; i++) {
+            timeOutput = timeOutput + ((s.run(true, carsPerLane))* (TIMEINCREMENTS));
+        }*/
+        
+        
+        
         // This means that you input 54 cars to each of the twelve lanes.
         // This is like the no.2 graph I ask you to do. Just do this first.
-        System.out.println(s.run(true, carsPerLane));
+        //System.out.println(s.run(true, carsPerLane));
     }
 }
