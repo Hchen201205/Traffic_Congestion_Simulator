@@ -57,9 +57,7 @@ public class LightSet implements TCSConstant {
 
         //  left_turn_dec determines how short the green light for left turn lane will be 
         //compared to the green light for through and right lanes
-        //  set to 1/2 beacuse the left turn light only covers one lane from each side, 
-        //while the through and right light covers two lanes from each side
-        double left_turn_dec = 1.0 / 2.0;
+        double left_turn_dec = 1.0;
 
         for (Light light : light_set) {
             if (light.isLeftTurnLight()) {
