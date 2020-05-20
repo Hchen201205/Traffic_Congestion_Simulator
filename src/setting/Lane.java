@@ -207,7 +207,6 @@ public class Lane {
             if (c.getReactionTime() <= 0) {
                 // Here have an if-else statement to account for the time when two cars are too close.
                 if (i > 0 && !c.distanceCheck(carList.get(i - 1))) {
-                    // two reaction time will happen here.
                     c.accelerate(false);
                 } else if (Math.sqrt(Math.pow(c.getSpeed()[0], 2) + Math.pow(c.getSpeed()[1], 2)) < c.getSpeedLimit()) {
                     c.accelerate(true);

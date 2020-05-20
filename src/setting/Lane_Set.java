@@ -64,9 +64,9 @@ public class Lane_Set implements TCSConstant {
             size_set1[1] = 10;
         }
         double[][] position_set = {{275, 135}, {285, 135}, {295, 135},
-        {465, 275}, {465, 285}, {465, 295},
-        {325, 465}, {315, 465}, {305, 465},
-        {135, 325}, {135, 315}, {135, 305}};
+                                   {465, 275}, {465, 285}, {465, 295},
+                                   {325, 465}, {315, 465}, {305, 465},
+                                   {135, 325}, {135, 315}, {135, 305}};
 
         double[] direction = {270, 180, 90, 0};
 
@@ -82,13 +82,13 @@ public class Lane_Set implements TCSConstant {
 
         Lane_Set ls = new Lane_Set(position_set, size_set, direction, numOfLane, lightset2, lightseq);
 
-        
-        int testingCarNumber = 54;
+        boolean automated = false;
+        int testingCarNumber = 648;
         int runTime = 0;
         for (int i = 0; i < ls.getSize(); i++) {
-            testingCarNumber -= ls.getLane(i).addCar(false, testingCarNumber);
+            testingCarNumber -= ls.getLane(i).addCar(automated, testingCarNumber);
             System.out.println(ls.getLane(i).getCarPos());
-            System.out.printf("Lane %d ahs direction %f", i, ls.getLane(i).getDirection());
+            System.out.printf("Lane %d has direction %f\n", i, ls.getLane(i).getDirection());
         }
         while (testingCarNumber > 0 || ls.getCars() > 0) {
             System.out.println(runTime + " : " + lightset2.toString());
@@ -97,7 +97,7 @@ public class Lane_Set implements TCSConstant {
             runTime++;
             for (int i = 0; i < ls.getSize(); i++) {
                 if (ls.getLane(i).getColor().equals(Color.RED)) {
-                    testingCarNumber -= ls.getLane(i).addCar(true, testingCarNumber);
+                    testingCarNumber -= ls.getLane(i).addCar(automated, testingCarNumber);
                 }
                 else if (ls.getLane(i).getColor().equals(Color.GREEN)) {
                     System.out.printf("Lane %d is Green now, it has %d car\n", i, ls.getLane(i).carList.size());
