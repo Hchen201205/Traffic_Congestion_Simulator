@@ -96,7 +96,7 @@ public class NormalCar extends Vehicle implements TCSConstant {
     public void genRandReactionTime() {
         reaction_time = rand.nextGaussian() * 0.1 + reaction_time_mean;
         reaction_time = this.rounder(reaction_time);
-        System.out.println("This reaction time is" + reaction_time);
+       // System.out.println("This reaction time is" + reaction_time);
     }
 
     public void genRandSpeedLimit() {
