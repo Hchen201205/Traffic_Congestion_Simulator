@@ -3,9 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package traffic_congestion_simulator;
+package all_unused_or_unimplemented_classes;
 
 import java.awt.BorderLayout;
+import java.awt.Canvas;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.Graphics;
