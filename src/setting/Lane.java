@@ -383,7 +383,7 @@ public class Lane {
             //System.out.print(carList.get(i).getDeceleration_rate(stackPos));
         }
     }
-    
+     
     public static void main(String[] args) {
 
         double[] position = {135, 0};

@@ -22,7 +22,8 @@ public class LightTesting implements TCSConstant{
         }
 
         test.startLightSetCycle();
-        System.out.println("Inc in one sec: " + 1.0 / TIMEINCREMENTS);
+        //System.out.println("Inc in one sec: " + 1.0 / TIMEINCREMENTS);
+        System.out.println("");
         System.out.println("     Light 1\t|   Light 2\t|   Light 3\t|   Light 4");
         System.out.println("-------------------------------------------------------");
 
