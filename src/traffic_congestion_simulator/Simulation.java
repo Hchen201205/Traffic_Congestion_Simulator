@@ -6,7 +6,7 @@
 package traffic_congestion_simulator;
 
 import java.awt.Color;
-import setting.Lane_Set;
+import setting.LaneSet;
 import setting.LightSet;
 
 /**
@@ -17,7 +17,7 @@ import setting.LightSet;
  */
 public class Simulation implements TCSConstant {
 
-    Lane_Set laneset;
+    LaneSet laneset;
 
     LightSet lightset;
 
@@ -30,7 +30,7 @@ public class Simulation implements TCSConstant {
         lightset = new LightSet(LIGHTPOSITION);
         lightset.startLightSetCycle();
 
-        laneset = new Lane_Set(LANEPOSITION, LANESIZE, LANEDIRECTION, LANEPOSITION.length, lightset, LIGHTSEQUENCE);
+        laneset = new LaneSet(LANEPOSITION, LANESIZE, LANEDIRECTION, LANEPOSITION.length, lightset, LIGHTSEQUENCE);
 
         testingCarNumbers = new int[LANEPOSITION.length];
 

@@ -12,12 +12,12 @@ import vehicle.Vehicle;
  *
  * @author chenhanxi
  */
-public class Vehicle_Pool {
+public class VehiclePool {
     
     ArrayList<Vehicle> inLane;
     ArrayList<Vehicle> outLane; // Intersection;
 
-    public Vehicle_Pool() {
+    public VehiclePool() {
         inLane = new ArrayList<>();
         outLane = new ArrayList<>();
     }

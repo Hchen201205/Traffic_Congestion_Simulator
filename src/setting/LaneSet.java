@@ -18,7 +18,7 @@ import vehicle.Vehicle;
  *
  * @author chenhanxi
  */
-public class Lane_Set implements TCSConstant {
+public class LaneSet implements TCSConstant {
 
     Lane[] lane_set;
 
@@ -36,7 +36,7 @@ public class Lane_Set implements TCSConstant {
      * @param light_set
      * @param lightseq 
      */
-    public Lane_Set(double[][] position_set, double[][] size_set, double[] direction, int numOfLane, LightSet light_set, int[] lightseq) {
+    public LaneSet(double[][] position_set, double[][] size_set, double[] direction, int numOfLane, LightSet light_set, int[] lightseq) {
         lane_set = new Lane[numOfLane];
         for (int i = 0; i < lane_set.length; i++) {
             lane_set[i] = new Lane(position_set[i], size_set[i], direction[i / 3], light_set.getLight_Set()[lightseq[i]]);

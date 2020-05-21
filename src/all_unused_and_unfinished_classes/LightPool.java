@@ -15,14 +15,14 @@ import traffic_congestion_simulator.TCSConstant;
  * @author chenhanxi
  */
 //Creates different situations for cars, and to mimic real life traffic light.
-public class Light_Pool implements Runnable {
+public class LightPool implements Runnable {
 
     LightSet[] lightpool;
 
     final Buffer shared;
     
     //Creates all the traffic lights.
-    public Light_Pool(Buffer shared) {
+    public LightPool(Buffer shared) {
 
         lightpool = new LightSet[TCSConstant.NUMOFINTERSECTION + 1];
 
