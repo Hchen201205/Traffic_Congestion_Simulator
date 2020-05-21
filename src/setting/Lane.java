@@ -13,50 +13,48 @@ import traffic_congestion_simulator.TCSConstant;
 import static traffic_congestion_simulator.TCSConstant.ROUNDEDDECPOS;
 
 /**
- * One thing to remember in this lane class is that it needs to be queue instead
- * of stack
+ * Lane is a class that will: 1. Run the Vehicle objects on a lane based on the
+ * Light object on this lane. This class can: 1. Run all Vehicle objects by one
+ * increment 2. Place or remove Vehicle when specific method is called.
  *
  * @author chenhanxi
  */
 public class Lane {
 
-    ArrayList<Vehicle> carList;// a list of all the cars on the road.
+    ArrayList<Vehicle> carList; // A list of all the cars on the road.
 
-    double[] position; // 0 is x, 1 is y
+    double[] position; // The position of a Lane object, position[0] will be its x-value and position[1] will be its y-value
 
-    double[] frontPos;
+    double[] frontPos; // The front position of a Lane object, which is located on the middle of its width but on the top of its length same with its direction.
 
-    double[] size; // 0 is length, 1 is width
+    double[] size; // The size of a Lane object, size[0] will be its length and size[1] will be its width
 
-    double direction; //  angle
+    double direction; // The direction, in degree, of a Lane object.
 
-    Light light;
+    Light light; // a Light object that direct the Vehicle on a Lane.
 
-    boolean overflow;
-
-    ArrayList<Vehicle> overflowVehicles;
-
-    char reset; // R = Red; G = Green; Y = Yellow;
-
-    int capacity;
+    //boolean overflow; // A indicator that will be used when multiple Lane_Set are declared. Not supported
+    //ArrayList<Vehicle> overflowVehicles; // An array of Vehicle that move out from the Lane. Supposedly work with overflow. Not supported.
+    char reset; // reset will help the Lane when Light is changed. It will prevent Lane class to repeatly implement some one-time operation. R = Red; G = Green; Y = Yellow;
 
     public Lane(double[] position, double[] size, double direction, Light light) {
         carList = new ArrayList<>();
-        // Both x and y are defining the center position of the lane.
+        // The position, size, and direction shouldn't be changing.
         this.position = position;
         this.size = size;
-        this.direction = direction; // angle
+        this.direction = direction;
 
         this.light = light;
 
-        overflow = false;
-
-        overflowVehicles = new ArrayList<>();
-        
+        //overflow = false;
+        //overflowVehicles = new ArrayList<>();
         //The car's dicretion is given in degrees, so the cars are able to turn.
         frontPos = new double[2];
+        // The orientation of the map is x is bigger when going right, and y is bigger when going down.
         frontPos[0] = position[0] + 1 / 2.0 * size[0] * rounder(Math.cos(Math.toRadians(direction)));
         frontPos[1] = position[1] - 1 / 2.0 * size[0] * rounder(Math.sin(Math.toRadians(direction)));
+
+        // Determine the initial light.
         if (light.getColor().equals(Color.RED)) {
             reset = 'R';
         } else if (light.getColor().equals(Color.GREEN)) {
@@ -66,6 +64,13 @@ public class Lane {
         }
     }
 
+    /**
+     * Rounder is a method that is the same across all classes. It will ensure
+     * the value is in ROUNDEDDECPOS decimal places.
+     *
+     * @param num
+     * @return
+     */
     public double rounder(double num) {
         num = num * Math.pow(10, ROUNDEDDECPOS);
         num = Math.round(num);
@@ -73,7 +78,10 @@ public class Lane {
     }
 
     /**
-     * This function will run this lane for one unit time.
+     * runUnit will run this lane for one unit time. It will hear from the Light
+     * object about the color, and will: 1. accelerate the Vehicle objects when
+     * the light is green or when there is no light (output Lane). 2. stop and
+     * reset Vehicle objects when the light is either yellow or red.
      */
     public void runUnit() {
         if (light == null || light.getColor().equals(Color.GREEN)) {
@@ -82,14 +90,17 @@ public class Lane {
             }
             green();
         } else if (light.getColor().equals(Color.RED)) {
+            // Run the methods that only need to run once. Like setting Vehicles to their position.
             if (reset != 'R') {
                 reset = 'R';
                 setCars();
+                for (int i = 0; i < carList.size(); i++) {
+                    
+                }
             }
         } else {
             if (reset != 'Y') {
                 reset = 'Y';
-                yellow();
                 for (Vehicle v : carList) {
                     if (v.getSpeed()[0] != 0 || v.getSpeed()[1] != 0) {
                         v.setSpeed(new double[2]);
@@ -98,7 +109,7 @@ public class Lane {
 
             }
 
-            /*
+            /* Yellow Light Attempt
             if (reset != 'Y') {
                 reset = 'Y';
                 // Do something here.
@@ -118,40 +129,18 @@ public class Lane {
         updateCarList();
     }
 
-    // This will report the lane status.
-    public double checkLaneStatus() {
-        double excessDistance = size[0];
-        for (int i = 0; i < carList.size(); i++) {
-            excessDistance -= carList.get(i).getSize()[0];
-            if (i >= 1) {
-                excessDistance -= carList.get(i).getBuffer();
-            }
-        }
-        return excessDistance;
-    }
-
-    // It will output how many spots there are left in the lane ahead of the current one.
-    public int checkSpotLeft(Lane lane, double time) {
-        double excessDistance = lane.checkLaneStatus();
-        int spotLeft = 0;
-        for (int i = 0; i < carList.size(); i++) {
-            Vehicle car = carList.get(i);
-            excessDistance -= car.getBuffer() + car.getSize()[0]; // Buffer + length;
-            if (excessDistance < 0) {
-                break;
-
-            }
-        }
-        return spotLeft;
-    }
-
-    public void addCar(Vehicle car) {
-        carList.add(car);
-        setCars();
-    }
-
-    // Done
+    /**
+     * addCar is a method that will take in a boolean automated variable and the
+     * number of cars. It will then create the Vehicle objects, add them into
+     * carList, and reposition them.
+     *
+     * @param automated
+     * @param numOfCar
+     * @return
+     */
     public int addCar(boolean automated, int numOfCar) {
+        // stackPos is a xy value position that will keep update when a new Vehicle is added.
+        // It will start from the front position of the Lane and add the buffer and length of each car on that direction.
         double[] stackPos = frontPos.clone();
         for (int i = 0; i < carList.size(); i++) {
             if (i > 0) {
@@ -161,7 +150,8 @@ public class Lane {
             stackPos[0] = stackPos[0] - (rounder(Math.cos(Math.toRadians(direction)) * (carList.get(i).getSize()[0])));
             stackPos[1] = stackPos[1] + (rounder(Math.sin(Math.toRadians(direction)) * (carList.get(i).getSize()[0])));
         }
-        
+
+        // It will count the Vehicle that is added and return it.
         int newAdd = 0;
         Vehicle v;
         if (automated) {
@@ -173,6 +163,7 @@ public class Lane {
         stackPos[0] = stackPos[0] - (rounder(Math.cos(Math.toRadians(direction)) * (v.getBuffer())));
         stackPos[1] = stackPos[1] + (rounder(Math.sin(Math.toRadians(direction)) * (v.getBuffer())));
         double distance = Math.sqrt(Math.pow(stackPos[0] - position[0], 2) + Math.pow(stackPos[1] - position[1], 2));
+        // Whenever the scakPos is out of the radius of the lane, it will stop adding Vehicle.
         while (distance <= (1 / 2.0 * size[0]) && newAdd < numOfCar) {
             carList.add(v);
             newAdd++;
@@ -192,15 +183,29 @@ public class Lane {
         return newAdd;
     }
 
+    /**
+     * removeCar will take in an int parameter index. It will remove the car on
+     * that index.
+     *
+     * @param index
+     */
     public void removeCar(int index) {
         carList.remove(index);
     }
 
+    /**
+     * getColor() is an accessor that will get the color of the Light object.
+     *
+     * @return
+     */
     public Color getColor() {
         return light.getColor();
     }
-    
-    // This will run for one millisecond and update carList
+
+    /**
+     * green is a method that will be responsible for Vehicle's movement for one
+     * increment of unit second when a green light is reached.
+     */
     public void green() {
         for (int i = 0; i < carList.size(); i++) {
             Vehicle c = carList.get(i);
@@ -214,6 +219,7 @@ public class Lane {
                 } else {
                     c.travelWithConstantSpeed();
                 }
+                // if the reactiontime of a Vehicle hasn't reach, the run will be ended.
             } else {
                 c.reduceReactionTimeUnit();
                 break;
@@ -222,6 +228,183 @@ public class Lane {
         }
     }
 
+    /**
+     * setCars will reset all the Vehicle objects to appropriate position on the
+     * Lane. There needs to be a buffer region in between two Vehicles.
+     */
+    public void setCars() {
+
+        if (carList.size() > 0) {
+            carList.get(0).setPosition(frontPos);
+            double[] destination = new double[2];
+            for (int i = 1; i < carList.size(); i++) {
+                destination[0] = carList.get(i - 1).getPosition()[0] - (rounder(Math.cos(Math.toRadians(direction)) * (carList.get(i - 1).getSize()[0] + carList.get(i).getBuffer())));
+
+                destination[1] = carList.get(i - 1).getPosition()[1] + (rounder(Math.sin(Math.toRadians(direction)) * (carList.get(i - 1).getSize()[0] + carList.get(i).getBuffer())));
+
+                carList.get(i).setPosition(destination);
+            }
+        }
+    }
+
+    /**
+     * updateCarList will check whether a Vehicle is in the radius of the Lane.
+     * If it is not in, the method will remove the Vehicle from its carList.
+     */
+    public void updateCarList() {
+        for (int i = 0; i < carList.size(); i++) {
+            // Distance formula
+            double distance = Math.sqrt(Math.pow(carList.get(i).getPosition()[0] - position[0], 2) + Math.pow(carList.get(i).getPosition()[1] - position[1], 2));
+            if (distance > (1 / 2.0 * size[0])) {
+                //overflowVehicles.add(carList.get(i)); Not supported
+                carList.remove(i--);
+
+                //overflow = true; Not Supported
+            } else {
+                break;
+            }
+        }
+    }
+
+    /**
+     * Unrelated to this simulation haveLight will check whether the Lane has a
+     * light
+     *
+     * @return
+     */
+    public boolean haveLight() {
+        return light != null;
+    }
+
+    /**
+     * getDirection is an accessor method that will return the direction of this
+     * Lane.
+     *
+     * @return
+     */
+    public double getDirection() {
+        return direction;
+    }
+
+    /**
+     * Unrelated to this simulation getCarPos is a method for testing that will
+     * print out all the Vehicle's current position
+     *
+     * @return
+     */
+    public String getCarPos() {
+        String result = "";
+        for (int i = 0; i < carList.size(); i++) {
+            result += "|" + Arrays.toString(carList.get(i).getPosition()) + "|";
+        }
+        return result;
+    }
+
+    /**
+     * Unrelated to this simulation getCarPos is a method for testing that will
+     * print out all the Vehicle's current speed.
+     *
+     * @return
+     */
+    public String getCarSpeed() {
+        String result = "";
+        for (int i = 0; i < carList.size(); i++) {
+            result += "|" + Arrays.toString(carList.get(i).getSpeed()) + "|";
+        }
+        return result;
+    }
+
+    /**
+     * Unrelated to this simulation getPosition is an accessor method that will
+     * return the position of this Lane
+     *
+     * @return
+     */
+    public double[] getPosition() {
+        return position;
+    }
+
+    /**
+     * getCarListSizes is an accessor method that will return the size of the
+     * carList.
+     *
+     * @return
+     */
+    public int getCarListSizes() {
+        return carList.size();
+    }
+
+    /**
+     * Unrelated to this simulation. getSize is an accessor method that will
+     * return the size of this Lane
+     *
+     * @return
+     */
+    public double[] getSize() {
+        return size;
+    }
+
+    /* Not supported.
+    yellow is a method that will direct the Vehicles to either slow down or speed up when a yellow light is on.
+    public void yellow() {
+        double[] stackPos = frontPos.clone();
+        for (int i = 0; i < carList.size(); i++) {
+            if (i > 0) {
+                stackPos[0] = stackPos[0] - (rounder(Math.cos(Math.toRadians(direction)) * (carList.get(i - 1).getSize()[0] + carList.get(i).getBuffer())));
+                stackPos[1] = stackPos[1] + (rounder(Math.sin(Math.toRadians(direction)) * (carList.get(i - 1).getSize()[0] + carList.get(i).getBuffer())));
+            }
+
+        }
+    }
+     */
+ /* Not supported
+    checkLaneStatus(), supposedly, will report the excess space of this Lane object.
+    public double checkLaneStatus() {
+        double excessDistance = size[0];
+        for (int i = 0; i < carList.size(); i++) {
+            excessDistance -= carList.get(i).getSize()[0];
+            if (i >= 1) {
+                excessDistance -= carList.get(i).getBuffer();
+            }
+        }
+        return excessDistance;
+    }
+     */
+ /* Not supported.
+    It will output how many spots there are left in the chosen Lane object.
+    It will help the automatedCar to decide whether it should move forward or stop when a yellow light is on.
+    public static int checkSpotLeft(Lane lane, double time) {
+        double excessDistance = lane.checkLaneStatus();
+        int spotLeft = 0;
+        for (int i = 0; i < carList.size(); i++) {
+            Vehicle car = carList.get(i);
+            excessDistance -= car.getBuffer() + car.getSize()[0]; // Buffer + length;
+            if (excessDistance < 0) {
+                break;
+
+            }
+        }
+        return spotLeft;
+    }
+     */
+ /* Not supported
+    These methods will help the Lane_Set to get cars that are moving out of the Lane
+    and transport them into the next Lane.
+    public boolean getOverFlow() {
+        return overflow;
+    }
+
+    public ArrayList<Vehicle> getOverFlowList() {
+        return overflowVehicles;
+    }
+
+    public void removeOverFlow() {
+        overflow = false;
+        overflowVehicles.clear();
+    }
+     */
+ /* Not supported
+    Suposedly, red will help the Vehicle to adjust their relative position.
     public void red() {
         double[] destination = new double[2];
         // Wait for position to be switched.
@@ -239,206 +422,5 @@ public class Lane {
             }
         }
     }
-
-    // This method will take care of setting up the lane.
-    // Debugged
-    public void setCars() {
-
-        if (carList.size() > 0) {
-            carList.get(0).setPosition(frontPos);
-            double[] destination = new double[2];
-            for (int i = 1; i < carList.size(); i++) {
-                destination[0] = carList.get(i - 1).getPosition()[0] - (rounder(Math.cos(Math.toRadians(direction)) * (carList.get(i - 1).getSize()[0] + carList.get(i).getBuffer())));
-                // I change this one to + instead of minus because of our system.
-
-                destination[1] = carList.get(i - 1).getPosition()[1] + (rounder(Math.sin(Math.toRadians(direction)) * (carList.get(i - 1).getSize()[0] + carList.get(i).getBuffer())));
-
-                carList.get(i).setPosition(destination);
-            }
-        }
-    }
-
-    public void setCars2() {
-        double[] carpos = {1000, 1000};
-        carList.get(0).setPosition(carpos);
-        /*
-        if (carList.size() > 0) {
-            double[] carPos = frontPos.clone();
-            carList.get(0).setPosition(carPos);
-        }
-         */
-    }
-
-    public void setCarsSpecial() {
-        if (carList.size() > 0) {
-            carList.get(0).setPosition(frontPos);
-            double[] destination = new double[2];
-            for (int i = 1; i < carList.size(); i++) {
-                destination[0] = carList.get(i - 1).getPosition()[0] - (rounder(Math.cos(Math.toRadians(direction)) * (carList.get(i - 1).getSize()[0] + carList.get(i).getBuffer())));
-
-                destination[1] = carList.get(i - 1).getPosition()[1] + (rounder(Math.sin(Math.toRadians(direction)) * (carList.get(i - 1).getSize()[0] + carList.get(i).getBuffer())));
-
-                carList.get(i).setPosition(destination);
-            }
-            for (int i = 0; i < carList.size(); i++) {
-                double[] tempPos = carList.get(i).getCenterPos().clone();
-                tempPos[0] = tempPos[0] - (rounder(Math.cos(Math.toRadians(direction)) * carList.get(i).getSize()[0] * 1 / 2));
-                tempPos[1] = tempPos[1] + (rounder(Math.sin(Math.toRadians(direction)) * carList.get(i).getSize()[0] * 1 / 2));
-                carList.get(i).setPosition(tempPos);
-            }
-        }
-    }
-
-    public void updateCarList() {
-        for (int i = 0; i < carList.size(); i++) {
-            // Distance formula
-            double distance = Math.sqrt(Math.pow(carList.get(i).getPosition()[0] - position[0], 2) + Math.pow(carList.get(i).getPosition()[1] - position[1], 2));
-            if (distance > (1 / 2.0 * size[0])) {
-                overflowVehicles.add(carList.get(i));
-                carList.remove(i--);
-
-                overflow = true;
-            } else {
-                break;
-            }
-        }
-    }
-
-    public boolean haveLight() {
-        return light != null;
-    }
-
-    public boolean getOverFlow() {
-        return overflow;
-    }
-
-    public ArrayList<Vehicle> getOverFlowList() {
-        return overflowVehicles;
-    }
-
-    public void removeOverFlow() {
-        overflow = false;
-        overflowVehicles.clear();
-    }
-
-    public double getDirection() {
-        return direction;
-    }
-
-    public String getCarPos() {
-        String result = "";
-        for (int i = 0; i < carList.size(); i++) {
-            result += "|" + Arrays.toString(carList.get(i).getPosition()) + "|";
-        }
-        return result;
-    }
-
-    public String getCarSpeed() {
-        String result = "";
-        for (int i = 0; i < carList.size(); i++) {
-            result += "|" + Arrays.toString(carList.get(i).getSpeed()) + "|";
-        }
-        return result;
-    }
-    
-    public double[] getPosition() {
-
-        return position;
-    }
-
-    public int getCarListSizes() {
-        return carList.size();
-    }
-    
-    public double[] getSize() {
-        return size;
-    }
-
-    public double[][] getPoints() {
-        double[][] points = new double[4][2];
-        double v1 = direction;
-        for (int i = 0; i < 2; i++) {
-            double v2 = v1 + 90;
-            for (int j = 0; j < 2; j++) {
-                points[i + j][0] = position[0] + 1 / 2 * size[0] * Math.cos(Math.toRadians(v1)) + 1 / 2 * size[1] * Math.cos(Math.toRadians(v2));
-                points[i + j][1] = position[1] + 1 / 2 * size[0] * Math.sin(Math.toRadians(v1)) + 1 / 2 * size[1] * Math.sin(Math.toRadians(v2));
-                v2 -= 180;
-
-            }
-            v1 -= 180;
-        }
-        return points;
-    }
-
-    public void yellow() {
-        double[] stackPos = frontPos.clone();
-        for (int i = 0; i < carList.size(); i++) {
-            if (i > 0) {
-                stackPos[0] = stackPos[0] - (rounder(Math.cos(Math.toRadians(direction)) * (carList.get(i - 1).getSize()[0] + carList.get(i).getBuffer())));
-                stackPos[1] = stackPos[1] + (rounder(Math.sin(Math.toRadians(direction)) * (carList.get(i - 1).getSize()[0] + carList.get(i).getBuffer())));
-            }
-
-            // I probably will need this line.
-            //System.out.print(carList.get(i).getDeceleration_rate(stackPos));
-        }
-    }
-         
-    public static void main(String[] args) {
-
-        double[] position = {135, 0};
-        double[] size = {270, 10};
-
-        double direction = 270;
-        System.out.println("hi");
-
-        double[] carpos = {10, 5};
-
-        Light l = new Light(Color.GREEN, true, false);
-        l.setChangeTimes(53, 10, 3);
-        l.setCycleTime(53);
-
-        Lane lane = new Lane(position, size, direction, l);
-
-        lane.addCar(true, 6);
-        System.out.println(lane.getCarPos());
-        /*
-        for (int i = 0; i < 30; i++) {
-            Vehicle c = new NormalCar(carpos, direction);
-            carpos[0]--;
-            lane.addCar(c);
-            System.out.println(Arrays.toString(c.getPosition()));
-        }
-         */
-        //lane.setCars();
-
-        l.startCycle();
-        for (int i = 0; i < 500; i++) {
-            System.out.println(l.getColorString() + l.getTimePassed());
-            //l.runCycleUnit();
-            if (i % 2 == 0) {
-                String output = "";
-
-                for (Vehicle car : lane.carList) {
-
-                    /*
-                    output += String.format("%7f, %7f; %7f, %7f; %7f\t\t", car.rounder(car.getCenterPos()[0]),
-                            car.rounder(car.getCenterPos()[1]), car.getSize()[0], car.getSize()[1], car.rounder(car.getDirection()));
-                     */
-                    output += String.format("Speed: %s Direction: %s Position: %s\t\t", Arrays.toString(car.getSpeed()), car.getDirection(), Arrays.toString(car.getPosition()));
-                }
-                System.out.println(output);
-
-            }
-            lane.green();
-            //lane.runUnit();
-
-            /*
-            System.out.println("safety: " + c2.getSafetyDistance());
-            System.out.println(c.getReactionTime() + " : " + c2.getReactionTime());
-            System.out.println(Arrays.toString(c.getSpeed()) + " : " + Arrays.toString(c.getPosition()));
-            System.out.println(Arrays.toString(c2.getSpeed()) + " : " + Arrays.toString(c2.getPosition()));
-             */
-        }
-
-    }
+     */
 }

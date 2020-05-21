@@ -12,6 +12,9 @@ import traffic_congestion_simulator.TCSConstant;
 import vehicle.Vehicle;
 
 /**
+ * Lane_Set is a set of Lane.
+ * It contains an array of Lane (and possibly an intersection in the future).
+ * It will run through all Lane for one increment of unit second.
  *
  * @author chenhanxi
  */
@@ -19,21 +22,32 @@ public class Lane_Set implements TCSConstant {
 
     Lane[] lane_set;
 
-    ArrayList<Vehicle> overflowList;
+    //ArrayList<Vehicle> overflowList; Not supported yet.
     
-    int numOfLane;
+    int numOfLane;// Unrelated to this simulation.
 
-    // Creates a lane.
+    /**
+     * Lane_Set is a constructor that will create Lanes in add them into the list.
+     * 
+     * @param position_set
+     * @param size_set
+     * @param direction
+     * @param numOfLane
+     * @param light_set
+     * @param lightseq 
+     */
     public Lane_Set(double[][] position_set, double[][] size_set, double[] direction, int numOfLane, LightSet light_set, int[] lightseq) {
         lane_set = new Lane[numOfLane];
         for (int i = 0; i < lane_set.length; i++) {
             lane_set[i] = new Lane(position_set[i], size_set[i], direction[i / 3], light_set.getLight_Set()[lightseq[i]]);
         }
-        overflowList = new ArrayList<>();
+        //overflowList = new ArrayList<>(); Not supported.
 
     }
 
-    //Runs that lane.
+    /**
+     * runUnit is a method that, when being called, will run through each Lane for one increment of unit second.
+     */
     public void runUnit() {
         for (Lane lane : lane_set) {
             lane.runUnit();
@@ -41,14 +55,28 @@ public class Lane_Set implements TCSConstant {
         // Intersection will be taken care in the Lane_Pool class.
     }
 
+    /**
+     * Unrelated to this simulation
+     * getSize is an accessor that will return the number of Lane in this Lane_Set
+     * @return 
+     */
     public int getSize() {
         return lane_set.length;
     }
 
+    /**
+     * getLane is an accessor that will return the Lane on the index.
+     * @param i
+     * @return 
+     */
     public Lane getLane(int i) {
         return lane_set[i];
     }
     
+    /**
+     * getCars is an accessor that will return the number of Vehicle objects on all the Lanes.
+     * @return 
+     */
     public int getCars() {
         int numOfCars = 0;
         for (int i = 0; i < lane_set.length; i++) {
@@ -57,6 +85,7 @@ public class Lane_Set implements TCSConstant {
         return numOfCars;
     }
 
+    /* Test method
     public static void main(String[] args) {
         double[][] size_set = new double[12][2];
         for (double[] size_set1 : size_set) {
@@ -110,5 +139,5 @@ public class Lane_Set implements TCSConstant {
         System.out.println("TestingCarNumber is:" + testingCarNumber);
         System.out.println("Use time is:" + runTime);
 
-    }
+    }*/
 }

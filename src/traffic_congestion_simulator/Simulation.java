@@ -9,7 +9,6 @@ import java.awt.Color;
 import java.util.Arrays;
 import setting.Lane_Set;
 import setting.LightSet;
-//hii
 public class Simulation implements TCSConstant {
 
     Lane_Set laneset;
