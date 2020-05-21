@@ -47,13 +47,13 @@ public class Lane {
         this.size = size;
         this.direction = direction; // angle
 
-        // I need to fix the car class based on this. That the length will always be the length and the width will always be the width. It's the direction that dominate.
         this.light = light;
 
         overflow = false;
 
         overflowVehicles = new ArrayList<>();
-
+        
+        //The car's dicretion is given in degrees, so the cars are able to turn.
         frontPos = new double[2];
         frontPos[0] = position[0] + 1 / 2.0 * size[0] * rounder(Math.cos(Math.toRadians(direction)));
         frontPos[1] = position[1] - 1 / 2.0 * size[0] * rounder(Math.sin(Math.toRadians(direction)));
@@ -119,7 +119,6 @@ public class Lane {
     }
 
     // This will report the lane status.
-    // It's highly recommend that this method don't use with checkSpotLeft at the same time because the target these methods are serving for are not the same.
     public double checkLaneStatus() {
         double excessDistance = size[0];
         for (int i = 0; i < carList.size(); i++) {
@@ -131,9 +130,7 @@ public class Lane {
         return excessDistance;
     }
 
-    // This will check whether the car can make it to the other end or not.
-    // Using this method, you are assuming an excessDistance variable is passed along from the simulation class to this specific lane.
-    // Kevin, This class is completed and you can use it. It will tell you how many spots there are left in the lane ahead of this one.
+    // It will output how many spots there are left in the lane ahead of the current one.
     public int checkSpotLeft(Lane lane, double time) {
         double excessDistance = lane.checkLaneStatus();
         int spotLeft = 0;
@@ -143,7 +140,6 @@ public class Lane {
             if (excessDistance < 0) {
                 break;
 
-                // Here I need to check whether the car can make it...
             }
         }
         return spotLeft;
@@ -280,7 +276,6 @@ public class Lane {
             double[] destination = new double[2];
             for (int i = 1; i < carList.size(); i++) {
                 destination[0] = carList.get(i - 1).getPosition()[0] - (rounder(Math.cos(Math.toRadians(direction)) * (carList.get(i - 1).getSize()[0] + carList.get(i).getBuffer())));
-                // I change this one to + instead of minus because of our system.
 
                 destination[1] = carList.get(i - 1).getPosition()[1] + (rounder(Math.sin(Math.toRadians(direction)) * (carList.get(i - 1).getSize()[0] + carList.get(i).getBuffer())));
 
@@ -300,7 +295,6 @@ public class Lane {
             // Distance formula
             double distance = Math.sqrt(Math.pow(carList.get(i).getPosition()[0] - position[0], 2) + Math.pow(carList.get(i).getPosition()[1] - position[1], 2));
             if (distance > (1 / 2.0 * size[0])) {
-                // Remember to check this tomorrow.
                 overflowVehicles.add(carList.get(i));
                 carList.remove(i--);
 
@@ -361,7 +355,6 @@ public class Lane {
         return size;
     }
 
-    // I forgot what I did to this...
     public double[][] getPoints() {
         double[][] points = new double[4][2];
         double v1 = direction;

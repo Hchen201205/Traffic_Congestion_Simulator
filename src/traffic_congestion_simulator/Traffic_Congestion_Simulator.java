@@ -22,9 +22,27 @@ public class Traffic_Congestion_Simulator {
     
     public static void main(String[] args) {
         // TODO code application logic here
-        VehicleTesting test = new VehicleTesting();
-        test.graphDataTesting();
-        //LightTesting test2 = new LightTesting();
+        //VehicleTesting test = new VehicleTesting();
+        //test.graphDataTesting();
+        //LightTesting test2 = new LightTesting()
+        Simulation s = new Simulation();
+        int[] carsPerLane = {20, 20, 20, 
+                            20, 20, 20, 
+                             20, 20, 20, 
+                             20, 20, 20};
+        
+        /*int[] carsPerLane = {30, 30, 30, 
+                            30, 30, 30, 
+                             30, 30, 30, 
+                             30, 30, 30};     */   
+        //System.out.println((s.run(false, carsPerLane))*0.05);
+        double timeOutput = 0;
+        for (int z = 0; z < 15; z++) {
+            timeOutput = timeOutput + ((s.run(true, carsPerLane)));
+        }
+        double timeOutputAverage = timeOutput / 15;
+        System.out.printf("%d   ;    %.3f\n", 20, timeOutputAverage);
+        
     }
 
     

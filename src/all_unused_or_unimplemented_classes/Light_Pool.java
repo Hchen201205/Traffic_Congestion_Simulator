@@ -3,10 +3,11 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package setting;
+package all_unused_or_unimplemented_classes;
 
 import java.awt.Color;
-import traffic_congestion_simulator.Buffer;
+import all_unused_or_unimplemented_classes.Buffer;
+import setting.LightSet;
 import traffic_congestion_simulator.TCSConstant;
 
 /**

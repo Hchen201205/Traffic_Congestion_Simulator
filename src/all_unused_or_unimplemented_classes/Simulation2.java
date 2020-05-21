@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package traffic_congestion_simulator;
+package all_unused_or_unimplemented_classes;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -17,6 +17,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import vehicle.*;
 import setting.*;
+import traffic_congestion_simulator.TCSConstant;
 
 /**
  *

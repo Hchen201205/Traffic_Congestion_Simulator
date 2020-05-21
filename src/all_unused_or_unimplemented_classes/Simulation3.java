@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package traffic_congestion_simulator;
+package all_unused_or_unimplemented_classes;
 
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -14,6 +14,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.locks.Condition;
 import setting.Light;
 import setting.Lane;
+import traffic_congestion_simulator.TCSConstant;
 
 /**
  * Simulation class will be the class taking care of the simulation of the
