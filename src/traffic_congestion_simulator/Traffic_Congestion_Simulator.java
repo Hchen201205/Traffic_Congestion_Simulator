@@ -7,13 +7,13 @@
  */
 package traffic_congestion_simulator;
 
-import setting.LightTesting;
+
 import static traffic_congestion_simulator.TCSConstant.TIMEINCREMENTS;
-import vehicle.VehicleTesting;
 
 /**
+ * Traffic_Congestion_Simulator serves as the main of the program.
  *
- * @author chenhanxi
+ * @author MJ
  */
 public class Traffic_Congestion_Simulator {
 
@@ -23,9 +23,7 @@ public class Traffic_Congestion_Simulator {
     public static void main(String[] args) {
         Simulation s = new Simulation();
 
-        // In the first graph, You can try to make put any numbers, 
-        //make sure you have each lane with equal number of cars EXCEPT those you want to be zero.
-        // For the second graph, all the numbers have to be the same.
+        // For testing, all the numbers have to be the same.
         //int[] carsPerLane = {30, 30, 30, 
         //30, 30, 30, 
         //30, 30, 30, 
@@ -34,7 +32,7 @@ public class Traffic_Congestion_Simulator {
         //using a nested loop
         //since the no.2 graph will be # car v. time
         //System.out.println((s.run(false, carsPerLane))*(TIMEINCREMENTS));
-        boolean automated = true;
+        boolean automated = false;
         double timeOutput = 0;
         for (int i = 20; i < 160; i = i + 10) {
             int[] carsPerLane = new int[12];//set number of lanes; creating new array as each loop finishes

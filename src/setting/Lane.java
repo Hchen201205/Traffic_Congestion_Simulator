@@ -9,7 +9,6 @@ import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Arrays;
 import vehicle.*;
-import traffic_congestion_simulator.TCSConstant;
 import static traffic_congestion_simulator.TCSConstant.ROUNDEDDECPOS;
 
 /**
@@ -94,8 +93,9 @@ public class Lane {
             if (reset != 'R') {
                 reset = 'R';
                 setCars();
+                // whenever there is a red light, a new round of reaction time will be generated.
                 for (int i = 0; i < carList.size(); i++) {
-                    
+                    carList.get(i).genRandReactionTime();
                 }
             }
         } else {
@@ -314,6 +314,14 @@ public class Lane {
         return result;
     }
 
+    public String getCarReaction() {
+        String result = "";
+        for (int i = 0; i < carList.size(); i++) {
+            result += "|" + carList.get(i).getReactionTime() + "|";
+        }
+        return result;
+    }
+    
     /**
      * Unrelated to this simulation getPosition is an accessor method that will
      * return the position of this Lane

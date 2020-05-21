@@ -6,19 +6,19 @@
 package traffic_congestion_simulator;
 
 /**
- * TSConstant interface will act as a database. It contains all the numbers the
+ * TSConstant interface will act as a database.
+ * It stores all the contents that this simulation needs.
  *
  * @author chenhanxi
  */
-//Stores all the contants that this simulation needs.
 public interface TCSConstant {
 
-    public final double TIMEINCREMENTS = 0.05; //milliseconds in unit second
+    public final double TIMEINCREMENTS = 0.05; // Milliseconds in unit second
 
-    public final int ROUNDEDDECPOS = 4;
+    public final int ROUNDEDDECPOS = 4; // Decimal Places
 
     //Vehicle classes constants
-    public final double BUFFER = 1;
+    public final double BUFFER = 1; // The space between two Vehicles when stop
 
     public final double LENGTHAVG = 4.0;
 
